@@ -19,69 +19,42 @@ package ru.xeroxp.launcher.utils;
 
 import java.util.Arrays;
 
+@SuppressWarnings("SameParameterValue")
 public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
 
-    static class Context {
-
-        int ibitWorkArea;
-
-        long lbitWorkArea;
-
-        byte[] buffer;
-
-        int pos;
-
-        int readPos;
-
-        boolean eof;
-
-        int currentLinePos;
-
-        int modulus;
-
-        Context() {
-        }
-
-        @SuppressWarnings("boxing") // OK to ignore boxing here
-        @Override
-        public String toString() {
-            return String.format("%s[buffer=%s, currentLinePos=%s, eof=%s, ibitWorkArea=%s, lbitWorkArea=%s, " +
-                    "modulus=%s, pos=%s, readPos=%s]", this.getClass().getSimpleName(), Arrays.toString(buffer),
-                    currentLinePos, eof, ibitWorkArea, lbitWorkArea, modulus, pos, readPos);
-        }
-    }
-
-    static final int EOF = -1;
-
-    public static final int MIME_CHUNK_SIZE = 76;
-
+    static final int MIME_CHUNK_SIZE = 76;
     public static final int PEM_CHUNK_SIZE = 64;
-
+    static final int MASK_8BITS = 0xff;
+    static final byte PAD_DEFAULT = '=';
+    final byte PAD = PAD_DEFAULT;
+    private static final int EOF = -1;
     private static final int DEFAULT_BUFFER_RESIZE_FACTOR = 2;
-
     private static final int DEFAULT_BUFFER_SIZE = 8192;
-
-    protected static final int MASK_8BITS = 0xff;
-
-    protected static final byte PAD_DEFAULT = '=';
-
-    protected final byte PAD = PAD_DEFAULT;
-
+    final int lineLength;
     private final int unencodedBlockSize;
 
     private final int encodedBlockSize;
-
-    protected final int lineLength;
-
     private final int chunkSeparatorLength;
 
-    protected BaseNCodec(final int unencodedBlockSize, final int encodedBlockSize,
-                         final int lineLength, final int chunkSeparatorLength) {
+    BaseNCodec(final int unencodedBlockSize, final int encodedBlockSize,
+               final int lineLength, final int chunkSeparatorLength) {
         this.unencodedBlockSize = unencodedBlockSize;
         this.encodedBlockSize = encodedBlockSize;
         final boolean useChunking = lineLength > 0 && chunkSeparatorLength > 0;
         this.lineLength = useChunking ? (lineLength / encodedBlockSize) * encodedBlockSize : 0;
         this.chunkSeparatorLength = chunkSeparatorLength;
+    }
+
+    static boolean isWhiteSpace(final byte byteToCheck) {
+        switch (byteToCheck) {
+            case ' ':
+            case '\n':
+            case '\r':
+            case '\t':
+                return false;
+            default:
+                return true;
+        }
     }
 
     boolean hasData(final Context context) {
@@ -92,7 +65,7 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
         return context.buffer != null ? context.pos - context.readPos : 0;
     }
 
-    protected int getDefaultBufferSize() {
+    int getDefaultBufferSize() {
         return DEFAULT_BUFFER_SIZE;
     }
 
@@ -109,14 +82,14 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
         return context.buffer;
     }
 
-    protected byte[] ensureBufferSize(final int size, final Context context){
-        if ((context.buffer == null) || (context.buffer.length < context.pos + size)){
+    byte[] ensureBufferSize(final int size, final Context context) {
+        if ((context.buffer == null) || (context.buffer.length < context.pos + size)) {
             return resizeBuffer(context);
         }
         return context.buffer;
     }
 
-    int readResults(final byte[] b, final int bPos, final int bAvail, final Context context) {
+    void readResults(final byte[] b, final int bPos, final int bAvail, final Context context) {
         if (context.buffer != null) {
             final int len = Math.min(available(context), bAvail);
             System.arraycopy(context.buffer, context.readPos, b, bPos, len);
@@ -124,21 +97,9 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
             if (context.readPos >= context.pos) {
                 context.buffer = null; // so hasData() will return false, and this method can return -1
             }
-            return len;
+            //return len;
         }
-        return context.eof ? EOF : 0;
-    }
-
-    protected static boolean isWhiteSpace(final byte byteToCheck) {
-        switch (byteToCheck) {
-            case ' ' :
-            case '\n' :
-            case '\r' :
-            case '\t' :
-                return true;
-            default :
-                return false;
-        }
+        //return context.eof ? EOF : 0;
     }
 
     @Override
@@ -153,7 +114,7 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
         return Base64.newStringUtf8(encode(pArray));
     }
 
-    public String encodeAsString(final byte[] pArray){
+    public String encodeAsString(final byte[] pArray) {
         return Base64.newStringUtf8(encode(pArray));
     }
 
@@ -168,7 +129,7 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
         }
     }
 
-    public byte[] decode(final String pArray) {
+    byte[] decode(final String pArray) {
         return decode(Base64.getBytesUtf8(pArray));
     }
 
@@ -204,10 +165,10 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
 
     protected abstract boolean isInAlphabet(byte value);
 
-    public boolean isInAlphabet(final byte[] arrayOctet, final boolean allowWSPad) {
-        for (int i = 0; i < arrayOctet.length; i++) {
-            if (!isInAlphabet(arrayOctet[i]) &&
-                    (!allowWSPad || (arrayOctet[i] != PAD) && !isWhiteSpace(arrayOctet[i]))) {
+    boolean isInAlphabet(final byte[] arrayOctet, final boolean allowWSPad) {
+        for (byte anArrayOctet : arrayOctet) {
+            if (!isInAlphabet(anArrayOctet) &&
+                    (!allowWSPad || (anArrayOctet != PAD) && isWhiteSpace(anArrayOctet))) {
                 return false;
             }
         }
@@ -218,7 +179,7 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
         return isInAlphabet(Base64.getBytesUtf8(basen), true);
     }
 
-    protected boolean containsAlphabetOrPad(final byte[] arrayOctet) {
+    boolean containsAlphabetOrPad(final byte[] arrayOctet) {
         if (arrayOctet == null) {
             return false;
         }
@@ -230,15 +191,46 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
         return false;
     }
 
-    public long getEncodedLength(final byte[] pArray) {
+    long getEncodedLength(final byte[] pArray) {
         // Calculate non-chunked size - rounded up to allow for padding
         // cast to long is needed to avoid possibility of overflow
-        long len = ((pArray.length + unencodedBlockSize-1)  / unencodedBlockSize) * (long) encodedBlockSize;
+        long len = ((pArray.length + unencodedBlockSize - 1) / unencodedBlockSize) * (long) encodedBlockSize;
         if (lineLength > 0) { // We're using chunking
             // Round up to nearest multiple
-            len += ((len + lineLength-1) / lineLength) * chunkSeparatorLength;
+            len += ((len + lineLength - 1) / lineLength) * chunkSeparatorLength;
         }
         return len;
+    }
+
+    static class Context {
+
+        int ibitWorkArea;
+
+        long lbitWorkArea;
+
+        byte[] buffer;
+
+        int pos;
+
+        int readPos;
+
+        boolean eof;
+
+        int currentLinePos;
+
+        int modulus;
+
+        Context() {
+        }
+
+        @SuppressWarnings("boxing") // OK to ignore boxing here
+        @Override
+        public String toString() {
+            return String.format("%s[buffer=%s, currentLinePos=%s, eof=%s, ibitWorkArea=%s, lbitWorkArea=%s, " +
+                            "modulus=%s, pos=%s, readPos=%s]", this.getClass().getSimpleName(), Arrays.toString(buffer),
+                    currentLinePos, eof, ibitWorkArea, lbitWorkArea, modulus, pos, readPos
+            );
+        }
     }
 
 }

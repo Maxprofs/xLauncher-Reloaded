@@ -1,110 +1,89 @@
 package ru.xeroxp.launcher;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.sound.sampled.*;
+import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.NumberFormatter;
 import javax.swing.text.PlainDocument;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.regex.Pattern;
 
-public class xTheme extends JPanel
-{
-    private static final long serialVersionUID = 1821411684598791934L;
+@SuppressWarnings("SameParameterValue")
+public class xTheme extends JPanel {
+    public static boolean gameOffline = false;
+    public final JButton[] buttons = new JButton[xSettingsOfTheme.Buttons.length];
+    private final JPasswordField passwordBar = new JPasswordField();
+    private final JTextField loginBar = new JTextField();
+    private final JTextField xSliderValue = new JTextField();
     public BufferedImage background;
+    private final ActionListener JoinListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            xTheme.this.startAuth();
+        }
+    };
+    private final ActionListener RememberMemListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            new Thread(new Runnable() {
+                public void run() {
+                    String mem = xSliderValue.getText();
+                    if (Integer.parseInt(mem) < 128) xAuth.rememberMemory("128");
+                    else xAuth.rememberMemory(mem);
+                }
+            }).start();
+        }
+    };
+
+    private final KeyListener JoinKListener = new KeyListener() {
+        public void keyTyped(KeyEvent e) {
+        }
+
+        public void keyReleased(KeyEvent e) {
+        }
+
+        public void keyPressed(KeyEvent e) {
+            int key = e.getKeyCode();
+            if (key == 10)
+                xTheme.this.startAuth();
+        }
+    };
     private BufferedImage logo;
-    private BufferedImage loginfield;
-    private BufferedImage passfield;
-    private BufferedImage memoryfield;
-    private JLabel percent = new JLabel();
-    private JPanel animpanel;
-    private JPanel npanel;
-    private JPanel bpanel;
-    private JPanel newspanel;
-    private JPanel gpanel;
+    private BufferedImage loginField;
+    private BufferedImage passField;
+    private BufferedImage memoryField;
+    private final JLabel percent = new JLabel();
+    private JPanel nPanel;
+    private JPanel bPanel;
     private JScrollPane scrollPane;
     private JButton newsButton;
-    public final JButton[] buttons = new JButton[xSettingsOfTheme.Buttons.length];
     private boolean newsOpened = false;
-    private JLabel error = new JLabel();
-    private Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]*$");
-    public static boolean gameOffline = false;
+    private final JLabel error = new JLabel();
+    private final Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]*$");
     private boolean remember = false;
     private String savedPassword = null;
     private boolean lockAuth = false;
     private Clip clip = null;
-    public boolean newsLoaded = true;
     private Font arial = null;
     private Font arial2 = null;
-    private final JPasswordField passwordBar = new JPasswordField();
-    private final JTextField loginBar = new JTextField();
-    private final JTextField xSliderValue = new JTextField();
-    public static xTheme theme;
-    
-    public xTheme()
-    {
+
+    public xTheme() {
         setLayout(null);
         setMinimumSize(new Dimension(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]));
         setSize(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]);
         setBackground(new Color(0, 0, 0, 0));
         setBorder(null);
         setOpaque(false);
-        
+
         InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.FontFile1);
-        try
-        {
+        try {
             this.arial = Font.createFont(0, is);
             this.arial = this.arial.deriveFont(0, xSettingsOfTheme.MainFonts[0]);
             this.arial2 = this.arial.deriveFont(Font.PLAIN, xSettingsOfTheme.MainFonts[1]);
@@ -115,15 +94,14 @@ public class xTheme extends JPanel
             System.out.println("Failed load font");
             System.out.println(e2.getMessage());
         }
-        try
-        {
+        try {
             this.background = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.MainPanelBackgroundImage));
             this.logo = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.Logo));
         } catch (IOException e) {
             System.out.println("Failed load Theme images");
             System.out.println(e.getMessage());
         }
-        
+
         if (xLauncher.getLauncher().getSound()) {
             try {
                 AudioInputStream audioIn = AudioSystem.getAudioInputStream(xTheme.class.getResource("/sound/" + xSettingsOfTheme.ClickButtonSound));
@@ -144,32 +122,31 @@ public class xTheme extends JPanel
         header.setForeground(xSettingsOfTheme.HeaderColor);
         header.setBounds(xSettingsOfTheme.HeaderBounds[0], xSettingsOfTheme.HeaderBounds[1], xSettingsOfTheme.HeaderBounds[2], xSettingsOfTheme.HeaderBounds[3]);
         header.setFont(this.arial);
-        
+
         this.percent.setBounds(xSettingsOfTheme.PercentLabelBounds[0], xSettingsOfTheme.PercentLabelBounds[1], xSettingsOfTheme.PercentLabelBounds[2], xSettingsOfTheme.PercentLabelBounds[3]);
         this.percent.setForeground(xSettingsOfTheme.PercentLabelColor);
-        
+
         this.error.setBounds(xSettingsOfTheme.ErrorLabelBounds[0], xSettingsOfTheme.ErrorLabelBounds[1], xSettingsOfTheme.ErrorLabelBounds[2], xSettingsOfTheme.ErrorLabelBounds[3]);
         this.error.setForeground(xSettingsOfTheme.ErrorLabelColor);
         this.error.setFont(this.arial2);
         this.error.setHorizontalTextPosition(JLabel.CENTER);
         this.error.setHorizontalAlignment(JLabel.CENTER);
-        
+
         String readFile = readLogin();
         if (readFile != null) {
             String[] args = readFile.split(":");
-            if (args.length == 1) {
-            } else {
+            if (args.length != 1) {
                 this.savedPassword = args[1];
             }
         }
-        
+
         JLabel mb = new JLabel(xSettingsOfTheme.MemoryLabelText);
         mb.setOpaque(false);
         mb.setBorder(null);
         mb.setBounds(xSettingsOfTheme.MemoryLabelBounds[0], xSettingsOfTheme.MemoryLabelBounds[1], xSettingsOfTheme.MemoryLabelBounds[2], xSettingsOfTheme.MemoryLabelBounds[3]);
         mb.setFont(this.arial);
         mb.setForeground(xSettingsOfTheme.MemoryLabelColor);
-        
+
         add(mb);
         xButton.loadButtons();
         addButtons();
@@ -187,16 +164,42 @@ public class xTheme extends JPanel
         add(this.percent);
         add(this.error);
     }
-    
-    public void paintComponent(Graphics g)
-    {
+
+    private static void openLink(URI uri) {
+        try {
+            Object o = Class.forName("java.awt.Desktop").getMethod("getDesktop", new Class[0]).invoke(null);
+            o.getClass().getMethod("browse", new Class[]{URI.class}).invoke(o, uri);
+        } catch (Throwable e) {
+            System.out.println("Failed to open link " + uri.toString());
+        }
+    }
+
+    public static String readMemory() {
+        xUtils utils = new xUtils();
+        File dir = utils.getDirectory();
+        File versionFile = new File(dir, "memory");
+        if (versionFile.exists()) {
+            DataInputStream dis;
+            try {
+                dis = new DataInputStream(new FileInputStream(versionFile));
+                String readMemory = dis.readUTF();
+                dis.close();
+                return readMemory;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public void paintComponent(Graphics g) {
         g.drawImage(this.background, 0, 0, this);
         g.drawImage(this.logo, xSettingsOfTheme.LogoBounds[0], xSettingsOfTheme.LogoBounds[1], this);
-        g.drawImage(this.loginfield, xSettingsOfTheme.LoginFieldBounds[0], xSettingsOfTheme.LoginFieldBounds[1], this);
-        g.drawImage(this.passfield, xSettingsOfTheme.PasswordFieldBounds[0], xSettingsOfTheme.PasswordFieldBounds[1], this);
-        g.drawImage(this.memoryfield, xSettingsOfTheme.MemoryFieldBounds[0], xSettingsOfTheme.MemoryFieldBounds[1], this);
+        g.drawImage(this.loginField, xSettingsOfTheme.LoginFieldBounds[0], xSettingsOfTheme.LoginFieldBounds[1], this);
+        g.drawImage(this.passField, xSettingsOfTheme.PasswordFieldBounds[0], xSettingsOfTheme.PasswordFieldBounds[1], this);
+        g.drawImage(this.memoryField, xSettingsOfTheme.MemoryFieldBounds[0], xSettingsOfTheme.MemoryFieldBounds[1], this);
     }
-    
+
     public void updatePercent(int done) {
         if (done < 99) {
             this.percent.setText("Обновление " + done + "%");
@@ -205,47 +208,13 @@ public class xTheme extends JPanel
             this.percent.setVisible(false);
         }
     }
-    
-    public ActionListener JoinListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            xTheme.this.startAuth();
-        }
-    };
-    
-    public ActionListener RememberMemListener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            new Thread(new Runnable() {
-                public void run() {
-                    String mem = xSliderValue.getText();
-                    if (Integer.parseInt(mem) < 128) xAuth.rememberMemory("128");
-                    else xAuth.rememberMemory(mem);
-                }
-            }).start();
-        }
-    };
-    
-    public KeyListener JoinKListener = new KeyListener() {
-        public void keyTyped(KeyEvent e) {
-        }
-        public void keyReleased(KeyEvent e) {
-        }
-        public void keyPressed(KeyEvent e) {
-            int key = e.getKeyCode();
-            if (key == 10)
-                xTheme.this.startAuth();
-        }
-    };
-    
-    public JScrollPane getUpdateNews()
-    {
+
+    public JScrollPane getUpdateNews() {
         if (scrollPane != null) return scrollPane;
-        try
-        {
-            final JTextPane editorPane = new JTextPane()
-            {
-                private static final long serialVersionUID = 1L;
-            };
-            editorPane.setContentType ( "text/html" );
+        try {
+            final JTextPane editorPane = new JTextPane();
+
+            editorPane.setContentType("text/html");
             editorPane.setText("<html><body><font color=\"#808080\"><br><br><br><br><center>Loading update news..</center></font></body></html>");
             editorPane.addHyperlinkListener(new HyperlinkListener() {
                 public void hyperlinkUpdate(HyperlinkEvent he) {
@@ -288,38 +257,29 @@ public class xTheme extends JPanel
         }
         return scrollPane;
     }
-    
-    public static void openLink(URI uri) {
-        try {
-            Object o = Class.forName("java.awt.Desktop").getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
-            o.getClass().getMethod("browse", new Class[] { URI.class }).invoke(o, new Object[] { uri });
-        } catch (Throwable e) {
-            System.out.println("Failed to open link " + uri.toString());
-        }
-    }
-    
+
     public void setAuth(String text) {
         this.error.setText(text);
         System.out.println(text);
     }
-    
+
     public void setError(String text) {
         this.error.setText(text);
         System.out.println(text);
         lockAuth(false);
     }
-    
+
     public boolean getRemember() {
         return this.remember;
     }
-    
-    public String readLogin() {
+
+    String readLogin() {
         xUtils utils = new xUtils();
         File dir = utils.getDirectory();
         File versionFile = new File(dir, "login");
-        
+
         if (versionFile.exists()) {
-            DataInputStream dis = null;
+            DataInputStream dis;
             try {
                 dis = new DataInputStream(new FileInputStream(versionFile));
                 String readLogin = dis.readUTF();
@@ -333,65 +293,42 @@ public class xTheme extends JPanel
         }
         return null;
     }
-    
-    public static String readMemory() {
-        xUtils utils = new xUtils();
-        File dir = utils.getDirectory();
-        File versionFile = new File(dir, "memory");
-        if (versionFile.exists()) {
-            DataInputStream dis = null;
-            try {
-                dis = new DataInputStream(new FileInputStream(versionFile));
-                String readMemory = dis.readUTF();
-                dis.close();
-                return readMemory;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-    
+
     public void lockAuth(boolean status) {
         this.lockAuth = status;
     }
-    
-    public void startAuth() {
+
+    void startAuth() {
         if (this.clip != null) {
             this.clip.start();
         }
-        
+
         String login = this.loginBar.getText();
         String password = new String(this.passwordBar.getPassword());
-        
+
         if (login.isEmpty()) {
             setError("Вы не указали логин");
             return;
         }
-        
-        if ((!this.newsLoaded) && (!this.gameOffline)) {
-            setError("Отсутствует подключение к серверу");
-            return;
-        }
-        
-        if (this.gameOffline) {
+
+        if (gameOffline) {
             xLauncher.getLauncher().drawMinecraft(login);
         } else if (!this.lockAuth) {
             if (password.isEmpty()) {
                 setError("Вы не указали пароль");
                 return;
             }
-            
+
             if (!this.pattern.matcher(login).matches()) {
                 setError("Недопустимый логин");
                 return;
             }
-            
+
             if (!this.pattern.matcher(password).matches()) {
                 setError("Недопустимый пароль");
                 return;
             }
-            
+
             lockAuth(true);
             if ((this.savedPassword != null) && (password.equals("password"))) {
                 Thread authThread = new Thread(new xAuth(login, this, this.savedPassword));
@@ -402,54 +339,42 @@ public class xTheme extends JPanel
             }
         }
     }
-    
-    public void addHeaderButtons()
-    {
-        for (final xHeaderButton headerbutton : xHeaderButton.getButtons())
-        {
-            final JLabel headerbuttons = new JLabel();
-            headerbuttons.setBounds(headerbutton.getImageX(), headerbutton.getImageY(), headerbutton.getImageSizeX(), headerbutton.getImageSizeY());
-            headerbuttons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerbutton.getImage())));
-            if (headerbutton.getButtonName().equals("exit")) {
-                headerbuttons.addMouseListener(new MouseAdapter() {
-                    public void mouseClicked(MouseEvent e) {
+
+    void addHeaderButtons() {
+        for (final xHeaderButton headerButton : xHeaderButton.getButtons()) {
+            final JLabel headerButtons = new JLabel();
+            headerButtons.setBounds(headerButton.getImageX(), headerButton.getImageY(), headerButton.getImageSizeX(), headerButton.getImageSizeY());
+            headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getImage())));
+            headerButtons.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (headerButton.getButtonName().equals("exit")) {
                         System.exit(0);
-                    }
-                    public void mouseEntered(MouseEvent e) {
-                        headerbuttons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerbutton.getOnMouseImage())));
-                    }
-                    public void mouseExited(MouseEvent e) {
-                        headerbuttons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerbutton.getImage())));
-                    }
-                });
-            }
-            if (headerbutton.getButtonName().equals("minimize")) {
-                headerbuttons.addMouseListener(new MouseAdapter() {
-                    public void mouseClicked(MouseEvent e) {
+                    } else if (headerButton.getButtonName().equals("minimize")) {
                         xLauncher.getLauncher().iconified();
                     }
-                    public void mouseEntered(MouseEvent e) {
-                        headerbuttons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerbutton.getOnMouseImage())));
-                    }
-                    public void mouseExited(MouseEvent e) {
-                        headerbuttons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerbutton.getImage())));
-                    }
-                });
-            }
-            add(headerbuttons);
+                }
+
+                public void mouseEntered(MouseEvent e) {
+                    headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getOnMouseImage())));
+                }
+
+                public void mouseExited(MouseEvent e) {
+                    headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getImage())));
+                }
+            });
+
+            add(headerButtons);
         }
     }
-    
-    public void addButtons()
-    {
-        for (final xButton button : xButton.getButtons())
-        {
+
+    void addButtons() {
+        for (final xButton button : xButton.getButtons()) {
             buttons[button.getId()] = new JButton();
             buttons[button.getId()].setBounds(button.getImageX(), button.getImageY(), button.getImageSizeX(), button.getImageSizeY());
             buttons[button.getId()].setIcon(new ImageIcon(xTheme.class.getResource("/images/" + button.getImage())));
             buttons[button.getId()].setPressedIcon(new ImageIcon(xTheme.class.getResource("/images/" + button.getPressedImage())));
             buttons[button.getId()].setDisabledIcon(new ImageIcon(xTheme.class.getResource("/images/" + button.getDisabledImage())));
-            buttons[button.getId()].setCursor(new Cursor(12));
+            buttons[button.getId()].setCursor(new Cursor(Cursor.HAND_CURSOR));
             buttons[button.getId()].setOpaque(false);
             buttons[button.getId()].setBorder(null);
             buttons[button.getId()].setContentAreaFilled(false);
@@ -468,15 +393,14 @@ public class xTheme extends JPanel
                     }
                 });
             }
-            if (button.getActionListener().equals("RML")) buttons[button.getId()].addActionListener(RememberMemListener);
+            if (button.getActionListener().equals("RML"))
+                buttons[button.getId()].addActionListener(RememberMemListener);
             add(buttons[button.getId()]);
         }
     }
-    
-    public void addCheckboxes()
-    {
-        for (final xCheckbox checkbox : xCheckbox.getCheckboxes())
-        {
+
+    void addCheckboxes() {
+        for (final xCheckbox checkbox : xCheckbox.getCheckboxes()) {
             final JLabel labels = new JLabel(checkbox.getCheckboxLabel());
             labels.setBounds(checkbox.getLabelX(), checkbox.getLabelY(), checkbox.getLabelSizeX(), checkbox.getLabelSizeY());
             labels.setForeground(checkbox.getLabelColor());
@@ -493,44 +417,33 @@ public class xTheme extends JPanel
             if (checkbox.getItemListener().equals("RPL")) {
                 checkboxes.addItemListener(new ItemListener() {
                     public void itemStateChanged(ItemEvent e) {
-                        if (checkboxes.isSelected()) {
-                            xTheme.this.remember = true;
-                        } else {
-                            xTheme.this.remember = false;
-                        }
+                        xTheme.this.remember = checkboxes.isSelected();
                     }
                 });
                 String readFile = readLogin();
                 if (readFile != null) {
                     String[] args = readFile.split(":");
-                    if (args.length == 1) {
-                    } else {
+                    if (args.length != 1) {
                         checkboxes.setSelected(true);
                     }
                 }
             }
             if (checkbox.getItemListener().equals("GML")) checkboxes.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
-                    if (checkboxes.isSelected()) {
-                        xTheme.this.gameOffline = true;
-                    } else {
-                        xTheme.this.gameOffline = false;
-                    }
+                    gameOffline = checkboxes.isSelected();
                 }
             });
             add(labels);
             add(checkboxes);
         }
     }
-    
-    public void addLabels()
-    {
-        for (final xLabel label : xLabel.getLabels())
-        {
+
+    void addLabels() {
+        for (final xLabel label : xLabel.getLabels()) {
             final JLabel labels = new JLabel(label.getName().toUpperCase());
             labels.setForeground(label.getColor());
             labels.setBounds(label.getLabelX(), label.getLabelY(), label.getLabelSizeX(), label.getLabelSizeY());
-            labels.setCursor(new Cursor(12));
+            labels.setCursor(new Cursor(Cursor.HAND_CURSOR));
             labels.setFont(this.arial2);
             labels.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
@@ -548,12 +461,10 @@ public class xTheme extends JPanel
             add(labels);
         }
     }
-    
-    public void addFields()
-    {
+
+    void addFields() {
         String readFile = readLogin();
-        for (final xTextField field : xTextField.getFields())
-        {
+        for (final xTextField field : xTextField.getFields()) {
             if (field.getFieldName().equals("Пароль")) {
                 passwordBar.setDocument(new xTextFieldLimit(field.getFieldLimit()));
                 passwordBar.setBounds(field.getFieldX(), field.getFieldY(), field.getFieldSizeX(), field.getFieldSizeY());
@@ -570,6 +481,7 @@ public class xTheme extends JPanel
                             passwordBar.setText("");
                         }
                     }
+
                     public void focusLost(FocusEvent e) {
                         if (passwordBar.getPassword().length == 0) {
                             passwordBar.setEchoChar((char) 0);
@@ -580,8 +492,7 @@ public class xTheme extends JPanel
                 passwordBar.addKeyListener(JoinKListener);
                 if (readFile != null) {
                     String[] args = readFile.split(":");
-                    if (args.length == 1) {
-                    } else {
+                    if (args.length != 1) {
                         passwordBar.setText("password");
                     }
                 }
@@ -590,7 +501,7 @@ public class xTheme extends JPanel
                     passwordBar.setText("Пароль");
                 }
                 try {
-                    this.passfield = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
+                    this.passField = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
                 } catch (IOException e) {
                     System.out.println("Failed load password field image");
                     System.out.println(e.getMessage());
@@ -607,6 +518,7 @@ public class xTheme extends JPanel
                     public void focusGained(FocusEvent e) {
                         if (loginBar.getText().equals("Логин")) loginBar.setText("");
                     }
+
                     public void focusLost(FocusEvent e) {
                         if (loginBar.getText().length() == 0) loginBar.setText("Логин");
                     }
@@ -622,7 +534,7 @@ public class xTheme extends JPanel
                 }
                 if (loginBar.getText().length() == 0) loginBar.setText("Логин");
                 try {
-                    this.loginfield = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
+                    this.loginField = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
                 } catch (IOException e) {
                     System.out.println("Failed load login field image");
                     System.out.println(e.getMessage());
@@ -641,12 +553,13 @@ public class xTheme extends JPanel
                 xSliderValue.addFocusListener(new FocusListener() {
                     public void focusGained(FocusEvent e) {
                     }
+
                     public void focusLost(FocusEvent e) {
                         if (xSliderValue.getText().length() == 0) xSliderValue.setText("512");
                     }
                 });
                 try {
-                    this.memoryfield = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
+                    this.memoryField = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
                 } catch (IOException e) {
                     System.out.println("Failed load memory field image");
                     System.out.println(e.getMessage());
@@ -655,18 +568,17 @@ public class xTheme extends JPanel
             }
         }
     }
-    
-    public void animationPanels()
-    {
-        animpanel = new JPanel();
+
+    void animationPanels() {
+        JPanel animpanel = new JPanel();
         animpanel.setLayout(null);
         animpanel.setOpaque(false);
-        if (xSettings.animatednews){
-            bpanel = new JPanel();
-            bpanel.setLayout(null);
-            bpanel.setBorder(null);
-            bpanel.setOpaque(false);
-            bpanel.setBounds(0, 0, xSettingsOfTheme.NewsButtonBounds[2], xSettingsOfTheme.NewsPanelHeight1);
+        if (xSettings.animatedNews) {
+            bPanel = new JPanel();
+            bPanel.setLayout(null);
+            bPanel.setBorder(null);
+            bPanel.setOpaque(false);
+            bPanel.setBounds(0, 0, xSettingsOfTheme.NewsButtonBounds[2], xSettingsOfTheme.NewsPanelHeight1);
             newsButton = new JButton();
             newsButton.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NewsButtonIcons[0])));
             newsButton.setPressedIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NewsButtonIcons[1])));
@@ -677,7 +589,7 @@ public class xTheme extends JPanel
             newsButton.setFocusPainted(false);
             newsButton.setBorder(null);
             newsButton.setContentAreaFilled(false);
-            newsButton.setCursor(new Cursor(12));
+            newsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
             animpanel.setBounds(-1, xSettingsOfTheme.NewsPanelY1, xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight1);
             animpanel.setSize(xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight1);
         } else {
@@ -685,33 +597,33 @@ public class xTheme extends JPanel
             animpanel.setSize(xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight2);
         }
         animpanel.add(getNPane());
-        if (xSettings.animatednews){
-            bpanel.add(newsButton);
-            animpanel.add(bpanel);
+        if (xSettings.animatedNews) {
+            bPanel.add(newsButton);
+            animpanel.add(bPanel);
             newsButton.setBounds(xSettingsOfTheme.NewsButtonBounds[0], xSettingsOfTheme.NewsButtonBounds[1], xSettingsOfTheme.NewsButtonBounds[2], xSettingsOfTheme.NewsButtonBounds[3]);
             newsButton.addActionListener(new ActionListener() {
-                
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (!newsOpened){
-                        xAnimation anim = new xAnimation(bpanel, getNPane(), 0, animpanel, xAnimation.AnimationType.LEFT_TO_RIGHT_SLIDE);
+                    if (!newsOpened) {
+                        xAnimation anim = new xAnimation(bPanel, getNPane(), 0, xAnimation.AnimationType.LEFT_TO_RIGHT_SLIDE);
                         anim.start();
                         newsOpened = true;
                     } else {
-                        xAnimation anim2 = new xAnimation(getNPane(), bpanel, -1, animpanel, xAnimation.AnimationType.RIGHT_TO_LEFT_SLIDE);
+                        xAnimation anim2 = new xAnimation(getNPane(), bPanel, -1, xAnimation.AnimationType.RIGHT_TO_LEFT_SLIDE);
                         anim2.start();
                         newsOpened = false;
                     }
-                    new Thread (new Runnable() {
+                    new Thread(new Runnable() {
                         public void run() {
                             try {
                                 newsButton.setEnabled(false);
-                                while(true) {
+                                while (true) {
                                     if (newsOpened) {
-                                        if (npanel.getX() == -1) break;
+                                        if (nPanel.getX() == -1) break;
                                         else Thread.sleep(100);
                                     } else {
-                                        if (npanel.getX() == -xSettingsOfTheme.NewsPanelWidth1) break;
+                                        if (nPanel.getX() == -xSettingsOfTheme.NewsPanelWidth1) break;
                                         else Thread.sleep(100);
                                     }
                                 }
@@ -726,23 +638,23 @@ public class xTheme extends JPanel
         }
         add(animpanel);
     }
-    
-    public void buildNPane() {
-        npanel = new JPanel();
-        npanel.setLayout(null);
-        npanel.setOpaque(false);
-        newspanel = new JPanel();
-        gpanel = new JPanel();
+
+    void buildNPane() {
+        nPanel = new JPanel();
+        nPanel.setLayout(null);
+        nPanel.setOpaque(false);
+        JPanel newspanel = new JPanel();
+        JPanel gpanel = new JPanel();
         newspanel.setOpaque(false);
         JPanel newsbackground;
-        if (xSettings.animatednews){
+        if (xSettings.animatedNews) {
             getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1 - 25));
             gpanel.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1));
             gpanel.setBackground(xSettingsOfTheme.NewsPanelBgColor2);
             newsbackground = new BgPanel();
             newsbackground.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1));
             newspanel.setBounds(15, 12, xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1 - 15);
-            npanel.setBounds(-xSettingsOfTheme.NewsPanelWidth1, 0, xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1);
+            nPanel.setBounds(-xSettingsOfTheme.NewsPanelWidth1, 0, xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1);
         } else {
             getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2 - 25, xSettingsOfTheme.NewsPanelHeight2 - 25));
             gpanel.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2));
@@ -752,43 +664,42 @@ public class xTheme extends JPanel
             newsbackground.setBackground(new Color(0, 0, 0, 0));
             newsbackground.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2));
             newspanel.setBounds(5, 12, xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2 - 15);
-            npanel.setBounds(xSettingsOfTheme.NewsPanelX2, 0, xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2);
+            nPanel.setBounds(xSettingsOfTheme.NewsPanelX2, 0, xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2);
         }
         newspanel.add(getUpdateNews());
-        npanel.add(newspanel);
-        npanel.add(newsbackground);
-        npanel.add(gpanel);
+        nPanel.add(newspanel);
+        nPanel.add(newsbackground);
+        nPanel.add(gpanel);
     }
-    
-    public JPanel getNPane() {
-        if (npanel != null)
-            return npanel;
+
+    JPanel getNPane() {
+        if (nPanel != null)
+            return nPanel;
         else
             buildNPane();
-        return npanel;
+        return nPanel;
     }
-    
+
     public class xTextFieldLimit extends PlainDocument {
-        
-        private static final long serialVersionUID = 1L;
-        private int limit;
-        
+        private final int limit;
+
         public xTextFieldLimit(int limit) {
             this.limit = limit;
         }
-        
+
         public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
-            if(str != null) {
+            if (str != null) {
                 super.insertString(offset, str, attr);
-                if(this.getLength() > this.limit) {
+                if (this.getLength() > this.limit) {
                     super.remove(this.limit, this.getLength() - this.limit);
                 }
             }
         }
     }
-    
+
     class BgPanel extends JPanel {
-        Image bg = new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NewsBgImage)).getImage();
+        final Image bg = new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NewsBgImage)).getImage();
+
         @Override
         public void paintComponent(Graphics g) {
             g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);

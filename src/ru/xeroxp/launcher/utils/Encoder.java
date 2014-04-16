@@ -17,7 +17,7 @@
 
 package ru.xeroxp.launcher.utils;
 
-public interface Encoder {
+interface Encoder {
     Object encode(Object source) throws EncoderException;
 }
 

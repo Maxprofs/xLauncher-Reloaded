@@ -1,19 +1,24 @@
 package ru.xeroxp.launcher;
 
-import java.io.File;
-import java.util.ArrayList;
+import ru.xeroxp.launcher.process.JavaProcess;
+import ru.xeroxp.launcher.process.JavaProcessLauncher;
+import ru.xeroxp.launcher.process.JavaProcessRunnable;
 
-public class xLoader {
-    public static String userName;
-    public static String sessionId = "0";
-    public static String jarfile;
-    public static String server = "0";
-    public static String port = "25565";
-    public static String folder;
-    public static String version;
-    public static Process process;
-    
-    public void init(String userName, String sessionId, String server, String port, String folder, String jar, String version) {
+import java.io.File;
+
+public class xLoader implements JavaProcessRunnable {
+    public static JavaProcess process;
+    private final Object lock = new Object();
+    private boolean isWorking = false;
+    private final String userName;
+    private String sessionId = "0";
+    private final String jarfile;
+    private String server = "0";
+    private String port = "25565";
+    private final String folder;
+    private final String version;
+
+    public xLoader(String userName, String sessionId, String server, String port, String folder, String jar, String version) {
         this.userName = userName;
         this.sessionId = sessionId;
         this.server = server;
@@ -21,125 +26,156 @@ public class xLoader {
         this.jarfile = jar;
         this.folder = folder;
         this.version = version;
+        playGame();
     }
-    
-    public void init(String userName) {
+
+    public xLoader(String userName) {
         this.userName = userName;
         this.jarfile = xSettings.offlineClient[1];
         this.folder = xSettings.offlineClient[0];
         this.version = xSettings.offlineClient[2];
+        playGame();
     }
-    
-    public void StartMinecraft() {
-        try {
-            String memory = xTheme.readMemory();
-            if (memory == null || memory.isEmpty()) memory = Integer.toString(512);
-            ArrayList<String> params = new ArrayList<String>();
-            xUtils utils = new xUtils();
-            String nativespath;
-            File librarypath;
-            String workdir;
-            String assetsdir;
-            String jarpath;
-            if (this.folder.isEmpty()) {
-                nativespath = utils.getDirectory() + File.separator + "bin" + File.separator + "natives";
-                librarypath = new File(utils.getDirectory() + File.separator + "libraries");
-                workdir = utils.getDirectory().toString();
-                jarpath = utils.getDirectory() + File.separator + "bin" + File.separator + this.jarfile;
-                assetsdir = utils.getDirectory() + File.separator + "assets";
-            } else {
-                nativespath = utils.getDirectory() + File.separator + this.folder + File.separator + "bin" + File.separator + "natives";
-                librarypath = new File(utils.getDirectory() + File.separator + this.folder + File.separator + "libraries");
-                workdir = utils.getDirectory() + File.separator + this.folder;
-                jarpath = utils.getDirectory() + File.separator + this.folder + File.separator + "bin" + File.separator + this.jarfile;
-                assetsdir = utils.getDirectory() + File.separator + this.folder + File.separator + "assets";
-            }
-            if (utils.getPlatform().toString().equals("windows")) params.add("javaw");
-            else params.add("java");
-            params.add("-Xms" + Integer.parseInt(memory)/2 + "m");
-            params.add("-Xmx" + memory + "m");
-            File assetsDirectory = new File(assetsdir);
-            if (utils.getPlatform().toString().equals("macos")) {
-                params.add("-Xdock:icon=" + new File(assetsDirectory, "icons/minecraft.icns").getAbsolutePath());
-                params.add("-Xdock:name=" + xSettings.gameName);
-            }
-            String img = new File(xLoader.class.getResource("/images/favicon.png").toString()).getAbsolutePath();
-            System.out.println(img);
-            params.add("-Djava.library.path=" + nativespath);
-            params.add("-classpath");
-            String libraries = getLibraries(librarypath);
-            if (!libraries.isEmpty()) {
-                libraries = libraries + ";" + jarpath;
-            } else {
-                libraries = jarpath;
-            }
-            params.add("\"" + libraries + "\"");
-            params.add("net.minecraft.client.main.Main");
-            params.add("--username");
-            params.add(this.userName);
-            params.add("--session");
-            params.add(this.sessionId);
-            params.add("--version");
-            params.add(this.version);
-            params.add("--gameDir");
-            params.add(workdir);
-            params.add("--assetsDir");
-            params.add(assetsdir);
-            if (!this.server.equals("0")) {
-                params.add("--server");
-                params.add(this.server);
-                params.add("--port");
-                params.add(this.port);
-            }
-            
-            ProcessBuilder pb = new ProcessBuilder(params);
-            process = pb.start();
-            if (process == null) throw new Exception("Client can't be started!");
-            exit();
-        } catch (Exception var6) {
-            System.out.println(var6.getMessage());
-        }
-    }
-    
-    private static String getLibraries(File path) throws Exception {
-        String libraries = "";        
+
+    private static String getLibraries(File path) {
+        String libraries = "";
         File[] files = path.listFiles();
+
+        assert files != null;
         if (files.length == 0) {
             return "";
         }
-        for(int i = 0; i < files.length; i++) {
-            if(files[i].isDirectory()) {
-                String slibraries = getLibraries(new File(path+File.separator+files[i].getName()));
+        for (File file : files) {
+            if (file.isDirectory()) {
+                String slibraries = getLibraries(new File(path + File.separator + file.getName()));
                 if (libraries.isEmpty()) {
                     libraries = slibraries;
                 } else {
                     libraries = libraries + ";" + slibraries;
                 }
             }
-            if(files[i].isFile()) {
+            if (file.isFile()) {
                 if (libraries.isEmpty()) {
-                    libraries = files[i].getAbsolutePath();
+                    libraries = file.getAbsolutePath();
                 } else {
-                    libraries = libraries + ";" + files[i].getAbsolutePath();
-                }                
+                    libraries = libraries + ";" + file.getAbsolutePath();
+                }
             }
         }
         return libraries;
     }
-    
-    private static void exit() { 
-        new Thread (new Runnable() {
-            public void run() {
-                try {
-                    process.waitFor();
-                    if (!xMain.error) {
-                        System.exit(1);
-                    }
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                    System.exit(1);
+
+    private void setWorking(boolean working) {
+        this.isWorking = working;
+    }
+
+    void playGame() {
+        synchronized (this.lock) {
+            if (this.isWorking) {
+                return;
+            }
+            setWorking(true);
+            launchGame();
+        }
+    }
+
+    void launchGame() {
+        try {
+            String memory = xTheme.readMemory();
+            if (memory == null || memory.isEmpty()) memory = Integer.toString(512);
+            xUtils utils = new xUtils();
+            String separator = System.getProperty("file.separator");
+            File nativespath;
+            File librarypath;
+            File workdir;
+            File assetsdir;
+            File jarpath;
+            if (this.folder.isEmpty()) {
+                nativespath = new File(utils.getDirectory(), "bin" + separator + "natives");
+                librarypath = new File(utils.getDirectory(), "libraries");
+                workdir = utils.getDirectory();
+                jarpath = new File(utils.getDirectory(), "bin" + separator + this.jarfile);
+                assetsdir = new File(utils.getDirectory(), "assets");
+            } else {
+                nativespath = new File(utils.getDirectory(), this.folder + separator + "bin" + separator + "natives");
+                librarypath = new File(utils.getDirectory(), this.folder + separator + "libraries");
+                workdir = new File(utils.getDirectory(), this.folder);
+                jarpath = new File(utils.getDirectory(), this.folder + separator + "bin" + separator + this.jarfile);
+                assetsdir = new File(utils.getDirectory(), this.folder + separator + "assets");
+            }
+            String libraries = getLibraries(librarypath);
+            if (!libraries.isEmpty()) {
+                libraries = libraries + ";" + jarpath.getAbsolutePath();
+            } else {
+                libraries = jarpath.getAbsolutePath();
+            }
+            JavaProcessLauncher processLauncher = new JavaProcessLauncher(utils.getJavaExecutable(), new String[0]);
+            if (jarfile.toLowerCase().contains("forge")) {
+                processLauncher.addCommands("-Dfml.ignoreInvalidMinecraftCertificates=true");
+                processLauncher.addCommands("-Dfml.ignorePatchDiscrepancies=true");
+            }
+            processLauncher.addCommands("-Xmx" + memory + "M");
+            File assetsDirectory = assetsdir;
+            if (utils.getPlatform().toString().equals("macos")) {
+                processLauncher.addCommands("-Xdock:icon=" + new File(assetsDirectory, "icons/minecraft.icns").getAbsolutePath());
+                processLauncher.addCommands("-Xdock:name=" + xSettings.gameName);
+            }
+            processLauncher.addCommands("\"" + "-Djava.library.path=" + nativespath.getAbsolutePath() + "\"");
+            processLauncher.addCommands("-cp", "\"" + libraries + "\"");
+            if (jarfile.toLowerCase().contains("forge")) {
+                processLauncher.addCommands("net.minecraft.launchwrapper.Launch");
+                processLauncher.addCommands("--tweakClass", "cpw.mods.fml.common.launcher.FMLTweaker");
+            } else {
+                processLauncher.addCommands("net.minecraft.client.main.Main");
+            }
+            //processLauncher.addCommands(new String[] { userName, sessionId, version });
+            processLauncher.addCommands("--username", userName);
+            processLauncher.addCommands("--session", sessionId);
+            processLauncher.addCommands("--version", version);
+            processLauncher.addCommands("--gameDir", "\"" + workdir.getAbsolutePath() + "\"");
+            processLauncher.addCommands("--assetsDir", "\"" + assetsdir.getAbsolutePath() + "\"");
+            if (!server.equals("0")) {
+                processLauncher.addCommands("--server", server);
+                processLauncher.addCommands("--port", port);
+            }
+            process = processLauncher.start();
+            process.safeSetExitRunnable(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            setWorking(false);
+        }
+    }
+
+    public void onJavaProcessEnded(JavaProcess process) {
+        int exitCode = process.getExitCode();
+
+        if (exitCode == 0) {
+            System.out.println("Game ended with no troubles detected (exit code " + exitCode + ")");
+        } else {
+            System.out.println("Game ended with bad state (exit code " + exitCode + ")");
+
+            String errorText = null;
+            String[] sysOut = (String[]) process.getSysOutLines().getItems();
+
+            for (int i = sysOut.length - 1; i >= 0; i--) {
+                String line = sysOut[i];
+                String crashIdentifier = "#@!@#";
+                int pos = line.lastIndexOf(crashIdentifier);
+
+                if ((pos >= 0) && (pos < line.length() - crashIdentifier.length() - 1)) {
+                    errorText = line.substring(pos + crashIdentifier.length()).trim();
+                    break;
                 }
             }
-        }).start();
+
+            if (errorText != null) {
+                System.out.println(errorText);
+            }
+            setWorking(false);
+        }
+        if (!xMain.error) {
+            System.exit(1);
+        }
     }
+
 }

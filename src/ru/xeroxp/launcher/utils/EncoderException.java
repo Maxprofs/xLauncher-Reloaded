@@ -17,9 +17,8 @@
 
 package ru.xeroxp.launcher.utils;
 
-public class EncoderException extends Exception {
-
-    private static final long serialVersionUID = 1L;
+@SuppressWarnings("SameParameterValue")
+class EncoderException extends Exception {
 
     public EncoderException() {
         super();

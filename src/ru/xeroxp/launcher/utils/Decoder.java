@@ -17,7 +17,7 @@
 
 package ru.xeroxp.launcher.utils;
 
-public interface Decoder {
+interface Decoder {
     Object decode(Object source) throws DecoderException;
 }
 

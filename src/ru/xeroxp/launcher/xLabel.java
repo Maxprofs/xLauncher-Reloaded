@@ -1,100 +1,76 @@
 package ru.xeroxp.launcher;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("SameParameterValue")
 public class xLabel {
 
-   private static List labels = new ArrayList();
-   private int id;
-   private String labelName;
-   private Color labelColor;
-   private int labelX;
-   private int labelY;
-   private int labelSizeX;
-   private int labelSizeY;
-   private String labelLink;
+    private static final List labels = new ArrayList();
+    private final String labelName;
+    private final Color labelColor;
+    private final int labelX;
+    private final int labelY;
+    private final int labelSizeX;
+    private final int labelSizeY;
+    private final String labelLink;
 
-   public xLabel(int id, String labelName, Color labelColor, int labelX, int labelY, int labelSizeX, int labelSizeY, String labelLink) {
-      this.id = id;
-      this.labelName = labelName;
-      this.labelColor = labelColor;
-      this.labelX = labelX;
-      this.labelY = labelY;
-      this.labelSizeX = labelSizeX;
-      this.labelSizeY = labelSizeY;
-      this.labelLink = labelLink;
-   }
+    public xLabel(String labelName, Color labelColor, int labelX, int labelY, int labelSizeX, int labelSizeY, String labelLink) {
+        this.labelName = labelName;
+        this.labelColor = labelColor;
+        this.labelX = labelX;
+        this.labelY = labelY;
+        this.labelSizeX = labelSizeX;
+        this.labelSizeY = labelSizeY;
+        this.labelLink = labelLink;
+    }
 
-   public int getId() {
-      return this.id;
-   }
-   
-   public String getName() {
-      return this.labelName;
-   }
+    public static void loadLabels() {
+        labels.clear();
+        Collections.addAll(labels, xSettingsOfTheme.Labels);
+    }
 
-   public Color getColor() {
-      return this.labelColor;
-   }
+    public static xLabel[] getLabels() {
+        int size = labels.size();
+        xLabel[] labelList = new xLabel[size];
+        int i = 0;
 
-   public int getLabelX() {
-      return this.labelX;
-   }
+        for (Iterator var4 = labels.iterator(); var4.hasNext(); ++i) {
+            xLabel label = (xLabel) var4.next();
+            labelList[i] = label;
+        }
 
-   public int getLabelY() {
-      return this.labelY;
-   }
+        return labelList;
+    }
 
-   public int getLabelSizeX() {
-      return this.labelSizeX;
-   }
+    public String getName() {
+        return this.labelName;
+    }
 
-   public int getLabelSizeY() {
-      return this.labelSizeY;
-   }
+    public Color getColor() {
+        return this.labelColor;
+    }
 
-   public String getLabelLink() {
-      return this.labelLink;
-   }
+    public int getLabelX() {
+        return this.labelX;
+    }
 
-   public static void loadLabels() {
-      labels.clear();
-      for (int i = 0; i < xSettingsOfTheme.Labels.length; i++) {
-      xLabel label = xSettingsOfTheme.Labels[i];
-      labels.add(label);
-      }
-   }
-   
-   public static xLabel getLabel(int id) {
-      Iterator var2 = labels.iterator();
+    public int getLabelY() {
+        return this.labelY;
+    }
 
-      while(var2.hasNext()) {
-         xLabel label = (xLabel)var2.next();
-         if(label.getId() == id) {
-            return label;
-         }
-      }
+    public int getLabelSizeX() {
+        return this.labelSizeX;
+    }
 
-      return null;
-   }
+    public int getLabelSizeY() {
+        return this.labelSizeY;
+    }
 
-   public static int getSize() {
-      return labels.size();
-   }
-
-   public static xLabel[] getLabels() {
-      int size = labels.size();
-      xLabel[] labelList = new xLabel[size];
-      int i = 0;
-
-      for(Iterator var4 = labels.iterator(); var4.hasNext(); ++i) {
-         xLabel label = (xLabel)var4.next();
-         labelList[i] = label;
-      }
-
-      return labelList;
-   }
+    public String getLabelLink() {
+        return this.labelLink;
+    }
 }

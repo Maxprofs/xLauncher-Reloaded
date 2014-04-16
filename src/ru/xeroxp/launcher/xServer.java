@@ -1,232 +1,230 @@
 package ru.xeroxp.launcher;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("SameParameterValue")
 public class xServer {
 
-   private static List servers = new ArrayList();
-   private int id;
-   private String serverName;
-   private String ip;
-   private String port;
-   private String folder;
-   private String jar;
-   private String version;
-   private int online;
-   private int imageX;
-   private int imageY;
-   private int imageSizeX;
-   private int imageSizeY;
-   private int iconX;
-   private int iconY;
-   private int iconSizeX;
-   private int iconSizeY;
-   private int titleX;
-   private int titleY;
-   private int titleSizeX;
-   private int titleSizeY;
-   private Color titleColor;
-   private int onlineX;
-   private int onlineY;
-   private int onlineSizeX;
-   private int onlineSizeY;
-   private Color onlineColor;
-   private int barX;
-   private int barY;
-   private double barSizeX;
-   private int barSizeY;
+    private static final List servers = new ArrayList();
+    private final int id;
+    private final String serverName;
+    private final String ip;
+    private final String port;
+    private final String folder;
+    private final String jar;
+    private final String version;
+    private final int online;
+    private final int imageX;
+    private final int imageY;
+    private final int imageSizeX;
+    private final int imageSizeY;
+    private final int iconX;
+    private final int iconY;
+    private final int iconSizeX;
+    private final int iconSizeY;
+    private final int titleX;
+    private final int titleY;
+    private final int titleSizeX;
+    private final int titleSizeY;
+    private final Color titleColor;
+    private final int onlineX;
+    private final int onlineY;
+    private final int onlineSizeX;
+    private final int onlineSizeY;
+    private final Color onlineColor;
+    private final int barX;
+    private final int barY;
+    private final double barSizeX;
+    private final int barSizeY;
 
-   public xServer(int id, String serverName, String ip, String port, String folder, String jar, String version, int online, int imageX, int imageY, int imageSizeX, int imageSizeY, int iconX, int iconY, int iconSizeX, int iconSizeY, int titleX, int titleY, int titleSizeX, int titleSizeY, Color titleColor, int onlineX, int onlineY, int onlineSizeX, int onlineSizeY, Color onlineColor, int barX, int barY, double barSizeX, int barSizeY) {
-      this.id = id;
-      this.serverName = serverName;
-      this.ip = ip;
-      this.port = port;
-      this.folder = folder;
-      this.jar = jar;
-      this.version = version;
-      this.online = online;
-      this.imageX = imageX;
-      this.imageY = imageY;
-      this.imageSizeX = imageSizeX;
-      this.imageSizeY = imageSizeY;
-      this.iconX = iconX;
-      this.iconY = iconY;
-      this.iconSizeX = iconSizeX;
-      this.iconSizeY = iconSizeY;
-      this.titleX = titleX;
-      this.titleY = titleY;
-      this.titleSizeX = titleSizeX;
-      this.titleSizeY = titleSizeY;
-      this.titleColor = titleColor;
-      this.onlineX = onlineX;
-      this.onlineY = onlineY;
-      this.onlineSizeX = onlineSizeX;
-      this.onlineSizeY = onlineSizeY;
-      this.onlineColor = onlineColor;
-      this.barX = barX;
-      this.barY = barY;
-      this.barSizeX = barSizeX;
-      this.barSizeY = barSizeY;
-   }
+    public xServer(int id, String serverName, String ip, String port, String folder, String jar, String version, int online, int imageX, int imageY, int imageSizeX, int imageSizeY, int iconX, int iconY, int iconSizeX, int iconSizeY, int titleX, int titleY, int titleSizeX, int titleSizeY, Color titleColor, int onlineX, int onlineY, int onlineSizeX, int onlineSizeY, Color onlineColor, int barX, int barY, double barSizeX, int barSizeY) {
+        this.id = id;
+        this.serverName = serverName;
+        this.ip = ip;
+        this.port = port;
+        this.folder = folder;
+        this.jar = jar;
+        this.version = version;
+        this.online = online;
+        this.imageX = imageX;
+        this.imageY = imageY;
+        this.imageSizeX = imageSizeX;
+        this.imageSizeY = imageSizeY;
+        this.iconX = iconX;
+        this.iconY = iconY;
+        this.iconSizeX = iconSizeX;
+        this.iconSizeY = iconSizeY;
+        this.titleX = titleX;
+        this.titleY = titleY;
+        this.titleSizeX = titleSizeX;
+        this.titleSizeY = titleSizeY;
+        this.titleColor = titleColor;
+        this.onlineX = onlineX;
+        this.onlineY = onlineY;
+        this.onlineSizeX = onlineSizeX;
+        this.onlineSizeY = onlineSizeY;
+        this.onlineColor = onlineColor;
+        this.barX = barX;
+        this.barY = barY;
+        this.barSizeX = barSizeX;
+        this.barSizeY = barSizeY;
+    }
 
-   public int getId() {
-      return this.id;
-   }
+    public static void loadServers() {
+        servers.clear();
+        Collections.addAll(servers, xSettingsOfTheme.Servers);
+    }
 
-   public String getName() {
-      return this.serverName;
-   }
+    public static xServer getServer(int id) {
 
-   public String getIp() {
-      return this.ip;
-   }
+        for (Object server1 : servers) {
+            xServer server = (xServer) server1;
+            if (server.getId() == id) {
+                return server;
+            }
+        }
 
-   public String getPort() {
-      return this.port;
-   }
+        return null;
+    }
 
-   public String getFolder() {
-      return this.folder;
-   }
-   
-   public String getJar() {
-      return this.jar;
-   }
-   
-   public String getVersion() {
-      return this.version;
-   }
+    public static int getSize() {
+        return servers.size();
+    }
 
-   public int getOnline() {
-      return this.online;
-   }
+    public static xServer[] getServers() {
+        int size = servers.size();
+        xServer[] serverList = new xServer[size];
+        int i = 0;
 
-   public int getImageX() {
-      return this.imageX;
-   }
+        for (Iterator var4 = servers.iterator(); var4.hasNext(); ++i) {
+            xServer server = (xServer) var4.next();
+            serverList[i] = server;
+        }
 
-   public int getImageY() {
-      return this.imageY;
-   }
+        return serverList;
+    }
 
-   public int getImageSizeX() {
-      return this.imageSizeX;
-   }
+    public int getId() {
+        return this.id;
+    }
 
-   public int getImageSizeY() {
-      return this.imageSizeY;
-   }
-   
-   public int getIconX() {
-      return this.iconX;
-   }
+    public String getName() {
+        return this.serverName;
+    }
 
-   public int getIconY() {
-      return this.iconY;
-   }
+    public String getIp() {
+        return this.ip;
+    }
 
-   public int getIconSizeX() {
-      return this.iconSizeX;
-   }
+    public String getPort() {
+        return this.port;
+    }
 
-   public int getIconSizeY() {
-      return this.iconSizeY;
-   }
+    public String getFolder() {
+        return this.folder;
+    }
 
-   public int getTitleX() {
-      return this.titleX;
-   }
+    public String getJar() {
+        return this.jar;
+    }
 
-   public int getTitleY() {
-      return this.titleY;
-   }
-   
-   public int getTitleSizeX() {
-      return this.titleSizeX;
-   }
+    public String getVersion() {
+        return this.version;
+    }
 
-   public int getTitleSizeY() {
-      return this.titleSizeY;
-   }
-   
-   public Color getTitleColor() {
-       return this.titleColor;
-   }
+    public int getOnline() {
+        return this.online;
+    }
 
-   public int getOnlineX() {
-      return this.onlineX;
-   }
+    public int getImageX() {
+        return this.imageX;
+    }
 
-   public int getOnlineY() {
-      return this.onlineY;
-   }
-   
-   public int getOnlineSizeX() {
-      return this.onlineSizeX;
-   }
+    public int getImageY() {
+        return this.imageY;
+    }
 
-   public int getOnlineSizeY() {
-      return this.onlineSizeY;
-   }
-   
-   public Color getOnlineColor() {
-       return this.onlineColor;
-   }
+    public int getImageSizeX() {
+        return this.imageSizeX;
+    }
 
-   public int getBarX() {
-      return this.barX;
-   }
+    public int getImageSizeY() {
+        return this.imageSizeY;
+    }
 
-   public int getBarY() {
-      return this.barY;
-   }
-   
-   public double getBarSizeX() {
-      return this.barSizeX;
-   }
+    public int getIconX() {
+        return this.iconX;
+    }
 
-   public int getBarSizeY() {
-      return this.barSizeY;
-   }
+    public int getIconY() {
+        return this.iconY;
+    }
 
-   public static void loadServers() {
-      servers.clear();
-      for (int i = 0; i < xSettingsOfTheme.Servers.length; i++) {
-      xServer server = xSettingsOfTheme.Servers[i];
-      servers.add(server);
-      }
-   }
+    public int getIconSizeX() {
+        return this.iconSizeX;
+    }
 
-   public static xServer getServer(int id) {
-      Iterator var2 = servers.iterator();
+    public int getIconSizeY() {
+        return this.iconSizeY;
+    }
 
-      while(var2.hasNext()) {
-         xServer server = (xServer)var2.next();
-         if(server.getId() == id) {
-            return server;
-         }
-      }
+    public int getTitleX() {
+        return this.titleX;
+    }
 
-      return null;
-   }
+    public int getTitleY() {
+        return this.titleY;
+    }
 
-   public static int getSize() {
-      return servers.size();
-   }
+    public int getTitleSizeX() {
+        return this.titleSizeX;
+    }
 
-   public static xServer[] getServers() {
-      int size = servers.size();
-      xServer[] serverList = new xServer[size];
-      int i = 0;
+    public int getTitleSizeY() {
+        return this.titleSizeY;
+    }
 
-      for(Iterator var4 = servers.iterator(); var4.hasNext(); ++i) {
-         xServer server = (xServer)var4.next();
-         serverList[i] = server;
-      }
+    public Color getTitleColor() {
+        return this.titleColor;
+    }
 
-      return serverList;
-   }
+    public int getOnlineX() {
+        return this.onlineX;
+    }
+
+    public int getOnlineY() {
+        return this.onlineY;
+    }
+
+    public int getOnlineSizeX() {
+        return this.onlineSizeX;
+    }
+
+    public int getOnlineSizeY() {
+        return this.onlineSizeY;
+    }
+
+    public Color getOnlineColor() {
+        return this.onlineColor;
+    }
+
+    public int getBarX() {
+        return this.barX;
+    }
+
+    public int getBarY() {
+        return this.barY;
+    }
+
+    public double getBarSizeX() {
+        return this.barSizeX;
+    }
+
+    public int getBarSizeY() {
+        return this.barSizeY;
+    }
 }

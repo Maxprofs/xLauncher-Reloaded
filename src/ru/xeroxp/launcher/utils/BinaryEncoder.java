@@ -17,7 +17,7 @@
 
 package ru.xeroxp.launcher.utils;
 
-public interface BinaryEncoder extends Encoder {
-    byte[] encode(byte[] source) throws EncoderException;
+interface BinaryEncoder extends Encoder {
+    byte[] encode(byte[] source);
 }
 
