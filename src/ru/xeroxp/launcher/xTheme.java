@@ -213,7 +213,7 @@ public class xTheme extends JPanel {
 
     public void updatePercent(int done) {
         if (done < 99) {
-            this.percent.setText("Обновление " + done + "%");
+            this.percent.setText("РћР±РЅРѕРІР»РµРЅРёРµ " + done + "%");
             this.percent.setVisible(true);
         } else {
             this.percent.setVisible(false);
@@ -321,7 +321,7 @@ public class xTheme extends JPanel {
         String password = new String(this.passwordBar.getPassword());
 
         if (login.isEmpty()) {
-            setError("Вы не указали логин");
+            setError("Р’С‹ РЅРµ СѓРєР°Р·Р°Р»Рё Р»РѕРіРёРЅ");
             return;
         }
 
@@ -329,17 +329,17 @@ public class xTheme extends JPanel {
             xLauncher.getLauncher().drawMinecraft(login);
         } else if (!this.lockAuth) {
             if (password.isEmpty()) {
-                setError("Вы не указали пароль");
+                setError("Р’С‹ РЅРµ СѓРєР°Р·Р°Р»Рё РїР°СЂРѕР»СЊ");
                 return;
             }
 
             if (!this.pattern.matcher(login).matches()) {
-                setError("Недопустимый логин");
+                setError("РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ Р»РѕРіРёРЅ");
                 return;
             }
 
             if (!this.pattern.matcher(password).matches()) {
-                setError("Недопустимый пароль");
+                setError("РќРµРґРѕРїСѓСЃС‚РёРјС‹Р№ РїР°СЂРѕР»СЊ");
                 return;
             }
 
@@ -492,7 +492,7 @@ public class xTheme extends JPanel {
     void addFields() {
         String readFile = readLogin();
         for (final xTextField field : xTextField.getFields()) {
-            if (field.getFieldName().equals("Пароль")) {
+            if (field.getId() == 1) {
                 passwordBar.setDocument(new xTextFieldLimit(field.getFieldLimit()));
                 passwordBar.setBounds(field.getFieldX(), field.getFieldY(), field.getFieldSizeX(), field.getFieldSizeY());
                 passwordBar.setOpaque(false);
@@ -504,7 +504,7 @@ public class xTheme extends JPanel {
                     @Override
                     public void focusGained(FocusEvent e) {
                         String passToString = new String(passwordBar.getPassword());
-                        if (passToString.equals("Пароль")) {
+                        if (passToString.equals(field.getFieldName())) {
                             passwordBar.setEchoChar('\u25CF');
                             passwordBar.setText("");
                         }
@@ -514,7 +514,7 @@ public class xTheme extends JPanel {
                     public void focusLost(FocusEvent e) {
                         if (passwordBar.getPassword().length == 0) {
                             passwordBar.setEchoChar((char) 0);
-                            passwordBar.setText("Пароль");
+                            passwordBar.setText(field.getFieldName());
                         }
                     }
                 });
@@ -529,7 +529,7 @@ public class xTheme extends JPanel {
 
                 if (passwordBar.getPassword().length == 0) {
                     passwordBar.setEchoChar((char) 0);
-                    passwordBar.setText("Пароль");
+                    passwordBar.setText(field.getFieldName());
                 }
 
                 try {
@@ -540,7 +540,7 @@ public class xTheme extends JPanel {
                 }
 
                 add(passwordBar);
-            } else if (field.getFieldName().equals("Логин")) {
+            } else if (field.getId() == 0) {
                 loginBar.setDocument(new xTextFieldLimit(field.getFieldLimit()));
                 loginBar.setBounds(field.getFieldX(), field.getFieldY(), field.getFieldSizeX(), field.getFieldSizeY());
                 loginBar.setOpaque(false);
@@ -550,12 +550,12 @@ public class xTheme extends JPanel {
                 loginBar.addFocusListener(new FocusListener() {
                     @Override
                     public void focusGained(FocusEvent e) {
-                        if (loginBar.getText().equals("Логин")) loginBar.setText("");
+                        if (loginBar.getText().equals(field.getFieldName())) loginBar.setText("");
                     }
 
                     @Override
                     public void focusLost(FocusEvent e) {
-                        if (loginBar.getText().length() == 0) loginBar.setText("Логин");
+                        if (loginBar.getText().length() == 0) loginBar.setText(field.getFieldName());
                     }
                 });
 
@@ -571,7 +571,7 @@ public class xTheme extends JPanel {
                 }
 
                 if (loginBar.getText().length() == 0) {
-                    loginBar.setText("Логин");
+                    loginBar.setText(field.getFieldName());
                 }
 
                 try {
@@ -582,7 +582,7 @@ public class xTheme extends JPanel {
                 }
 
                 add(loginBar);
-            } else if (field.getFieldName().equals("Память")) {
+            } else if (field.getId() == 2) {
                 xSliderValue.setDocument(new xTextFieldLimit(field.getFieldLimit()));
                 xSliderValue.setBounds(field.getFieldX(), field.getFieldY(), field.getFieldSizeX(), field.getFieldSizeY());
                 xSliderValue.setOpaque(false);
@@ -623,9 +623,9 @@ public class xTheme extends JPanel {
     }
 
     void animationPanels() {
-        JPanel animpanel = new JPanel();
-        animpanel.setLayout(null);
-        animpanel.setOpaque(false);
+        JPanel animPanel = new JPanel();
+        animPanel.setLayout(null);
+        animPanel.setOpaque(false);
 
         if (xSettings.animatedNews) {
             bPanel = new JPanel();
@@ -644,18 +644,18 @@ public class xTheme extends JPanel {
             newsButton.setBorder(null);
             newsButton.setContentAreaFilled(false);
             newsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            animpanel.setBounds(-1, xSettingsOfTheme.NewsPanelY1, xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight1);
-            animpanel.setSize(xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight1);
+            animPanel.setBounds(-1, xSettingsOfTheme.NewsPanelY1, xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight1);
+            animPanel.setSize(xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight1);
         } else {
-            animpanel.setBounds(-1, xSettingsOfTheme.NewsPanelY2, xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight2);
-            animpanel.setSize(xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight2);
+            animPanel.setBounds(-1, xSettingsOfTheme.NewsPanelY2, xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight2);
+            animPanel.setSize(xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight2);
         }
 
-        animpanel.add(getNPane());
+        animPanel.add(getNPane());
 
         if (xSettings.animatedNews) {
             bPanel.add(newsButton);
-            animpanel.add(bPanel);
+            animPanel.add(bPanel);
             newsButton.setBounds(xSettingsOfTheme.NewsButtonBounds[0], xSettingsOfTheme.NewsButtonBounds[1], xSettingsOfTheme.NewsButtonBounds[2], xSettingsOfTheme.NewsButtonBounds[3]);
             newsButton.addActionListener(new ActionListener() {
 
@@ -701,7 +701,7 @@ public class xTheme extends JPanel {
             });
         }
 
-        add(animpanel);
+        add(animPanel);
     }
 
     void buildNPane() {

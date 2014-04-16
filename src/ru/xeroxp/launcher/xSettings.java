@@ -1,30 +1,30 @@
 package ru.xeroxp.launcher;
 
 public class xSettings {
-    public static final String siteLink = "http://magicwars.high-sky.ru/"; // Ссылка на главную страницу сайта
-    public static final String mineFolder = "magicwars"; // Папка в которой находится майнкрафт (.minecraft) без точки
-    public static final String downLauncherLink = "http://localhost/launcher/"; // Путь до папки, в которой лежит лаунчер (xLauncher.jar и xLauncher.exe)
-    public static final String downClientLink = "http://localhost/client/"; // Путь до папки, в которой хранится client.zip (в нем хранятся все файлы клиентов)
-    public static final String mainInfoFile = "http://localhost/maininfo.php"; // Путь до файла информации
-    public static final String LauncherName = "MagicWars Launcher"; // Название лаунчера
-    public static final String monitorLink = "http://localhost/data/monitor.txt"; // Ссылка на файл мониторинга
-    public static final int checkTime = 70000; // Промежутки проверки клиента
-    public static final String gameName = "MagicWars"; // Название окна игры
-    public static final String launcherVersion = "1.0.0"; // Версия лаунчера
-    public static final String[] offlineClient = {"magicwars", "Forge1.6.4.jar", "1.6.4"}; // Клиент, который будет запускаться в оффлайн режиме
-    public static final String newsUrl = "http://localhost/MineCraft/news.html"; // Ссылка на файл с новостями
-    public static final String passIdKey = "QWERTY1"; // Ключ защиты пароля (такой же должен быть в сервере)
-    public static final int localPort = 6565; // Порт проверки лаунчера из клиента
+    public static final String siteLink = "http://magicwars.high-sky.ru/"; // РЎСЃС‹Р»РєР° РЅР° РіР»Р°РІРЅСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ СЃР°Р№С‚Р°
+    public static final String mineFolder = "magicwars"; // РџР°РїРєР° РІ РєРѕС‚РѕСЂРѕР№ РЅР°С…РѕРґРёС‚СЃСЏ РјР°Р№РЅРєСЂР°С„С‚ (.minecraft) Р±РµР· С‚РѕС‡РєРё
+    public static final String downLauncherLink = "http://localhost/launcher/"; // РџСѓС‚СЊ РґРѕ РїР°РїРєРё, РІ РєРѕС‚РѕСЂРѕР№ Р»РµР¶РёС‚ Р»Р°СѓРЅС‡РµСЂ (xLauncher.jar Рё xLauncher.exe)
+    public static final String downClientLink = "http://localhost/client/"; // РџСѓС‚СЊ РґРѕ РїР°РїРєРё, РІ РєРѕС‚РѕСЂРѕР№ С…СЂР°РЅРёС‚СЃСЏ client.zip (РІ РЅРµРј С…СЂР°РЅСЏС‚СЃСЏ РІСЃРµ С„Р°Р№Р»С‹ РєР»РёРµРЅС‚РѕРІ)
+    public static final String mainInfoFile = "http://localhost/maininfo.php"; // РџСѓС‚СЊ РґРѕ С„Р°Р№Р»Р° РёРЅС„РѕСЂРјР°С†РёРё
+    public static final String LauncherName = "MagicWars Launcher"; // РќР°Р·РІР°РЅРёРµ Р»Р°СѓРЅС‡РµСЂР°
+    public static final String monitorLink = "http://localhost/data/monitor.txt"; // РЎСЃС‹Р»РєР° РЅР° С„Р°Р№Р» РјРѕРЅРёС‚РѕСЂРёРЅРіР°
+    public static final int checkTime = 70000; // РџСЂРѕРјРµР¶СѓС‚РєРё РїСЂРѕРІРµСЂРєРё РєР»РёРµРЅС‚Р°
+    public static final String gameName = "MagicWars"; // РќР°Р·РІР°РЅРёРµ РѕРєРЅР° РёРіСЂС‹
+    public static final String launcherVersion = "1.0.0"; // Р’РµСЂСЃРёСЏ Р»Р°СѓРЅС‡РµСЂР°
+    public static final String[] offlineClient = {"magicwars", "Forge1.6.4.jar", "1.6.4"}; // РљР»РёРµРЅС‚, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ Р·Р°РїСѓСЃРєР°С‚СЊСЃСЏ РІ РѕС„С„Р»Р°Р№РЅ СЂРµР¶РёРјРµ
+    public static final String newsUrl = "http://localhost/MineCraft/news.html"; // РЎСЃС‹Р»РєР° РЅР° С„Р°Р№Р» СЃ РЅРѕРІРѕСЃС‚СЏРјРё
+    public static final String passIdKey = "QWERTY1"; // РљР»СЋС‡ Р·Р°С‰РёС‚С‹ РїР°СЂРѕР»СЏ (С‚Р°РєРѕР№ Р¶Рµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ СЃРµСЂРІРµСЂРµ)
+    public static final int localPort = 6565; // РџРѕСЂС‚ РїСЂРѕРІРµСЂРєРё Р»Р°СѓРЅС‡РµСЂР° РёР· РєР»РёРµРЅС‚Р°
     public static final byte[] key = {
             0x74, 0x68, 0x68, 0x73, 0x49, 0x73, 0x41, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x4b, 0x65, 0x79
-    }; // Ключ обмена информацией между лаунчером и сокет-сервером (в сокет-сервере должен быть такой же)
-    public static final boolean animatedNews = false; // Переключение вида новостей
+    }; // РљР»СЋС‡ РѕР±РјРµРЅР° РёРЅС„РѕСЂРјР°С†РёРµР№ РјРµР¶РґСѓ Р»Р°СѓРЅС‡РµСЂРѕРј Рё СЃРѕРєРµС‚-СЃРµСЂРІРµСЂРѕРј (РІ СЃРѕРєРµС‚-СЃРµСЂРІРµСЂРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ С‚Р°РєРѕР№ Р¶Рµ)
+    public static final boolean animatedNews = false; // РџРµСЂРµРєР»СЋС‡РµРЅРёРµ РІРёРґР° РЅРѕРІРѕСЃС‚РµР№
     public static final xServerConnect[] connectServers = {
             new xServerConnect("192.168.10.3", 4444)
-    }; // id, ip адрес и port сокет-серверов
-    public static final boolean patchDir = true; //Использовать автоматическую замену директории игры
+    }; // id, ip Р°РґСЂРµСЃ Рё port СЃРѕРєРµС‚-СЃРµСЂРІРµСЂРѕРІ
+    public static final boolean patchDir = true; //РСЃРїРѕР»СЊР·РѕРІР°С‚СЊ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєСѓСЋ Р·Р°РјРµРЅСѓ РґРёСЂРµРєС‚РѕСЂРёРё РёРіСЂС‹
     public static final String mcClass = "net.minecraft.client.Minecraft";
     public static final String[] mcVersions = {
             "1.2.5::aj", "1.3.x::am", "1.4.x::an", "1.5.x::an", "1.6.x::an"
-    }; // Версии и классы для автозамены дирректории игры
+    }; // Р’РµСЂСЃРёРё Рё РєР»Р°СЃСЃС‹ РґР»СЏ Р°РІС‚РѕР·Р°РјРµРЅС‹ РґРёСЂСЂРµРєС‚РѕСЂРёРё РёРіСЂС‹
 }

@@ -132,7 +132,7 @@ class xAuth implements Runnable {
     }
 
     private void sendAuth() {
-        this.theme.setAuth("Авторизация");
+        this.theme.setAuth("РђРІС‚РѕСЂРёР·Р°С†РёСЏ");
         getServerConnect();
         launcherSize();
         getCheckFormats();
@@ -162,23 +162,23 @@ class xAuth implements Runnable {
                 if (!response.equals("0")) {
                     if (!response.equals("1")) {
                         if (response.equals("abuse")) {
-                            this.setError("Ошибка авторизаци");
+                            this.setError("РћС€РёР±РєР° Р°РІС‚РѕСЂРёР·Р°С†Рё");
                         } else if (response.equals("fail")) {
-                            this.setError("Неправильный логин или пароль");
+                            this.setError("РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ Р»РѕРіРёРЅ РёР»Рё РїР°СЂРѕР»СЊ");
                         } else if (response.equals("abanned")) {
-                            this.setError("Ваш аккаунт заблокирован");
+                            this.setError("Р’Р°С€ Р°РєРєР°СѓРЅС‚ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ");
                         } else if (response.equals("banned")) {
-                            this.setError("Вы заблокированы");
+                            this.setError("Р’С‹ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅС‹");
                         } else if (response.equals("abuseSize")) {
-                            this.setError("Нельзя модифицировать клиент");
+                            this.setError("РќРµР»СЊР·СЏ РјРѕРґРёС„РёС†РёСЂРѕРІР°С‚СЊ РєР»РёРµРЅС‚");
                         } else if (response.equals("abuseLauncherSize")) {
-                            this.setError("Лаунчер не прошел проверку");
+                            this.setError("Р›Р°СѓРЅС‡РµСЂ РЅРµ РїСЂРѕС€РµР» РїСЂРѕРІРµСЂРєСѓ");
                         } else if (response.equals("abuseTexture")) {
-                            this.setError("У вас обнаружен X-Ray");
+                            this.setError("РЈ РІР°СЃ РѕР±РЅР°СЂСѓР¶РµРЅ X-Ray");
                         } else if (response.equals("abuseMod")) {
-                            this.setError("Нельзя добавлять моды в клиент");
+                            this.setError("РќРµР»СЊР·СЏ РґРѕР±Р°РІР»СЏС‚СЊ РјРѕРґС‹ РІ РєР»РёРµРЅС‚");
                         } else if (response.equals("oldLauncher")) {
-                            this.setError("Лаунчер устарел");
+                            this.setError("Р›Р°СѓРЅС‡РµСЂ СѓСЃС‚Р°СЂРµР»");
                             new xUpdater(this.theme);
                         } else if (!response.equals("2")) {
                             String[] args1 = response.split(":");
@@ -200,7 +200,7 @@ class xAuth implements Runnable {
                             } else {
                                 salt = xCipherUtils.genSalt(symbolsCount);
                                 dataOutputStream.writeUTF(xCipherUtils.encrypt(salt + "false"));
-                                this.setError("Текстуры не прошли проверку");
+                                this.setError("РўРµРєСЃС‚СѓСЂС‹ РЅРµ РїСЂРѕС€Р»Рё РїСЂРѕРІРµСЂРєСѓ");
                                 break;
                             }
                         }
@@ -226,9 +226,9 @@ class xAuth implements Runnable {
 
             socket.close();
         } catch (SocketTimeoutException var11) {
-            this.setError("Время подключения истекло");
+            this.setError("Р’СЂРµРјСЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ РёСЃС‚РµРєР»Рѕ");
         } catch (IOException var12) {
-            this.setError("Сервер авторизации недоступен");
+            this.setError("РЎРµСЂРІРµСЂ Р°РІС‚РѕСЂРёР·Р°С†РёРё РЅРµРґРѕСЃС‚СѓРїРµРЅ");
         }
     }
 
@@ -374,10 +374,10 @@ class xAuth implements Runnable {
             }
 
             if (result.equals("nofiles")) {
-                this.setError("Клиент не прошел проверку");
+                this.setError("РљР»РёРµРЅС‚ РЅРµ РїСЂРѕС€РµР» РїСЂРѕРІРµСЂРєСѓ");
                 return false;
             } else if (result.equals("noconnect")) {
-                this.setError("Нет соединения");
+                this.setError("РќРµС‚ СЃРѕРµРґРёРЅРµРЅРёСЏ");
                 return false;
             } else {
                 return true;

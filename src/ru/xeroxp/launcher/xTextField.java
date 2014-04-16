@@ -9,6 +9,7 @@ import java.util.List;
 @SuppressWarnings("SameParameterValue")
 public class xTextField {
     private static final List fields = new ArrayList();
+    private final int id;
     private final String fieldName;
     private final Color fieldColor;
     private final int fieldLimit;
@@ -18,7 +19,8 @@ public class xTextField {
     private final int fieldSizeY;
     private final String image;
 
-    public xTextField(String fieldName, Color fieldColor, int fieldLimit, int fieldX, int fieldY, int fieldSizeX, int fieldSizeY, String image) {
+    public xTextField(int id, String fieldName, Color fieldColor, int fieldLimit, int fieldX, int fieldY, int fieldSizeX, int fieldSizeY, String image) {
+        this.id = id;
         this.fieldName = fieldName;
         this.fieldColor = fieldColor;
         this.fieldLimit = fieldLimit;
@@ -45,6 +47,10 @@ public class xTextField {
         }
 
         return fieldList;
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     public String getFieldName() {

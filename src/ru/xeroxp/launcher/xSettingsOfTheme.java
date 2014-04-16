@@ -13,92 +13,92 @@ class xSettingsOfTheme {
             new xServer(6, "Hitech", "localhost", "25565", "", "minecraft.jar", "1.4.7", 100, 0, 720, 724, 110, 6, 726, 180, 98, 500, 750, 200, 24, new Color(114, 114, 114), 450, 798, 70, 14, new Color(114, 114, 114), 231, 791, 484.0D, 29),
             new xServer(7, "Classic", "localhost", "25565", "", "minecraft.jar", "1.4.7", 80, 0, 840, 724, 110, 6, 846, 180, 98, 500, 870, 200, 24, new Color(114, 114, 114), 450, 918, 70, 14, new Color(114, 114, 114), 231, 911, 484.0D, 29),
             new xServer(8, "Sandbox", "localhost", "25565", "", "minecraft.jar", "1.4.7", 100, 0, 960, 724, 110, 6, 966, 180, 98, 500, 990, 200, 24, new Color(114, 114, 114), 450, 1038, 70, 14, new Color(114, 114, 114), 231, 1031, 484.0D, 29)
-    }; // id, название(текст и названия картинки), ip, port, подпапка, клиент, версия, максимальное количество слотов сервера, координаты и размеры, цвета текстов
+    }; // id, РЅР°Р·РІР°РЅРёРµ(С‚РµРєСЃС‚ Рё РЅР°Р·РІР°РЅРёСЏ РєР°СЂС‚РёРЅРєРё), ip, port, РїРѕРґРїР°РїРєР°, РєР»РёРµРЅС‚, РІРµСЂСЃРёСЏ, РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃР»РѕС‚РѕРІ СЃРµСЂРІРµСЂР°, РєРѕРѕСЂРґРёРЅР°С‚С‹ Рё СЂР°Р·РјРµСЂС‹, С†РІРµС‚Р° С‚РµРєСЃС‚РѕРІ
 
     public static final xLabel[] Labels = {
-            new xLabel("База знаний", new Color(63, 63, 63), 593, 65, 100, 14, "http://magicwars.high-sky.ru/"),
-            new xLabel("Личный кабинет", new Color(63, 63, 63), 593, 98, 150, 14, "http://magicwars.high-sky.ru/cabinet/"),
-            new xLabel("Еще ссылка", new Color(63, 63, 63), 593, 131, 150, 14, "http://magicwars.high-sky.ru/"),
-            new xLabel("И еще", new Color(63, 63, 63), 593, 164, 100, 14, "http://magicwars.high-sky.ru/")
-    }; // Название, цвет, координаты и размеры ссылки, сама ссылка
+            new xLabel("Р‘Р°Р·Р° Р·РЅР°РЅРёР№", new Color(63, 63, 63), 593, 65, 100, 14, "http://magicwars.high-sky.ru/"),
+            new xLabel("Р›РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚", new Color(63, 63, 63), 593, 98, 150, 14, "http://magicwars.high-sky.ru/cabinet/"),
+            new xLabel("Р•С‰Рµ СЃСЃС‹Р»РєР°", new Color(63, 63, 63), 593, 131, 150, 14, "http://magicwars.high-sky.ru/"),
+            new xLabel("Р РµС‰Рµ", new Color(63, 63, 63), 593, 164, 100, 14, "http://magicwars.high-sky.ru/")
+    }; // РќР°Р·РІР°РЅРёРµ, С†РІРµС‚, РєРѕРѕСЂРґРёРЅР°С‚С‹ Рё СЂР°Р·РјРµСЂС‹ СЃСЃС‹Р»РєРё, СЃР°РјР° СЃСЃС‹Р»РєР°
 
     public static final xButton[] Buttons = {
             new xButton(0, "update_button.png", "update_button_pressed.png", "update_button_disabled.png", 730, 448, 39, 39, "UL", ""),
             new xButton(1, "auth_button.png", "auth_button_pressed.png", "auth_button.png", 545, 448, 178, 39, "JL", "JKL"),
             new xButton(2, "save_button.png", "save_button_pressed.png", "save_button.png", 730, 400, 39, 39, "RML", "")
-    }; // id, картинка, картинка при нажатии, картинка при деактивации кнопки, координаты и размеры, переменные(не менять!!!)
+    }; // id, РєР°СЂС‚РёРЅРєР°, РєР°СЂС‚РёРЅРєР° РїСЂРё РЅР°Р¶Р°С‚РёРё, РєР°СЂС‚РёРЅРєР° РїСЂРё РґРµР°РєС‚РёРІР°С†РёРё РєРЅРѕРїРєРё, РєРѕРѕСЂРґРёРЅР°С‚С‹ Рё СЂР°Р·РјРµСЂС‹, РїРµСЂРµРјРµРЅРЅС‹Рµ(РЅРµ РјРµРЅСЏС‚СЊ!!!)
 
     public static final xCheckbox[] Checkboxes = {
-            new xCheckbox("Запомнить пароль", 573, 331, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 331, 16, 16, "RPL"),
-            new xCheckbox("Режим оффлайн", 573, 364, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 364, 16, 16, "GML")
-    }; // Название(выполняет роль текста), координаты и размеры, цвет, картинка, активированная картинка, координаты и размеры, переменные(не менять!!!)
+            new xCheckbox("Р—Р°РїРѕРјРЅРёС‚СЊ РїР°СЂРѕР»СЊ", 573, 331, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 331, 16, 16, "RPL"),
+            new xCheckbox("Р РµР¶РёРј РѕС„С„Р»Р°Р№РЅ", 573, 364, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 364, 16, 16, "GML")
+    }; // РќР°Р·РІР°РЅРёРµ(РІС‹РїРѕР»РЅСЏРµС‚ СЂРѕР»СЊ С‚РµРєСЃС‚Р°), РєРѕРѕСЂРґРёРЅР°С‚С‹ Рё СЂР°Р·РјРµСЂС‹, С†РІРµС‚, РєР°СЂС‚РёРЅРєР°, Р°РєС‚РёРІРёСЂРѕРІР°РЅРЅР°СЏ РєР°СЂС‚РёРЅРєР°, РєРѕРѕСЂРґРёРЅР°С‚С‹ Рё СЂР°Р·РјРµСЂС‹, РїРµСЂРµРјРµРЅРЅС‹Рµ(РЅРµ РјРµРЅСЏС‚СЊ!!!)
 
     public static final xHeaderButton[] HeaderButtons = {
             new xHeaderButton("exit", "exit_button.png", "exit_button.png", 775, 6, 14, 14),
             new xHeaderButton("minimize", "minimize_button.png", "minimize_button.png", 745, 6, 14, 14)
-    }; // Название(не менять!!!), картинка, картинка при наведении, координаты и размеры
+    }; // РќР°Р·РІР°РЅРёРµ (РЅРµ РјРµРЅСЏС‚СЊ!), РєР°СЂС‚РёРЅРєР°, РєР°СЂС‚РёРЅРєР° РїСЂРё РЅР°РІРµРґРµРЅРёРё, РєРѕРѕСЂРґРёРЅР°С‚С‹ Рё СЂР°Р·РјРµСЂС‹
 
     public static final xTextField[] Fields = {
-            new xTextField("Логин", new Color(114, 114, 114), 20, 560, 232, 200, 14, "login_field.png"),
-            new xTextField("Пароль", new Color(114, 114, 114), 26, 560, 281, 200, 14, "password_field.png"),
-            new xTextField("Память", new Color(114, 114, 114), 6, 560, 411, 120, 20, "memory_field.png")
-    }; // Название(не менять!!!), цвет, максимальное количество символов, координаты и размеры, картинка
+            new xTextField(0, "Р›РѕРіРёРЅ", new Color(114, 114, 114), 20, 560, 232, 200, 14, "login_field.png"),
+            new xTextField(1, "РџР°СЂРѕР»СЊ", new Color(114, 114, 114), 26, 560, 281, 200, 14, "password_field.png"),
+            new xTextField(2, "РџР°РјСЏС‚СЊ", new Color(114, 114, 114), 6, 560, 411, 120, 20, "memory_field.png")
+    }; // id(РЅРµ РјРµРЅСЏС‚СЊ!), РЅР°Р·РІР°РЅРёРµ, С†РІРµС‚, РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ, РєРѕРѕСЂРґРёРЅР°С‚С‹ Рё СЂР°Р·РјРµСЂС‹, РєР°СЂС‚РёРЅРєР°
 
-    public static final int[] LoginFieldBounds = {549, 225}; // Координаты картинки для логина
-    public static final int[] PasswordFieldBounds = {549, 273}; // Координаты картинки для пароля
-    public static final int[] MemoryFieldBounds = {547, 405}; // Координаты картинки для памяти
+    public static final int[] LoginFieldBounds = {549, 225}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ РєР°СЂС‚РёРЅРєРё РґР»СЏ Р»РѕРіРёРЅР°
+    public static final int[] PasswordFieldBounds = {549, 273}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ РєР°СЂС‚РёРЅРєРё РґР»СЏ РїР°СЂРѕР»СЏ
+    public static final int[] MemoryFieldBounds = {547, 405}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ РєР°СЂС‚РёРЅРєРё РґР»СЏ РїР°РјСЏС‚Рё
 
-    public static final int[] LauncherSize = {800, 599}; // Размер лаунчера
-    public static final String Favicon = "favicon.png"; // Значек
-    public static final String FontFile1 = "arial.ttf"; // Название файла первого шрифта
-    public static final String FontFile2 = "MyriadPro.otf"; // Название файла второго шрифта
-    public static final String ClickButtonSound = "click.wav"; // Название файла звука клика
-    public static final String MainPanelBackgroundImage = "launcher_bg.png"; // Картинка фона главной панели лаунчера
-    public static final float[] MainFonts = {12.0F, 12.0F}; // Размеры шрифтов в главной панели
+    public static final int[] LauncherSize = {800, 599}; // Р Р°Р·РјРµСЂ Р»Р°СѓРЅС‡РµСЂР°
+    public static final String Favicon = "favicon.png"; // Р—РЅР°С‡РµРє
+    public static final String FontFile1 = "arial.ttf"; // РќР°Р·РІР°РЅРёРµ С„Р°Р№Р»Р° РїРµСЂРІРѕРіРѕ С€СЂРёС„С‚Р°
+    public static final String FontFile2 = "MyriadPro.otf"; // РќР°Р·РІР°РЅРёРµ С„Р°Р№Р»Р° РІС‚РѕСЂРѕРіРѕ С€СЂРёС„С‚Р°
+    public static final String ClickButtonSound = "click.wav"; // РќР°Р·РІР°РЅРёРµ С„Р°Р№Р»Р° Р·РІСѓРєР° РєР»РёРєР°
+    public static final String MainPanelBackgroundImage = "launcher_bg.png"; // РљР°СЂС‚РёРЅРєР° С„РѕРЅР° РіР»Р°РІРЅРѕР№ РїР°РЅРµР»Рё Р»Р°СѓРЅС‡РµСЂР°
+    public static final float[] MainFonts = {12.0F, 12.0F}; // Р Р°Р·РјРµСЂС‹ С€СЂРёС„С‚РѕРІ РІ РіР»Р°РІРЅРѕР№ РїР°РЅРµР»Рё
 
-    public static final String Logo = "logo.png"; // Картинка-лого
-    public static final int[] LogoBounds = {50, 70}; // Координаты лого
+    public static final String Logo = "logo.png"; // РљР°СЂС‚РёРЅРєР°-Р»РѕРіРѕ
+    public static final int[] LogoBounds = {50, 70}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ Р»РѕРіРѕ
 
-    public static final int[] HeaderBounds = {20, 5, 200, 14}; // Координаты текста на рамке (сверху)
-    public static final Color HeaderColor = new Color(114, 114, 114); // Цвет текста на рамке (сверху)
+    public static final int[] HeaderBounds = {20, 5, 200, 14}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ С‚РµРєСЃС‚Р° РЅР° СЂР°РјРєРµ (СЃРІРµСЂС…Сѓ)
+    public static final Color HeaderColor = new Color(114, 114, 114); // Р¦РІРµС‚ С‚РµРєСЃС‚Р° РЅР° СЂР°РјРєРµ (СЃРІРµСЂС…Сѓ)
 
-    public static final int[] ErrorLabelBounds = {485, 513, 300, 14}; // Координаты панели информации о входе (там, где надпись "Авторизация...")
-    public static final Color ErrorLabelColor = new Color(63, 63, 63); // Цвет текта панели информации о входе
+    public static final int[] ErrorLabelBounds = {485, 513, 300, 14}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ РїР°РЅРµР»Рё РёРЅС„РѕСЂРјР°С†РёРё Рѕ РІС…РѕРґРµ (С‚Р°Рј, РіРґРµ РЅР°РґРїРёСЃСЊ "РђРІС‚РѕСЂРёР·Р°С†РёСЏ...")
+    public static final Color ErrorLabelColor = new Color(63, 63, 63); // Р¦РІРµС‚ С‚РµРєС‚Р° РїР°РЅРµР»Рё РёРЅС„РѕСЂРјР°С†РёРё Рѕ РІС…РѕРґРµ
 
-    public static final int[] PercentLabelBounds = {360, 542, 200, 15}; // Координаты панели с процентами (на полосе загрузки)
-    public static final Color PercentLabelColor = new Color(114, 114, 114); // Цвет текста панели с процентами
+    public static final int[] PercentLabelBounds = {360, 542, 200, 15}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ РїР°РЅРµР»Рё СЃ РїСЂРѕС†РµРЅС‚Р°РјРё (РЅР° РїРѕР»РѕСЃРµ Р·Р°РіСЂСѓР·РєРё)
+    public static final Color PercentLabelColor = new Color(114, 114, 114); // Р¦РІРµС‚ С‚РµРєСЃС‚Р° РїР°РЅРµР»Рё СЃ РїСЂРѕС†РµРЅС‚Р°РјРё
 
-    public static final String MemoryLabelText = "mb"; // Надпись в панели выбора памяти
-    public static final int[] MemoryLabelBounds = {690, 410, 20, 20}; // Координаты надписи в панели выбора памяти
-    public static final Color MemoryLabelColor = new Color(114, 114, 114); // Цвет текста надписи в панели выбора памяти
+    public static final String MemoryLabelText = "mb"; // РќР°РґРїРёСЃСЊ РІ РїР°РЅРµР»Рё РІС‹Р±РѕСЂР° РїР°РјСЏС‚Рё
+    public static final int[] MemoryLabelBounds = {690, 410, 20, 20}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ РЅР°РґРїРёСЃРё РІ РїР°РЅРµР»Рё РІС‹Р±РѕСЂР° РїР°РјСЏС‚Рё
+    public static final Color MemoryLabelColor = new Color(114, 114, 114); // Р¦РІРµС‚ С‚РµРєСЃС‚Р° РЅР°РґРїРёСЃРё РІ РїР°РЅРµР»Рё РІС‹Р±РѕСЂР° РїР°РјСЏС‚Рё
 
-    public static final String[] ScrollbarImages = {"scrollbar.png", "scrollbar_bg.png"}; // Картинки полосы прокрутки
+    public static final String[] ScrollbarImages = {"scrollbar.png", "scrollbar_bg.png"}; // РљР°СЂС‚РёРЅРєРё РїРѕР»РѕСЃС‹ РїСЂРѕРєСЂСѓС‚РєРё
 
-    public static final int[] NewsScrollBarSize = {12, 30}; // Размеры полосы прокрутки новостей
-    // Если включены анимированные новости
-    public static final String[] NewsButtonIcons = {"news_button.png", "news_button.png", "news_button_disabled.png"}; //картинки кнопки новостей
-    public static final int[] NewsButtonBounds = {0, 0, 50, 279}; // Координаты и размеры кнопки новостей
-    public static final int NewsPanelHeight1 = 279; // Высота панели новостей
-    public static final int NewsPanelWidth1 = 330; // Ширина панели новостей
-    public static final int NewsPanelY1 = 180; // Положение панели новостей по высоте
-    public static final String NewsBgImage = "news_panel.png"; // Картинка фона панели новостей
-    // Если выключены анимированные новости
-    public static final int NewsPanelHeight2 = 305; // Высота панели новостей
-    public static final int NewsPanelWidth2 = 430; // Ширина панели новостей
-    public static final int NewsPanelY2 = 180; // Положение панели новостей по высоте
-    public static final int NewsPanelX2 = 50; // Положение панели новостей по ширине
-    public static final Color NewsPanelBgColor2 = new Color(0, 0, 0, 50); // Цвет фона пвнели новостей
+    public static final int[] NewsScrollBarSize = {12, 30}; // Р Р°Р·РјРµСЂС‹ РїРѕР»РѕСЃС‹ РїСЂРѕРєСЂСѓС‚РєРё РЅРѕРІРѕСЃС‚РµР№
+    // Р•СЃР»Рё РІРєР»СЋС‡РµРЅС‹ Р°РЅРёРјРёСЂРѕРІР°РЅРЅС‹Рµ РЅРѕРІРѕСЃС‚Рё
+    public static final String[] NewsButtonIcons = {"news_button.png", "news_button.png", "news_button_disabled.png"}; //РєР°СЂС‚РёРЅРєРё РєРЅРѕРїРєРё РЅРѕРІРѕСЃС‚РµР№
+    public static final int[] NewsButtonBounds = {0, 0, 50, 279}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ Рё СЂР°Р·РјРµСЂС‹ РєРЅРѕРїРєРё РЅРѕРІРѕСЃС‚РµР№
+    public static final int NewsPanelHeight1 = 279; // Р’С‹СЃРѕС‚Р° РїР°РЅРµР»Рё РЅРѕРІРѕСЃС‚РµР№
+    public static final int NewsPanelWidth1 = 330; // РЁРёСЂРёРЅР° РїР°РЅРµР»Рё РЅРѕРІРѕСЃС‚РµР№
+    public static final int NewsPanelY1 = 180; // РџРѕР»РѕР¶РµРЅРёРµ РїР°РЅРµР»Рё РЅРѕРІРѕСЃС‚РµР№ РїРѕ РІС‹СЃРѕС‚Рµ
+    public static final String NewsBgImage = "news_panel.png"; // РљР°СЂС‚РёРЅРєР° С„РѕРЅР° РїР°РЅРµР»Рё РЅРѕРІРѕСЃС‚РµР№
+    // Р•СЃР»Рё РІС‹РєР»СЋС‡РµРЅС‹ Р°РЅРёРјРёСЂРѕРІР°РЅРЅС‹Рµ РЅРѕРІРѕСЃС‚Рё
+    public static final int NewsPanelHeight2 = 305; // Р’С‹СЃРѕС‚Р° РїР°РЅРµР»Рё РЅРѕРІРѕСЃС‚РµР№
+    public static final int NewsPanelWidth2 = 430; // РЁРёСЂРёРЅР° РїР°РЅРµР»Рё РЅРѕРІРѕСЃС‚РµР№
+    public static final int NewsPanelY2 = 180; // РџРѕР»РѕР¶РµРЅРёРµ РїР°РЅРµР»Рё РЅРѕРІРѕСЃС‚РµР№ РїРѕ РІС‹СЃРѕС‚Рµ
+    public static final int NewsPanelX2 = 50; // РџРѕР»РѕР¶РµРЅРёРµ РїР°РЅРµР»Рё РЅРѕРІРѕСЃС‚РµР№ РїРѕ С€РёСЂРёРЅРµ
+    public static final Color NewsPanelBgColor2 = new Color(0, 0, 0, 50); // Р¦РІРµС‚ С„РѕРЅР° РїРІРЅРµР»Рё РЅРѕРІРѕСЃС‚РµР№
 
-    public static final String ServersPanelBackgroundImage = "servers_bg.png"; // Картинка панели выбора серверов
-    public static final String[] ServersImages = {"serverinfobox.png", "serverinfobox_pressed.png"}; // Картинки панелек серверов
-    public static final String[] ServersBarImages = {"serverbar_on.png", "serverbar_off.png", "serverbar_bg.png"}; // Картинки полосы загруженности серверов
-    public static final float[] ServersFonts = {12.0F, 16.0F, 24.0F}; // Размеры шрифтов панели серверов
-    public static final int[] ServersScrollPanelBounds = {20, 65, 760, 495}; // Координаты панели с серверами в панели выбора серверов
-    public static final int[] ServersInScrollPanelSize = {740, xSettingsOfTheme.Servers.length * 120}; // Размеры листа с серверами
-    public static final int[] ServersScrollBarSize = {17, 479}; // Размеры полосы прокрутки панели серверов
+    public static final String ServersPanelBackgroundImage = "servers_bg.png"; // РљР°СЂС‚РёРЅРєР° РїР°РЅРµР»Рё РІС‹Р±РѕСЂР° СЃРµСЂРІРµСЂРѕРІ
+    public static final String[] ServersImages = {"serverinfobox.png", "serverinfobox_pressed.png"}; // РљР°СЂС‚РёРЅРєРё РїР°РЅРµР»РµРє СЃРµСЂРІРµСЂРѕРІ
+    public static final String[] ServersBarImages = {"serverbar_on.png", "serverbar_off.png", "serverbar_bg.png"}; // РљР°СЂС‚РёРЅРєРё РїРѕР»РѕСЃС‹ Р·Р°РіСЂСѓР¶РµРЅРЅРѕСЃС‚Рё СЃРµСЂРІРµСЂРѕРІ
+    public static final float[] ServersFonts = {12.0F, 16.0F, 24.0F}; // Р Р°Р·РјРµСЂС‹ С€СЂРёС„С‚РѕРІ РїР°РЅРµР»Рё СЃРµСЂРІРµСЂРѕРІ
+    public static final int[] ServersScrollPanelBounds = {20, 65, 760, 495}; // РљРѕРѕСЂРґРёРЅР°С‚С‹ РїР°РЅРµР»Рё СЃ СЃРµСЂРІРµСЂР°РјРё РІ РїР°РЅРµР»Рё РІС‹Р±РѕСЂР° СЃРµСЂРІРµСЂРѕРІ
+    public static final int[] ServersInScrollPanelSize = {740, xSettingsOfTheme.Servers.length * 120}; // Р Р°Р·РјРµСЂС‹ Р»РёСЃС‚Р° СЃ СЃРµСЂРІРµСЂР°РјРё
+    public static final int[] ServersScrollBarSize = {17, 479}; // Р Р°Р·РјРµСЂС‹ РїРѕР»РѕСЃС‹ РїСЂРѕРєСЂСѓС‚РєРё РїР°РЅРµР»Рё СЃРµСЂРІРµСЂРѕРІ
 
-    public static final int[] ErrorPanelSize = {500, 200}; //размеры окна ошибок (выводится в самой игре)
-    public static final Color ErrorPanelTextColor = Color.red; //цвет текста в окне ошибок
-    public static final float ErrorPanelTextSize = 20.0F; //размер текста в окне ошибок
-    public static final String ErrorPanelImage = "errorpanel.png"; //фон в окне ошибок
+    public static final int[] ErrorPanelSize = {500, 200}; //СЂР°Р·РјРµСЂС‹ РѕРєРЅР° РѕС€РёР±РѕРє (РІС‹РІРѕРґРёС‚СЃСЏ РІ СЃР°РјРѕР№ РёРіСЂРµ)
+    public static final Color ErrorPanelTextColor = Color.red; //С†РІРµС‚ С‚РµРєСЃС‚Р° РІ РѕРєРЅРµ РѕС€РёР±РѕРє
+    public static final float ErrorPanelTextSize = 20.0F; //СЂР°Р·РјРµСЂ С‚РµРєСЃС‚Р° РІ РѕРєРЅРµ РѕС€РёР±РѕРє
+    public static final String ErrorPanelImage = "errorpanel.png"; //С„РѕРЅ РІ РѕРєРЅРµ РѕС€РёР±РѕРє
 }

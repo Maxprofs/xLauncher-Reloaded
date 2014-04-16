@@ -27,7 +27,7 @@ class xSelectTheme extends JPanel {
     private Font serverFont2 = null;
 
     public xSelectTheme() {
-        System.out.println("Выбор сервера");
+        System.out.println("Р’С‹Р±РѕСЂ СЃРµСЂРІРµСЂР°");
 
         setLayout(null);
         setMinimumSize(new Dimension(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]));

@@ -10,7 +10,7 @@ class xErrorPanel extends JDialog {
 
     public xErrorPanel(Frame parent, String error) {
         super(parent);
-        setTitle("Œ¯Ë·Í‡");
+        setTitle("–û—à–∏–±–∫–∞");
         setSize(xSettingsOfTheme.ErrorPanelSize[0], xSettingsOfTheme.ErrorPanelSize[1] + 20);
         setResizable(false);
         setModal(true);
