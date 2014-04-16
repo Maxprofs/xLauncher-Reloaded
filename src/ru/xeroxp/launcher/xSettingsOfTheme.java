@@ -4,7 +4,7 @@ import java.awt.*;
 
 class xSettingsOfTheme {
     public static final xServer[] Servers = {
-            new xServer(0, "MagicWars", "s2.high-sky.ru", "27897", "client", "Forge1.6.4.jar", "1.6.4", 100, 0, 0, 724, 110, 6, 6, 180, 98, 500, 30, 200, 24, new Color(114, 114, 114), 450, 78, 70, 14, new Color(114, 114, 114), 231, 71, 484.0D, 29),
+            new xServer(0, "MagicWars", "localhost", "25565", "client", "Forge1.6.4.jar", "1.6.4", 100, 0, 0, 724, 110, 6, 6, 180, 98, 500, 30, 200, 24, new Color(114, 114, 114), 450, 78, 70, 14, new Color(114, 114, 114), 231, 71, 484.0D, 29),
             new xServer(1, "Hitech", "localhost", "25565", "sandbox", "minecraft.jar", "1.4.7", 100, 0, 120, 724, 110, 6, 126, 180, 98, 500, 150, 200, 24, new Color(114, 114, 114), 450, 198, 70, 14, new Color(114, 114, 114), 231, 191, 484.0D, 29),
             new xServer(2, "Rpg", "localhost", "25565", "new", "minecraft.jar", "1.6.0", 100, 0, 240, 724, 110, 6, 246, 180, 98, 500, 270, 200, 24, new Color(114, 114, 114), 450, 318, 70, 14, new Color(114, 114, 114), 231, 311, 484.0D, 29),
             new xServer(3, "Sandbox", "localhost", "25565", "", "minecraft.jar", "1.4.7", 80, 0, 360, 724, 110, 6, 366, 180, 98, 500, 390, 200, 24, new Color(114, 114, 114), 450, 438, 70, 14, new Color(114, 114, 114), 231, 431, 484.0D, 29),
@@ -75,6 +75,7 @@ class xSettingsOfTheme {
     public static final String[] ScrollbarImages = {"scrollbar.png", "scrollbar_bg.png"}; // Картинки полосы прокрутки
 
     public static final int[] NewsScrollBarSize = {12, 30}; // Размеры полосы прокрутки новостей
+
     // Если включены анимированные новости
     public static final String[] NewsButtonIcons = {"news_button.png", "news_button.png", "news_button_disabled.png"}; //картинки кнопки новостей
     public static final int[] NewsButtonBounds = {0, 0, 50, 279}; // Координаты и размеры кнопки новостей
@@ -82,6 +83,7 @@ class xSettingsOfTheme {
     public static final int NewsPanelWidth1 = 330; // Ширина панели новостей
     public static final int NewsPanelY1 = 180; // Положение панели новостей по высоте
     public static final String NewsBgImage = "news_panel.png"; // Картинка фона панели новостей
+
     // Если выключены анимированные новости
     public static final int NewsPanelHeight2 = 305; // Высота панели новостей
     public static final int NewsPanelWidth2 = 430; // Ширина панели новостей
