@@ -1,4 +1,6 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui.elements;
+
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ public class xCheckbox {
     public static final byte REMEMBER_PASS_ID = 0;
     public static final byte OFFLINE_MODE_ID = 1;
 
-    private static final List checkboxes = new ArrayList();
+    private static final List<xCheckbox> checkboxes = new ArrayList<xCheckbox>();
     private final int id;
     private final String checkboxLabel;
     private final int labelX;

@@ -1,6 +1,12 @@
 package ru.xeroxp.launcher;
 
 import net.minecraft.Launcher;
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.gui.elements.xServer;
+import ru.xeroxp.launcher.gui.xSelectTheme;
+import ru.xeroxp.launcher.gui.xTheme;
+import ru.xeroxp.launcher.utils.xUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,7 +22,7 @@ import java.net.URLConnection;
 
 public class xLauncher extends JFrame {
     private static xLauncher launcher;
-    private static boolean oldver = true;
+    private static boolean oldVer = true;
     private xMinecraftFrame minecraft;
     private xOnlineThread online;
     private final xTheme theme;
@@ -44,6 +50,7 @@ public class xLauncher extends JFrame {
         }
 
         addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     xLauncher.this.initialClick = e.getPoint();
@@ -52,6 +59,7 @@ public class xLauncher extends JFrame {
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
             public void mouseDragged(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     int thisX = xLauncher.this.getLocation().x;
@@ -102,7 +110,7 @@ public class xLauncher extends JFrame {
         launcher.setVisible(false);
         launcher.dispose();
         minecraft = new xMinecraftFrame(this.login, this.session, server, port, folder, jar, version);
-        if (oldver) {
+        if (oldVer) {
             minecraft.setVisible(true);
             minecraft.pack();
         }
@@ -117,7 +125,7 @@ public class xLauncher extends JFrame {
             login = "Player";
         }
         minecraft = new xMinecraftFrame(login);
-        if (oldver) {
+        if (oldVer) {
             minecraft.setVisible(true);
             minecraft.pack();
         }
@@ -181,7 +189,7 @@ public class xLauncher extends JFrame {
             if (((versionr.length() == 3) && (Integer.parseInt(versionr) >= 160)) || ((versionr.length() == 2) && (Integer.parseInt(versionr) >= 16))) {
                 old = false;
             }
-            oldver = old;
+            oldVer = old;
             xMain.cm.start();
             if (old) {
                 Launcher applet = new Launcher();
@@ -214,7 +222,7 @@ public class xLauncher extends JFrame {
             if (((versionr.length() == 3) && (Integer.parseInt(versionr) >= 160)) || ((versionr.length() == 2) && (Integer.parseInt(versionr) >= 16))) {
                 old = false;
             }
-            oldver = old;
+            oldVer = old;
             xMain.cm.start();
             if (old) {
                 Launcher applet = new Launcher();

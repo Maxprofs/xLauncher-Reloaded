@@ -1,7 +1,7 @@
 package net.minecraft;
 
-import ru.xeroxp.launcher.xSettings;
-import ru.xeroxp.launcher.xUtils;
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.utils.xUtils;
 
 import java.applet.Applet;
 import java.applet.AppletStub;

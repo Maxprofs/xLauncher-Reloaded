@@ -1,4 +1,6 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui;
+
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -6,8 +8,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
-class xErrorPanel extends JDialog {
-
+public class xErrorPanel extends JDialog {
     public xErrorPanel(Frame parent, String error) {
         super(parent);
         setTitle("Ошибка");
@@ -22,6 +23,7 @@ class xErrorPanel extends JDialog {
         add(backgroundBg);
         InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.FontFile1);
         Font arial = null;
+
         try {
             arial = Font.createFont(0, is);
             arial = arial.deriveFont(0, xSettingsOfTheme.ErrorPanelTextSize);
@@ -32,6 +34,7 @@ class xErrorPanel extends JDialog {
             System.out.println("Failed load font");
             System.out.println(e2.getMessage());
         }
+
         JLabel errorLabel = new JLabel(error);
         errorLabel.setBounds(0, 0, xSettingsOfTheme.ErrorPanelSize[0], xSettingsOfTheme.ErrorPanelSize[1]);
         errorLabel.setFont(arial);
@@ -46,6 +49,7 @@ class xErrorPanel extends JDialog {
 
         public BackgroundRegisterPanel() {
             setOpaque(true);
+
             try {
                 bgImage = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.ErrorPanelImage)).getScaledInstance(xSettingsOfTheme.ErrorPanelSize[0], xSettingsOfTheme.ErrorPanelSize[1], 1);
             } catch (IOException e) {
@@ -57,6 +61,7 @@ class xErrorPanel extends JDialog {
         public void paintComponent(Graphics g2) {
             int w = getWidth();
             int h = getHeight();
+
             if ((img == null) || (img.getWidth(null) != w) || (img.getHeight(null) != h)) {
                 img = createImage(w, h);
 
@@ -68,6 +73,7 @@ class xErrorPanel extends JDialog {
 
                 g.dispose();
             }
+
             g2.drawImage(img, 0, 0, w, h, null);
         }
     }

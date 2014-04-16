@@ -1,6 +1,6 @@
 package ru.xeroxp.launcher.process;
 
-import ru.xeroxp.launcher.xUtils;
+import ru.xeroxp.launcher.utils.xUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class JavaProcessLauncher {
     }
 
     List<String> getFullCommands() {
-        ArrayList<String> result = new ArrayList<String>(this.commands);
+        List<String> result = new ArrayList<String>(this.commands);
         result.add(0, this.getJavaPath());
         return result;
     }

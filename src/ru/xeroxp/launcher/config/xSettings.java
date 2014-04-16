@@ -1,4 +1,6 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.config;
+
+import ru.xeroxp.launcher.xServerConnect;
 
 public class xSettings {
     public static final String siteLink = "http://magicwars.high-sky.ru/"; // Ссылка на главную страницу сайта

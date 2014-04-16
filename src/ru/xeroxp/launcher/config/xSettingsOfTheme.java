@@ -1,8 +1,11 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.config;
+
+import ru.xeroxp.launcher.gui.elements.*;
+import ru.xeroxp.launcher.gui.xHeaderButton;
 
 import java.awt.*;
 
-class xSettingsOfTheme {
+public class xSettingsOfTheme {
     public static final xServer[] Servers = {
             new xServer(0, "MagicWars", "localhost", "25565", "client", "Forge1.6.4.jar", "1.6.4", 100, 0, 0, 724, 110, 6, 6, 180, 98, 500, 30, 200, 24, new Color(114, 114, 114), 450, 78, 70, 14, new Color(114, 114, 114), 231, 71, 484.0D, 29),
             new xServer(1, "Hitech", "localhost", "25565", "sandbox", "minecraft.jar", "1.4.7", 100, 0, 120, 724, 110, 6, 126, 180, 98, 500, 150, 200, 24, new Color(114, 114, 114), 450, 198, 70, 14, new Color(114, 114, 114), 231, 191, 484.0D, 29),

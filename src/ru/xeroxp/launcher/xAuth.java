@@ -1,5 +1,12 @@
 package ru.xeroxp.launcher;
 
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.gui.elements.xServer;
+import ru.xeroxp.launcher.gui.xTheme;
+import ru.xeroxp.launcher.utils.xCipherUtils;
+import ru.xeroxp.launcher.utils.xUtils;
+
 import javax.imageio.ImageIO;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -16,8 +23,7 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-class xAuth implements Runnable {
-
+public class xAuth implements Runnable {
     private final String login;
     private final String password;
     private final xTheme theme;

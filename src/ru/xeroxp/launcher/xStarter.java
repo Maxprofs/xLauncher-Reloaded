@@ -1,15 +1,19 @@
 package ru.xeroxp.launcher;
 
+import ru.xeroxp.launcher.gui.xTheme;
+import ru.xeroxp.launcher.utils.xUtils;
+
 import java.util.ArrayList;
+import java.util.List;
 
 class xStarter {
     public static void main(String[] args) throws Exception {
         try {
-            String jarpath = xStarter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            String jarPath = xStarter.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
             String memory = xTheme.readMemory();
             if (memory == null || memory.isEmpty()) memory = Integer.toString(512);
 
-            ArrayList<String> params = new ArrayList<String>();
+            List<String> params = new ArrayList<String>();
             if (xUtils.getPlatform().toString().equals("windows")) params.add("javaw");
             else params.add("java");
             params.add("-Xmx" + memory + "m");
@@ -18,7 +22,7 @@ class xStarter {
             params.add("-Dsun.java2d.opengl=false");
             params.add("-Dsun.java2d.pmoffscreen=false");
             params.add("-classpath");
-            params.add(jarpath);
+            params.add(jarPath);
             params.add("ru.xeroxp.launcher.xMain");
 
             ProcessBuilder pb = new ProcessBuilder(params);

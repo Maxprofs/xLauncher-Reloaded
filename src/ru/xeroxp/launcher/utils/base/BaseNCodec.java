@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ru.xeroxp.launcher.utils;
+package ru.xeroxp.launcher.utils.base;
 
 import java.util.Arrays;
 

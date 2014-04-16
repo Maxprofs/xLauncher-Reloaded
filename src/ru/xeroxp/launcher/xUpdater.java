@@ -1,5 +1,11 @@
 package ru.xeroxp.launcher;
 
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.gui.elements.xButton;
+import ru.xeroxp.launcher.gui.xTheme;
+import ru.xeroxp.launcher.utils.xUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;

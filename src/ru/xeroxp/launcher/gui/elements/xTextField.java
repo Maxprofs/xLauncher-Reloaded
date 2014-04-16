@@ -1,4 +1,6 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui.elements;
+
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ public class xTextField {
     public final static byte PASS_ID = 1;
     public final static byte RAM_ID = 2;
 
-    private static final List fields = new ArrayList();
+    private static final List<xTextField> fields = new ArrayList<xTextField>();
     private final int id;
     private final String fieldName;
     private final Color fieldColor;

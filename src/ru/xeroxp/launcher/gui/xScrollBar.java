@@ -1,4 +1,6 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui;
+
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -7,17 +9,17 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
 
-class xScrollBar {
-    static class MyScrollbarUI extends MetalScrollBarUI {
-
+public class xScrollBar {
+    public static class MyScrollbarUI extends MetalScrollBarUI {
         private Image imageThumb, imageTrack;
         private final JButton b = new JButton() {
+            @Override
             public Dimension getPreferredSize() {
                 return new Dimension(0, 0);
             }
         };
 
-        MyScrollbarUI() {
+        public MyScrollbarUI() {
             try {
                 imageThumb = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.ScrollbarImages[0]));
                 imageTrack = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.ScrollbarImages[1]));

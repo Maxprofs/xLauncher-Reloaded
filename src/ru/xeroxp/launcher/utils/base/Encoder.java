@@ -15,24 +15,9 @@
  * limitations under the License.
  */
 
-package ru.xeroxp.launcher.utils;
+package ru.xeroxp.launcher.utils.base;
 
-@SuppressWarnings("SameParameterValue")
-class EncoderException extends Exception {
-
-    public EncoderException() {
-        super();
-    }
-
-    public EncoderException(final String message) {
-        super(message);
-    }
-
-    public EncoderException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
-
-    public EncoderException(final Throwable cause) {
-        super(cause);
-    }
+interface Encoder {
+    Object encode(Object source) throws EncoderException;
 }
+

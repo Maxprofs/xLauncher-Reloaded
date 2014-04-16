@@ -1,4 +1,6 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui.elements;
+
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.List;
 @SuppressWarnings("SameParameterValue")
 public class xServer {
 
-    private static final List servers = new ArrayList();
+    private static final List<xServer> servers = new ArrayList<xServer>();
     private final int id;
     private final String serverName;
     private final String ip;

@@ -1,4 +1,10 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui;
+
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.gui.elements.xServer;
+import ru.xeroxp.launcher.xLauncher;
+import ru.xeroxp.launcher.xMain;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
@@ -10,7 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-class xSelectTheme extends JPanel {
+public class xSelectTheme extends JPanel {
     private final JLabel[] serverOnline = new JLabel[xServer.getSize()];
     private BufferedImage background;
     private BufferedImage onlineBar;

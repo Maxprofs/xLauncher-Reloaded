@@ -1,5 +1,8 @@
-//class author dr.death
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui;
+
+/**
+ * Class author: Dr.Death
+ */
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,25 +16,25 @@ public class xAnimation implements ActionListener {
     private final Component newComp;
     private final Timer timer;
     private final int goodX;
-    private final AnimationType anitype;
+    private final AnimationType aniType;
 
     public xAnimation(Component oldComp, Component newComp, int goodX, AnimationType type) {
         this.oldComp = oldComp;
         this.newComp = newComp;
         this.goodX = goodX;
         timer = new Timer(1 / 10, this);
-        this.anitype = type;
+        this.aniType = type;
     }
 
-    @SuppressWarnings("static-access")
     public void start() {
         while (animationRunning) {
             try {
-                Thread.currentThread().sleep(100L);
+                Thread.sleep(100L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
         animationRunning = true;
         timer.start();
     }
@@ -40,13 +43,15 @@ public class xAnimation implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         int oldX = oldComp.getX();
         int newX = newComp.getX();
-        if (anitype == AnimationType.RIGHT_TO_LEFT_SLIDE) {
+
+        if (aniType == AnimationType.RIGHT_TO_LEFT_SLIDE) {
             oldX--;
             newX--;
         } else {
             oldX++;
             newX++;
         }
+
         if (newX != goodX) {
             oldComp.setBounds(oldX, oldComp.getY(), oldComp.getWidth(),
                     oldComp.getHeight());

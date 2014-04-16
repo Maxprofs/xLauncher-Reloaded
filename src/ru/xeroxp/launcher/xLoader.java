@@ -1,8 +1,11 @@
 package ru.xeroxp.launcher;
 
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.gui.xTheme;
 import ru.xeroxp.launcher.process.JavaProcess;
 import ru.xeroxp.launcher.process.JavaProcessLauncher;
 import ru.xeroxp.launcher.process.JavaProcessRunnable;
+import ru.xeroxp.launcher.utils.xUtils;
 
 import java.io.File;
 
@@ -12,7 +15,7 @@ public class xLoader implements JavaProcessRunnable {
     private boolean isWorking = false;
     private final String userName;
     private String sessionId = "0";
-    private final String jarfile;
+    private final String jarFile;
     private String server = "0";
     private String port = "25565";
     private final String folder;
@@ -23,7 +26,7 @@ public class xLoader implements JavaProcessRunnable {
         this.sessionId = sessionId;
         this.server = server;
         this.port = port;
-        this.jarfile = jar;
+        this.jarFile = jar;
         this.folder = folder;
         this.version = version;
         playGame();
@@ -31,7 +34,7 @@ public class xLoader implements JavaProcessRunnable {
 
     public xLoader(String userName) {
         this.userName = userName;
-        this.jarfile = xSettings.offlineClient[1];
+        this.jarFile = xSettings.offlineClient[1];
         this.folder = xSettings.offlineClient[0];
         this.version = xSettings.offlineClient[2];
         playGame();
@@ -41,27 +44,18 @@ public class xLoader implements JavaProcessRunnable {
         String libraries = "";
         File[] files = path.listFiles();
 
-        assert files != null;
-        if (files.length == 0) {
+        if (files == null || files.length == 0) {
             return "";
         }
+
         for (File file : files) {
             if (file.isDirectory()) {
-                String slibraries = getLibraries(new File(path + File.separator + file.getName()));
-                if (libraries.isEmpty()) {
-                    libraries = slibraries;
-                } else {
-                    libraries = libraries + ";" + slibraries;
-                }
-            }
-            if (file.isFile()) {
-                if (libraries.isEmpty()) {
-                    libraries = file.getAbsolutePath();
-                } else {
-                    libraries = libraries + ";" + file.getAbsolutePath();
-                }
+                libraries = ((libraries.isEmpty()) ? "" : libraries + ";") + getLibraries(new File(path + File.separator + file.getName()));
+            } else if (file.isFile()) {
+                libraries = ((libraries.isEmpty()) ? "" : libraries + ";") + file.getAbsolutePath();
             }
         }
+
         return libraries;
     }
 
@@ -98,13 +92,13 @@ public class xLoader implements JavaProcessRunnable {
                 nativesPath = new File(xUtils.getDirectory(), "bin" + separator + "natives");
                 libraryPath = new File(xUtils.getDirectory(), "libraries");
                 workDir = xUtils.getDirectory();
-                jarPath = new File(xUtils.getDirectory(), "bin" + separator + this.jarfile);
+                jarPath = new File(xUtils.getDirectory(), "bin" + separator + this.jarFile);
                 assetsDir = new File(xUtils.getDirectory(), "assets");
             } else {
                 nativesPath = new File(xUtils.getDirectory(), this.folder + separator + "bin" + separator + "natives");
                 libraryPath = new File(xUtils.getDirectory(), this.folder + separator + "libraries");
                 workDir = new File(xUtils.getDirectory(), this.folder);
-                jarPath = new File(xUtils.getDirectory(), this.folder + separator + "bin" + separator + this.jarfile);
+                jarPath = new File(xUtils.getDirectory(), this.folder + separator + "bin" + separator + this.jarFile);
                 assetsDir = new File(xUtils.getDirectory(), this.folder + separator + "assets");
             }
 
@@ -118,7 +112,7 @@ public class xLoader implements JavaProcessRunnable {
 
             JavaProcessLauncher processLauncher = new JavaProcessLauncher(xUtils.getJavaExecutable(), new String[0]);
 
-            if (jarfile.toLowerCase().contains("forge")) {
+            if (jarFile.toLowerCase().contains("forge")) {
                 processLauncher.addCommands("-Dfml.ignoreInvalidMinecraftCertificates=true");
                 processLauncher.addCommands("-Dfml.ignorePatchDiscrepancies=true");
             }
@@ -134,7 +128,7 @@ public class xLoader implements JavaProcessRunnable {
             processLauncher.addCommands("\"" + "-Djava.library.path=" + nativesPath.getAbsolutePath() + "\"");
             processLauncher.addCommands("-cp", "\"" + libraries + "\"");
 
-            if (jarfile.toLowerCase().contains("forge")) {
+            if (jarFile.toLowerCase().contains("forge")) {
                 processLauncher.addCommands("net.minecraft.launchwrapper.Launch");
                 processLauncher.addCommands("--tweakClass", "cpw.mods.fml.common.launcher.FMLTweaker");
             } else {

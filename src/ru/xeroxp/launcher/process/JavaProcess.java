@@ -3,12 +3,12 @@ package ru.xeroxp.launcher.process;
 import java.util.List;
 
 public class JavaProcess {
-    private final List commands;
+    private final List<String> commands;
     private final Process process;
     private final LimitedCapacityList sysOutLines = new LimitedCapacityList(String.class, 5);
     private JavaProcessRunnable onExit;
 
-    public JavaProcess(List commands, Process process) {
+    public JavaProcess(List<String> commands, Process process) {
         this.commands = commands;
         this.process = process;
         ProcessMonitorThread monitor = new ProcessMonitorThread(this);

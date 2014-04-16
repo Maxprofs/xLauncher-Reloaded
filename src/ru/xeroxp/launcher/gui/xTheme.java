@@ -1,4 +1,14 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui;
+
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.gui.elements.xButton;
+import ru.xeroxp.launcher.gui.elements.xCheckbox;
+import ru.xeroxp.launcher.gui.elements.xLabel;
+import ru.xeroxp.launcher.gui.elements.xTextField;
+import ru.xeroxp.launcher.xAuth;
+import ru.xeroxp.launcher.xLauncher;
+import ru.xeroxp.launcher.xMain;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
@@ -17,7 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.regex.Pattern;
 
-import static ru.xeroxp.launcher.xUtils.getDirectory;
+import static ru.xeroxp.launcher.utils.xUtils.getDirectory;
 
 @SuppressWarnings("SameParameterValue")
 public class xTheme extends JPanel {
@@ -34,8 +44,10 @@ public class xTheme extends JPanel {
         }
     };
     private final ActionListener RememberMemListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
             new Thread(new Runnable() {
+                @Override
                 public void run() {
                     String mem = xSliderValue.getText();
                     xAuth.rememberMemory((Integer.parseInt(mem) < 128) ? "128" : mem);

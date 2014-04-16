@@ -1,4 +1,6 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui.elements;
+
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.List;
 @SuppressWarnings("SameParameterValue")
 public class xLabel {
 
-    private static final List labels = new ArrayList();
+    private static final List<xLabel> labels = new ArrayList<xLabel>();
     private final String labelName;
     private final Color labelColor;
     private final int labelX;

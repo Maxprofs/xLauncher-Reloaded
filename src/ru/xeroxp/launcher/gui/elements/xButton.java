@@ -1,4 +1,6 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.gui.elements;
+
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,20 +8,26 @@ import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
-public class xHeaderButton {
-    private static final List buttons = new ArrayList();
-    private final String buttonName;
+public class xButton {
+    public static final byte UPDATE_ID = 0;
+    public static final byte AUTH_ID = 1;
+    public static final byte RAM_ID = 2;
+
+    private static final List<xButton> buttons = new ArrayList<xButton>();
+    private final int id;
     private final String image;
-    private final String onmouseimage;
+    private final String pressedImage;
+    private final String disabledImage;
     private final int imageX;
     private final int imageY;
     private final int imageSizeX;
     private final int imageSizeY;
 
-    public xHeaderButton(String buttonName, String image, String onmouseimage, int imageX, int imageY, int imageSizeX, int imageSizeY) {
-        this.buttonName = buttonName;
+    public xButton(int id, String image, String pressedImage, String disabledImage, int imageX, int imageY, int imageSizeX, int imageSizeY) {
+        this.id = id;
         this.image = image;
-        this.onmouseimage = onmouseimage;
+        this.pressedImage = pressedImage;
+        this.disabledImage = disabledImage;
         this.imageX = imageX;
         this.imageY = imageY;
         this.imageSizeX = imageSizeX;
@@ -28,32 +36,36 @@ public class xHeaderButton {
 
     public static void loadButtons() {
         buttons.clear();
-        Collections.addAll(buttons, xSettingsOfTheme.HeaderButtons);
+        Collections.addAll(buttons, xSettingsOfTheme.Buttons);
     }
 
-    public static xHeaderButton[] getButtons() {
+    public static xButton[] getButtons() {
         int size = buttons.size();
-        xHeaderButton[] buttonsList = new xHeaderButton[size];
+        xButton[] buttonsList = new xButton[size];
         int i = 0;
 
         for (Iterator var4 = buttons.iterator(); var4.hasNext(); ++i) {
-            xHeaderButton button = (xHeaderButton) var4.next();
+            xButton button = (xButton) var4.next();
             buttonsList[i] = button;
         }
 
         return buttonsList;
     }
 
-    public String getButtonName() {
-        return this.buttonName;
+    public int getId() {
+        return this.id;
     }
 
     public String getImage() {
         return this.image;
     }
 
-    public String getOnMouseImage() {
-        return this.onmouseimage;
+    public String getPressedImage() {
+        return this.pressedImage;
+    }
+
+    public String getDisabledImage() {
+        return this.disabledImage;
     }
 
     public int getImageX() {

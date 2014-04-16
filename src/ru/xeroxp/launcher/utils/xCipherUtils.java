@@ -1,12 +1,13 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.utils;
 
-import ru.xeroxp.launcher.utils.Base64;
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.utils.base.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Random;
 
-class xCipherUtils {
+public class xCipherUtils {
     private static final byte[] key = xSettings.key;
 
     public static String encrypt(String strToEncrypt) {

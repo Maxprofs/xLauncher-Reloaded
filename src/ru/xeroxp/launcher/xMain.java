@@ -1,5 +1,9 @@
 package ru.xeroxp.launcher;
 
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.gui.xErrorPanel;
+import ru.xeroxp.launcher.gui.xTheme;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +12,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
-class xMain {
+public class xMain {
 
     private static String version = xSettings.launcherVersion;
     public static boolean error = false;
@@ -22,7 +27,7 @@ class xMain {
         } else {
             try {
                 String e = xMain.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-                ArrayList<String> params = new ArrayList<String>();
+                List<String> params = new ArrayList<String>();
                 params.add("javaw");
                 params.add("-Xmx512m");
                 params.add("-classpath");
@@ -142,7 +147,7 @@ class xMain {
 
         assert currentJar != null;
         if (currentJar.getName().endsWith(".jar") || currentJar.getName().endsWith(".exe")) {
-            ArrayList<String> command = new ArrayList<String>();
+            List<String> command = new ArrayList<String>();
             command.add(javaBin);
             command.add("-jar");
             command.add(currentJar.getPath());

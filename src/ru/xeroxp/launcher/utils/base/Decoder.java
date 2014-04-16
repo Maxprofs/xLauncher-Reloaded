@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package ru.xeroxp.launcher.utils;
+package ru.xeroxp.launcher.utils.base;
 
-interface Encoder {
-    Object encode(Object source) throws EncoderException;
+interface Decoder {
+    Object decode(Object source) throws DecoderException;
 }
 

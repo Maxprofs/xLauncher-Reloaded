@@ -15,9 +15,24 @@
  * limitations under the License.
  */
 
-package ru.xeroxp.launcher.utils;
+package ru.xeroxp.launcher.utils.base;
 
-interface BinaryDecoder extends Decoder {
-    byte[] decode(byte[] source);
+@SuppressWarnings("SameParameterValue")
+class EncoderException extends Exception {
+
+    public EncoderException() {
+        super();
+    }
+
+    public EncoderException(final String message) {
+        super(message);
+    }
+
+    public EncoderException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public EncoderException(final Throwable cause) {
+        super(cause);
+    }
 }
-

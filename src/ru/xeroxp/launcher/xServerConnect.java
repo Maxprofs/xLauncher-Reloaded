@@ -1,5 +1,7 @@
 package ru.xeroxp.launcher;
 
+import ru.xeroxp.launcher.config.xSettings;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -8,7 +10,7 @@ import java.util.List;
 @SuppressWarnings("SameParameterValue")
 public class xServerConnect {
 
-    private static final List connectServers = new ArrayList();
+    private static final List<xServerConnect> connectServers = new ArrayList<xServerConnect>();
     private final String serverIp;
     private final int serverPort;
 

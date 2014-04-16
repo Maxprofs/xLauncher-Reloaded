@@ -1,4 +1,8 @@
-package ru.xeroxp.launcher;
+package ru.xeroxp.launcher.utils;
+
+import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.gui.elements.xServer;
 
 import java.io.File;
 import java.io.FilenameFilter;
