@@ -108,6 +108,7 @@ class xSelectTheme extends JPanel {
         addHeaderButtons();
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         g.drawImage(this.background, 0, 0, this);
     }
@@ -155,6 +156,7 @@ class xSelectTheme extends JPanel {
             headerButtons.setBounds(headerButton.getImageX(), headerButton.getImageY(), headerButton.getImageSizeX(), headerButton.getImageSizeY());
             headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getImage())));
             headerButtons.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (headerButton.getButtonName().equals("exit")) {
                         System.exit(0);
@@ -163,10 +165,12 @@ class xSelectTheme extends JPanel {
                     }
                 }
 
+                @Override
                 public void mouseEntered(MouseEvent e) {
                     headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getOnMouseImage())));
                 }
 
+                @Override
                 public void mouseExited(MouseEvent e) {
                     headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getImage())));
                 }
@@ -187,6 +191,7 @@ class xSelectTheme extends JPanel {
             serverImage.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
             serverImage.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (!xSelectTheme.this.sendReady) {
                         if (xSelectTheme.this.clip != null) {
@@ -198,16 +203,19 @@ class xSelectTheme extends JPanel {
                     }
                 }
 
+                @Override
                 public void mouseEntered(MouseEvent e) {
                     serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersImages[1])));
                 }
 
+                @Override
                 public void mouseExited(MouseEvent e) {
                     serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersImages[0])));
                 }
             });
 
             serverIcon.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (!xSelectTheme.this.sendReady) {
                         if (xSelectTheme.this.clip != null) {
@@ -219,10 +227,12 @@ class xSelectTheme extends JPanel {
                     }
                 }
 
+                @Override
                 public void mouseEntered(MouseEvent e) {
                     serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersImages[1])));
                 }
 
+                @Override
                 public void mouseExited(MouseEvent e) {
                     serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersImages[0])));
                 }

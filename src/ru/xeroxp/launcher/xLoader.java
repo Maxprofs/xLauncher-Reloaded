@@ -146,6 +146,7 @@ public class xLoader implements JavaProcessRunnable {
         }
     }
 
+    @Override
     public void onJavaProcessEnded(JavaProcess process) {
         int exitCode = process.getExitCode();
 

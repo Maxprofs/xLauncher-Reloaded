@@ -32,12 +32,12 @@ class xErrorPanel extends JDialog {
             System.out.println("Failed load font");
             System.out.println(e2.getMessage());
         }
-        JLabel errorlabel = new JLabel(error);
-        errorlabel.setBounds(0, 0, xSettingsOfTheme.ErrorPanelSize[0], xSettingsOfTheme.ErrorPanelSize[1]);
-        errorlabel.setFont(arial);
-        errorlabel.setForeground(xSettingsOfTheme.ErrorPanelTextColor);
-        errorlabel.setHorizontalAlignment(JLabel.CENTER);
-        backgroundBg.add(errorlabel);
+        JLabel errorLabel = new JLabel(error);
+        errorLabel.setBounds(0, 0, xSettingsOfTheme.ErrorPanelSize[0], xSettingsOfTheme.ErrorPanelSize[1]);
+        errorLabel.setFont(arial);
+        errorLabel.setForeground(xSettingsOfTheme.ErrorPanelTextColor);
+        errorLabel.setHorizontalAlignment(JLabel.CENTER);
+        backgroundBg.add(errorLabel);
     }
 
     public class BackgroundRegisterPanel extends JPanel {
@@ -53,10 +53,7 @@ class xErrorPanel extends JDialog {
             }
         }
 
-        public void update(Graphics g) {
-            paint(g);
-        }
-
+        @Override
         public void paintComponent(Graphics g2) {
             int w = getWidth();
             int h = getHeight();

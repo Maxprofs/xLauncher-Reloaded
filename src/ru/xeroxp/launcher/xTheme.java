@@ -42,12 +42,15 @@ public class xTheme extends JPanel {
     };
 
     private final KeyListener JoinKListener = new KeyListener() {
+        @Override
         public void keyTyped(KeyEvent e) {
         }
 
+        @Override
         public void keyReleased(KeyEvent e) {
         }
 
+        @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == 10) {
                 xTheme.this.startAuth();
@@ -199,6 +202,7 @@ public class xTheme extends JPanel {
         return null;
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         g.drawImage(this.background, 0, 0, this);
         g.drawImage(this.logo, xSettingsOfTheme.LogoBounds[0], xSettingsOfTheme.LogoBounds[1], this);
@@ -357,6 +361,7 @@ public class xTheme extends JPanel {
             headerButtons.setBounds(headerButton.getImageX(), headerButton.getImageY(), headerButton.getImageSizeX(), headerButton.getImageSizeY());
             headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getImage())));
             headerButtons.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (headerButton.getButtonName().equals("exit")) {
                         System.exit(0);
@@ -365,10 +370,12 @@ public class xTheme extends JPanel {
                     }
                 }
 
+                @Override
                 public void mouseEntered(MouseEvent e) {
                     headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getOnMouseImage())));
                 }
 
+                @Override
                 public void mouseExited(MouseEvent e) {
                     headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getImage())));
                 }
@@ -494,6 +501,7 @@ public class xTheme extends JPanel {
                 passwordBar.setForeground(field.getFieldColor());
                 passwordBar.setEchoChar('\u25CF');
                 passwordBar.addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         String passToString = new String(passwordBar.getPassword());
                         if (passToString.equals("Пароль")) {
@@ -502,6 +510,7 @@ public class xTheme extends JPanel {
                         }
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         if (passwordBar.getPassword().length == 0) {
                             passwordBar.setEchoChar((char) 0);
@@ -539,10 +548,12 @@ public class xTheme extends JPanel {
                 loginBar.setFont(this.arial);
                 loginBar.setForeground(field.getFieldColor());
                 loginBar.addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         if (loginBar.getText().equals("Логин")) loginBar.setText("");
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         if (loginBar.getText().length() == 0) loginBar.setText("Логин");
                     }
@@ -589,9 +600,11 @@ public class xTheme extends JPanel {
                 }
 
                 xSliderValue.addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         if (xSliderValue.getText().length() == 0) xSliderValue.setText("512");
                     }
@@ -741,6 +754,7 @@ public class xTheme extends JPanel {
             this.limit = limit;
         }
 
+        @Override
         public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
             if (str != null) {
                 super.insertString(offset, str, attr);

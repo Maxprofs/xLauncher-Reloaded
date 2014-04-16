@@ -32,13 +32,14 @@ class xAuth implements Runnable {
     public xAuth(String login, String password, xTheme theme) {
         this(login, theme, strToInt(xorEncode(password)));
     }
-    
+
     public xAuth(String login, xTheme theme, String password) {
         this.theme = theme;
         this.login = login;
         this.password = password;
     }
-    
+
+    @Override
     public void run() {
         this.sendAuth();
     }
@@ -55,7 +56,7 @@ class xAuth implements Runnable {
 
         return string;
     }
-    
+
     private static String byteArrToHexString(byte[] bArr) {
         StringBuilder sb = new StringBuilder();
 
@@ -71,7 +72,7 @@ class xAuth implements Runnable {
 
         return sb.toString();
     }
-    
+
     private void setError(String text) {
         this.theme.setError(text);
     }
@@ -129,14 +130,14 @@ class xAuth implements Runnable {
         socketIp = servers[randomNum].split(";")[0];
         socketPort = Integer.parseInt(servers[randomNum].split(";")[1]);
     }
-    
+
     private void sendAuth() {
         this.theme.setAuth("Авторизация");
         getServerConnect();
         launcherSize();
         getCheckFormats();
         String salt;
-        
+
         try {
             System.out.println("Connection to authorization server");
             InetAddress e = InetAddress.getByName(socketIp);
@@ -146,16 +147,16 @@ class xAuth implements Runnable {
             socket.setEnabledCipherSuites(suites);
             socket.startHandshake();
             socket.setSoTimeout(10000);
-            InputStream sin = socket.getInputStream();
-            OutputStream sout = socket.getOutputStream();
-            DataInputStream in = new DataInputStream(sin);
-            DataOutputStream out = new DataOutputStream(sout);
+            InputStream inputStream = socket.getInputStream();
+            OutputStream outputStream = socket.getOutputStream();
+            DataInputStream dataInputStream = new DataInputStream(inputStream);
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
             salt = xCipherUtils.genSalt(symbolsCount);
-            out.writeUTF("0:" + xCipherUtils.encrypt(salt + this.login + ":" + this.password + ":" + xMain.getVersion() + ":" + launcherFormat + ":" + launcherSize));
-            out.flush();
+            dataOutputStream.writeUTF("0:" + xCipherUtils.encrypt(salt + this.login + ":" + this.password + ":" + xMain.getVersion() + ":" + launcherFormat + ":" + launcherSize));
+            dataOutputStream.flush();
 
-            while(true) {
-                String input = in.readUTF();
+            while (true) {
+                String input = dataInputStream.readUTF();
                 String response = (xCipherUtils.decrypt(input)).substring(symbolsCount);
 
                 if (!response.equals("0")) {
@@ -188,23 +189,23 @@ class xAuth implements Runnable {
 
                         break;
                     } else {
-                        if (!this.clientCheck(out, in)) {
+                        if (!this.clientCheck(dataOutputStream, dataInputStream)) {
                             salt = xCipherUtils.genSalt(symbolsCount);
-                            out.writeUTF(xCipherUtils.encrypt(salt + "false"));
+                            dataOutputStream.writeUTF(xCipherUtils.encrypt(salt + "false"));
                             break;
                         } else {
                             if (!checkTextures()) {
                                 salt = xCipherUtils.genSalt(symbolsCount);
-                                out.writeUTF(xCipherUtils.encrypt(salt + "3"));
+                                dataOutputStream.writeUTF(xCipherUtils.encrypt(salt + "3"));
                             } else {
                                 salt = xCipherUtils.genSalt(symbolsCount);
-                                out.writeUTF(xCipherUtils.encrypt(salt + "false"));
+                                dataOutputStream.writeUTF(xCipherUtils.encrypt(salt + "false"));
                                 this.setError("Текстуры не прошли проверку");
                                 break;
                             }
                         }
 
-                        out.flush();
+                        dataOutputStream.flush();
                     }
                 } else {
                     socket.setSoTimeout(20000);
@@ -212,17 +213,17 @@ class xAuth implements Runnable {
 
                     if (args != null) {
                         salt = xCipherUtils.genSalt(symbolsCount);
-                        out.writeUTF("1:" + xCipherUtils.encrypt(salt + this.getHwid()));
+                        dataOutputStream.writeUTF("1:" + xCipherUtils.encrypt(salt + this.getHwid()));
                     } else {
                         xUtils launcher = new xUtils();
                         salt = xCipherUtils.genSalt(symbolsCount);
-                        out.writeUTF("1:" + xCipherUtils.encrypt(salt + launcher.getPlatform()));
+                        dataOutputStream.writeUTF("1:" + xCipherUtils.encrypt(salt + launcher.getPlatform()));
                     }
 
-                    out.flush();
+                    dataOutputStream.flush();
                 }
             }
-            
+
             socket.close();
         } catch (SocketTimeoutException var11) {
             this.setError("Время подключения истекло");
@@ -230,13 +231,13 @@ class xAuth implements Runnable {
             this.setError("Сервер авторизации недоступен");
         }
     }
-    
+
     private void remember() {
         xUtils utils = new xUtils();
         File dir = utils.getDirectory();
         File versionFile = new File(dir, "login");
         DataOutputStream dos;
-        if(this.theme.getRemember()) {
+        if (this.theme.getRemember()) {
             try {
                 dos = new DataOutputStream(new FileOutputStream(versionFile));
                 dos.writeUTF(this.login + ":" + this.password);
@@ -258,7 +259,7 @@ class xAuth implements Runnable {
             }
         }
     }
-    
+
     public static void rememberMemory(String value) {
         xUtils utils = new xUtils();
         File dir = utils.getDirectory();
@@ -273,82 +274,79 @@ class xAuth implements Runnable {
         }
         xMain.restart();
     }
-    
+
     private String getHwid() {
-      String result = "";
+        String result = "";
 
-      try {
-         File utils = File.createTempFile("hwid", ".vbs");
-         utils.deleteOnExit();
-         FileWriter utils3 = new FileWriter(utils);
-         String vbs = "Set objFSO = CreateObject(\"Scripting.FileSystemObject\")\nSet colDrives = objFSO.Drives\nSet objDrive = colDrives.item(\"C\")\nWscript.Echo objDrive.SerialNumber";
-         utils3.write(vbs);
-         utils3.close();
-         Process p = Runtime.getRuntime().exec("cscript //NoLogo " + utils.getPath());
-         BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        try {
+            File utils = File.createTempFile("hwid", ".vbs");
+            utils.deleteOnExit();
+            FileWriter utils3 = new FileWriter(utils);
+            String vbs = "Set objFSO = CreateObject(\"Scripting.FileSystemObject\")\nSet colDrives = objFSO.Drives\nSet objDrive = colDrives.item(\"C\")\nWscript.Echo objDrive.SerialNumber";
+            utils3.write(vbs);
+            utils3.close();
+            Process p = Runtime.getRuntime().exec("cscript //NoLogo " + utils.getPath());
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-         while(true) {
-            String line;
-            if((line = input.readLine()) == null) {
-               input.close();
-               break;
+            while (true) {
+                String line;
+                if ((line = input.readLine()) == null) {
+                    input.close();
+                    break;
+                }
+
+                result = result + line;
             }
+        } catch (Exception var8) {
+            xUtils utils1 = new xUtils();
+            return utils1.getPlatform().toString();
+        }
 
-            result = result + line;
-         }
-      } catch (Exception var8) {
-         xUtils utils1 = new xUtils();
-         return utils1.getPlatform().toString();
-      }
+        if (result.length() < 30) {
+            return result.trim();
+        } else {
+            xUtils utils2 = new xUtils();
+            return utils2.getPlatform().toString();
+        }
+    }
 
-      if(result.length() < 30) {
-         return result.trim();
-      } else {
-         xUtils utils2 = new xUtils();
-         return utils2.getPlatform().toString();
-      }
-   }
-    
-   private static void launcherSize() {
-       File runningLauncher;
+    private static void launcherSize() {
+        File runningLauncher;
 
-      try {
-         runningLauncher = new File(xUpdater.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-         if(runningLauncher.getPath().endsWith(".jar")) {
-             launcherFormat = "jar";
-         } else if(runningLauncher.getPath().endsWith(".exe")) {
-             launcherFormat = "exe";
-         }
-         MessageDigest md5 = MessageDigest.getInstance("MD5");
-          launcherSize = calculateHash(md5, runningLauncher.getPath());
-      } catch (Exception var5) {
-          System.out.println(var5.getMessage());
-      }
-   }
+        try {
+            runningLauncher = new File(xUpdater.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            if (runningLauncher.getPath().endsWith(".jar")) {
+                launcherFormat = "jar";
+            } else if (runningLauncher.getPath().endsWith(".exe")) {
+                launcherFormat = "exe";
+            }
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            launcherSize = calculateHash(md5, runningLauncher.getPath());
+        } catch (Exception var5) {
+            System.out.println(var5.getMessage());
+        }
+    }
 
-    private static String xorEncode(String text)
-   {
-       String res = ""; 
-       int j = 0;
-       for (int i = 0; i < text.length(); i++)
-       {
-           res += (char) (text.charAt(i) ^ xSettings.passIdKey.charAt(j));
-           j++;
-           if (j == xSettings.passIdKey.length()) j = 0;
-       }
-       return res;
-   }
+    private static String xorEncode(String text) {
+        String res = "";
+        int j = 0;
+        for (int i = 0; i < text.length(); i++) {
+            res += (char) (text.charAt(i) ^ xSettings.passIdKey.charAt(j));
+            j++;
+            if (j == xSettings.passIdKey.length()) j = 0;
+        }
+        return res;
+    }
 
-    private static String strToInt(String text)
-   {
-       String res = "";
-       for (int i = 0; i < text.length(); i++) res += (int)text.charAt(i) + "-";
-       res = res.substring(0, res.length() - 1);
-       return res;
-   }
-   
-   private static String[] addToArray(String[] array, String s) {
-        String[] ans = new String[array.length+1];
+    private static String strToInt(String text) {
+        String res = "";
+        for (int i = 0; i < text.length(); i++) res += (int) text.charAt(i) + "-";
+        res = res.substring(0, res.length() - 1);
+        return res;
+    }
+
+    private static String[] addToArray(String[] array, String s) {
+        String[] ans = new String[array.length + 1];
         System.arraycopy(array, 0, ans, 0, array.length);
         ans[ans.length - 1] = s;
         return ans;
@@ -371,14 +369,14 @@ class xAuth implements Runnable {
             out.writeUTF(xCipherUtils.encrypt(salt + strToOut));
             result = in.readUTF();
 
-            if (!result.equals("noconnect")){
+            if (!result.equals("noconnect")) {
                 result = (xCipherUtils.decrypt(result)).substring(symbolsCount);
             }
 
-            if (result.equals("nofiles")){
+            if (result.equals("nofiles")) {
                 this.setError("Клиент не прошел проверку");
                 return false;
-            } else if (result.equals("noconnect")){
+            } else if (result.equals("noconnect")) {
                 this.setError("Нет соединения");
                 return false;
             } else {
@@ -421,7 +419,7 @@ class xAuth implements Runnable {
             result = dataInputStream.readUTF();
             socket.close();
 
-            if (!result.equals("noconnect")){
+            if (!result.equals("noconnect")) {
                 result = (xCipherUtils.decrypt(result)).substring(symbolsCount);
             }
 
@@ -431,9 +429,9 @@ class xAuth implements Runnable {
         }
         return false;
     }
-    
+
     private static File[] addToFileArray(File[] array, File s) {
-        File[] ans = new File[array.length+1];
+        File[] ans = new File[array.length + 1];
         System.arraycopy(array, 0, ans, 0, array.length);
         ans[ans.length - 1] = s;
         return ans;
@@ -560,10 +558,10 @@ class xAuth implements Runnable {
 
         while (dis.read() != -1) ; //TODO: Understand this
         byte[] hash = algorithm.digest();
-        
+
         return byteArray2Hex(hash);
     }
-    
+
     private static String byteArray2Hex(byte[] hash) {
         Formatter formatter = new Formatter();
 
@@ -573,7 +571,7 @@ class xAuth implements Runnable {
 
         return formatter.toString();
     }
-    
+
     public static boolean checkTextures() {
         xUtils utils = new xUtils();
         String[] texturepackFolders = {"texturepacks", "resourcepacks"};
@@ -604,7 +602,7 @@ class xAuth implements Runnable {
     }
 
     private static boolean chTextures(File textures) {
-        if(textures.exists()) {
+        if (textures.exists()) {
             File[] listOfTextures = textures.listFiles();
 
             assert listOfTextures != null;

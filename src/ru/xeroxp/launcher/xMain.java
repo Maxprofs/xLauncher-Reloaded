@@ -45,6 +45,7 @@ class xMain {
             public boolean client = true;
             boolean check = true;
 
+            @Override
             public void run() {
                 while (check) {
                     try {
@@ -173,6 +174,7 @@ class xMain {
             this.launcher = launcher;
         }
 
+        @Override
         public void run() {
             xTheme theme = this.launcher.getTheme();
             theme.getUpdateNews();

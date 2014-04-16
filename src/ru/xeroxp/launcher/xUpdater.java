@@ -12,6 +12,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class xUpdater {
+    private final static String TYPE_LAUNCHER = "launcher";
+    private final static String TYPE_CLIENT = "version";
+
     private BufferedImage update;
     private BufferedImage bg;
     private BufferedImage image;
@@ -44,13 +47,16 @@ public class xUpdater {
 
     private void checkLauncherUpdate() {
         try {
-            String e = this.checkLauncherVersion();
+            String e = this.checkVersion(TYPE_LAUNCHER);
+
             if (e != null) {
                 String getVersion = xMain.getVersion();
+
                 if (!e.equals(getVersion)) {
                     this.theme.lockAuth(true);
                     this.updateLauncher(e);
                 }
+
                 this.updateDownload();
                 this.theme.lockAuth(false);
             }
@@ -62,6 +68,7 @@ public class xUpdater {
 
     private void updateLauncher(String checkVersion) {
         xButton.loadButtons();
+
         for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
             xButton button = xButton.getButtons()[i];
             if (button.getActionListener().equals("UL")) {
@@ -71,7 +78,9 @@ public class xUpdater {
                 this.theme.buttons[button.getId()].setEnabled(false);
             }
         }
+
         File runningLauncher = null;
+
         try {
             runningLauncher = new File(xUpdater.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         } catch (URISyntaxException var5) {
@@ -80,11 +89,12 @@ public class xUpdater {
         }
 
         try {
-            assert runningLauncher != null;
-            if (runningLauncher.getPath().endsWith(".jar")) {
-                this.unpackLauncher(new URL(xSettings.downLauncherLink + "xLauncher.jar"), runningLauncher);
-            } else if (runningLauncher.getPath().endsWith(".exe")) {
-                this.unpackLauncher(new URL(xSettings.downLauncherLink + "xLauncher.exe"), runningLauncher);
+            if (runningLauncher != null) {
+                if (runningLauncher.getPath().endsWith(".jar")) {
+                    this.unpackLauncher(new URL(xSettings.downLauncherLink + "xLauncher.jar"), runningLauncher);
+                } else if (runningLauncher.getPath().endsWith(".exe")) {
+                    this.unpackLauncher(new URL(xSettings.downLauncherLink + "xLauncher.exe"), runningLauncher);
+                }
             }
             xMain.setVersion(checkVersion);
             xMain.restart();
@@ -108,12 +118,15 @@ public class xUpdater {
 
     void checkUpdateBar(int size) {
         double percent = (double) size / this.onePercent;
+
         if (percent < 1.0D) {
             percent = 1.0D;
         }
+
         if (percent > 100.0D) {
             percent = 100.0D;
         }
+
         this.updateDownload(percent);
     }
 
@@ -122,16 +135,19 @@ public class xUpdater {
         this.theme.setBackground(new Color(0, 0, 0, 0));
         Graphics g2 = this.background.getGraphics();
         g2.setColor(new Color(0, 0, 0, 0));
+
         if (this.firstBg) {
             g2.drawImage(this.bg, 42, 536, null);
             this.firstBg = false;
         }
+
         if (done == 100.0D) {
             g2.drawImage(this.update, 42, 536, null);
         } else {
             g2.drawImage(this.image.getSubimage(0, 0, (int) (6.62D * done), 29), 42, 536, null);
             this.theme.updatePercent((int) done);
         }
+
         g2.fillRect(42, 536, this.bg.getWidth(), this.bg.getHeight());
         g2.dispose();
         this.theme.revalidate();
@@ -140,6 +156,7 @@ public class xUpdater {
 
     void updateClient(String version) {
         xButton.loadButtons();
+
         for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
             xButton button = xButton.getButtons()[i];
             if (button.getActionListener().equals("UL")) {
@@ -158,14 +175,17 @@ public class xUpdater {
             System.out.println("Failed unpack client");
             System.out.println(var4.getMessage());
         }
+
         try {
             this.updateVersion(version);
         } catch (Exception var3) {
             System.out.println("Failed update client version");
             System.out.println(var3.getMessage());
         }
+
         for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
             xButton button = xButton.getButtons()[i];
+
             if (button.getActionListener().equals("RML")) {
                 this.theme.buttons[button.getId()].setEnabled(true);
                 break;
@@ -173,39 +193,26 @@ public class xUpdater {
         }
     }
 
-    String checkLauncherVersion() {
+    String checkVersion(String type) {
         try {
-            URL e = new URL(xSettings.mainInfoFile + "?action=launcher");
+            URL e = new URL(xSettings.mainInfoFile + "?action=" + type);
             URLConnection getVer = e.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(getVer.getInputStream()));
             String inputLine = in.readLine();
             in.close();
-            return inputLine;
-        } catch (Exception var5) {
-            System.out.println("Failed check launcher version");
-            System.out.println(var5.getMessage());
-            return null;
-        }
-    }
 
-    String checkClientVersion() {
-        try {
-            URL e = new URL(xSettings.mainInfoFile + "?action=version");
-            URLConnection getVer = e.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(getVer.getInputStream()));
-            String inputLine = in.readLine();
-            in.close();
             return inputLine;
         } catch (Exception var5) {
-            System.out.println("Failed check client version");
+            System.out.println("Failed check " + type + " version");
             System.out.println(var5.getMessage());
-            return null;
         }
+
+        return null;
     }
 
     public void checkClientUpdate(boolean n) {
         try {
-            String e = this.checkClientVersion();
+            String e = this.checkVersion(TYPE_CLIENT);
             if (e != null) {
                 String getVersion;
                 if (!n) {
@@ -267,7 +274,7 @@ public class xUpdater {
         BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(zip));
         this.copyInputStream(in, out, false);
         out.close();
-        //return this.unpackArchive(zip, targetDir);
+        this.unpackArchive(zip, targetDir);
     }
 
     void unpackLauncher(URL url, File target) throws IOException {
@@ -288,20 +295,25 @@ public class xUpdater {
         } else {
             ZipFile zipFile = new ZipFile(theFile);
             Enumeration entries = zipFile.entries();
+
             while (entries.hasMoreElements()) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 File file = new File(targetDir, File.separator + entry.getName());
+
                 if (this.buildDirectory(file.getParentFile())) {
                     throw new IOException("Could not create directory: " + file.getParentFile());
                 }
+
                 if (!entry.isDirectory()) {
                     this.copyInputStream(zipFile.getInputStream(entry), new BufferedOutputStream(new FileOutputStream(file)), true);
                 } else if (this.buildDirectory(file)) {
                     throw new IOException("Could not create directory: " + file);
                 }
             }
+
             zipFile.close();
             theFile.delete();
+
             return theFile;
         }
     }
@@ -309,6 +321,7 @@ public class xUpdater {
     void copyInputStream(InputStream in, OutputStream out, boolean zip) throws IOException {
         byte[] buffer = new byte[1024];
         int len = in.read(buffer);
+
         for (int size = 0; len >= 0; len = in.read(buffer)) {
             if (!zip) {
                 size += len;
@@ -316,6 +329,7 @@ public class xUpdater {
             }
             out.write(buffer, 0, len);
         }
+
         in.close();
         out.close();
     }
