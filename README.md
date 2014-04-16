@@ -1,4 +1,2 @@
-goog
-====
-
-zzzzzzzzzzzzzzzzzz
+# xLauncher
+Socket launcher for Minecraft
