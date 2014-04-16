@@ -1,5 +1,7 @@
 package ru.xeroxp.launcher.process;
 
+import ru.xeroxp.launcher.utils.xDebug;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,7 +25,7 @@ class ProcessMonitorThread extends Thread {
         while (this.process.isRunning()) {
             try {
                 while ((line = buf.readLine()) != null) {
-                    System.out.println("Client> " + line);
+                    xDebug.infoMessage("Client> " + line);
                     this.process.getSysOutLines().add(line);
                 }
             } catch (IOException var13) {

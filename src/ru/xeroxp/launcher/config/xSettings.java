@@ -29,4 +29,6 @@ public class xSettings {
     public static final String[] mcVersions = {
             "1.2.5::aj", "1.3.x::am", "1.4.x::an", "1.5.x::an", "1.6.x::an"
     }; // Версии и классы для автозамены дирректории игры
+
+    public static boolean debug = true; // Режим отладки - отключите если не знаете что это
 }

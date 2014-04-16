@@ -3,6 +3,7 @@ package ru.xeroxp.launcher;
 import ru.xeroxp.launcher.config.xSettings;
 import ru.xeroxp.launcher.gui.xErrorPanel;
 import ru.xeroxp.launcher.gui.xTheme;
+import ru.xeroxp.launcher.utils.xDebug;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -41,7 +42,7 @@ public class xMain {
 
                 System.exit(0);
             } catch (Exception var6) {
-                System.out.println(var6.getMessage());
+                xDebug.errorMessage(var6.getMessage());
                 start();
             }
         }
@@ -118,16 +119,16 @@ public class xMain {
                     sin.close();
                     client.close();
                     srv.close();
-                    System.out.println("Launcher process closed");
+                    xDebug.errorMessage("Launcher process closed");
                 } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    xDebug.errorMessage(ex.getMessage());
                 }
             }
         });
     }
 
     public static void start() {
-        System.out.println("Starting xLauncher v" + version + " created by XeroXP");
+        xDebug.infoMessage("Starting xLauncher v" + version + " created by XeroXP and OsipXD");
         xLauncher launcher = new xLauncher();
         launcher.setVisible(true);
         Thread thread = new Thread(new xWebThread(launcher));
@@ -157,8 +158,7 @@ public class xMain {
                 builder.start();
                 System.exit(0);
             } catch (IOException var5) {
-                System.out.println("Failed to restart launcher!");
-                System.out.println(var5.getMessage());
+                xDebug.errorMessage("Failed to restart launcher: " + var5.getMessage());
             }
         }
 

@@ -4,6 +4,7 @@ import ru.xeroxp.launcher.config.xSettings;
 import ru.xeroxp.launcher.config.xSettingsOfTheme;
 import ru.xeroxp.launcher.gui.elements.xButton;
 import ru.xeroxp.launcher.gui.xTheme;
+import ru.xeroxp.launcher.utils.xDebug;
 import ru.xeroxp.launcher.utils.xUtils;
 
 import javax.imageio.ImageIO;
@@ -36,8 +37,7 @@ public class xUpdater {
             this.image = ImageIO.read(xUpdater.class.getResource("/images/updatebar.png"));
             this.bg = ImageIO.read(xUpdater.class.getResource("/images/updatebar_bg.png"));
         } catch (IOException var3) {
-            System.out.println("Failed load updater images");
-            System.out.println(var3.getMessage());
+            xDebug.errorMessage("Failed load updater images: " + var3.getMessage());
         }
 
         this.theme = theme;
@@ -66,8 +66,7 @@ public class xUpdater {
                 this.theme.lockAuth(false);
             }
         } catch (Exception var3) {
-            System.out.println("Failed check launcher update");
-            System.out.println(var3.getMessage());
+            xDebug.errorMessage("Failed check launcher update: " + var3.getMessage());
         }
     }
 
@@ -87,8 +86,7 @@ public class xUpdater {
         try {
             runningLauncher = new File(xUpdater.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         } catch (URISyntaxException var5) {
-            System.out.println("Failed to find launcher path");
-            System.out.println(var5.getMessage());
+            xDebug.errorMessage("Failed to find launcher path: " + var5.getMessage());
         }
 
         try {
@@ -102,8 +100,7 @@ public class xUpdater {
             xMain.setVersion(checkVersion);
             xMain.restart();
         } catch (IOException var4) {
-            System.out.println("Failed update launcher");
-            System.out.println(var4.getMessage());
+            xDebug.errorMessage("Failed update launcher:" + var4.getMessage());
         }
     }
 
@@ -173,15 +170,13 @@ public class xUpdater {
         try {
             this.unpackClient(new URL(xSettings.downClientLink + "client.zip"), xUtils.getDirectory());
         } catch (IOException var4) {
-            System.out.println("Failed unpack client");
-            System.out.println(var4.getMessage());
+            xDebug.errorMessage("Failed unpack client: " + var4.getMessage());
         }
 
         try {
             this.updateVersion(version);
         } catch (Exception var3) {
-            System.out.println("Failed update client version");
-            System.out.println(var3.getMessage());
+            xDebug.errorMessage("Failed update client version: " + var3.getMessage());
         }
 
         for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
@@ -204,8 +199,7 @@ public class xUpdater {
 
             return inputLine;
         } catch (Exception var5) {
-            System.out.println("Failed check " + type + " version");
-            System.out.println(var5.getMessage());
+            xDebug.errorMessage("Failed check " + type + " version: " + var5.getMessage());
         }
 
         return null;
@@ -216,27 +210,25 @@ public class xUpdater {
             String e = this.checkVersion(TYPE_CLIENT);
             if (e != null) {
                 String getVersion;
-                if (!n) {
-                    getVersion = this.getVersion();
-                } else {
-                    getVersion = "0";
-                }
+                getVersion = n ? "0" : this.getVersion();
+
                 if (getVersion == null) {
                     this.theme.lockAuth(true);
                     this.updateClient(e);
                     this.theme.lockAuth(false);
                     return;
                 }
+
                 if (!e.equals(getVersion)) {
                     this.theme.lockAuth(true);
                     this.updateClient(e);
                 }
+
                 this.updateDownload();
                 this.theme.lockAuth(false);
             }
         } catch (Exception var3) {
-            System.out.println("Failed check client update");
-            var3.printStackTrace();
+            xDebug.errorMessage("Failed check client update: " + var3.getMessage());
         }
     }
 

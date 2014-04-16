@@ -5,6 +5,7 @@ import ru.xeroxp.launcher.gui.xTheme;
 import ru.xeroxp.launcher.process.JavaProcess;
 import ru.xeroxp.launcher.process.JavaProcessLauncher;
 import ru.xeroxp.launcher.process.JavaProcessRunnable;
+import ru.xeroxp.launcher.utils.xDebug;
 import ru.xeroxp.launcher.utils.xUtils;
 
 import java.io.File;
@@ -135,12 +136,13 @@ public class xLoader implements JavaProcessRunnable {
                 processLauncher.addCommands("net.minecraft.client.main.Main");
             }
 
-            //processLauncher.addCommands(new String[] { userName, sessionId, version });
             processLauncher.addCommands("--username", userName);
             processLauncher.addCommands("--session", sessionId);
             processLauncher.addCommands("--version", version);
             processLauncher.addCommands("--gameDir", "\"" + workDir.getAbsolutePath() + "\"");
             processLauncher.addCommands("--assetsDir", "\"" + assetsDir.getAbsolutePath() + "\"");
+
+            xDebug.infoMessage("Launching client with this parameters: user - " + userName + ", session - " + sessionId + ", ver -" + version);
 
             if (!server.equals("0")) {
                 processLauncher.addCommands("--server", server);
@@ -160,9 +162,9 @@ public class xLoader implements JavaProcessRunnable {
         int exitCode = process.getExitCode();
 
         if (exitCode == 0) {
-            System.out.println("Game ended with no troubles detected (exit code " + exitCode + ")");
+            xDebug.errorMessage("Game ended with no troubles detected (exit code " + exitCode + ")");
         } else {
-            System.out.println("Game ended with bad state (exit code " + exitCode + ")");
+            xDebug.errorMessage("Game ended with bad state (exit code " + exitCode + ")");
 
             String errorText = null;
             String[] sysOut = (String[]) process.getSysOutLines().getItems();
@@ -179,8 +181,9 @@ public class xLoader implements JavaProcessRunnable {
             }
 
             if (errorText != null) {
-                System.out.println(errorText);
+                xDebug.errorMessage(errorText);
             }
+
             setWorking(false);
         }
         if (!xMain.error) {

@@ -3,6 +3,7 @@ package ru.xeroxp.launcher.gui;
 import ru.xeroxp.launcher.config.xSettings;
 import ru.xeroxp.launcher.config.xSettingsOfTheme;
 import ru.xeroxp.launcher.gui.elements.xServer;
+import ru.xeroxp.launcher.utils.xDebug;
 import ru.xeroxp.launcher.xLauncher;
 import ru.xeroxp.launcher.xMain;
 
@@ -33,7 +34,7 @@ public class xSelectTheme extends JPanel {
     private Font serverFont2 = null;
 
     public xSelectTheme() {
-        System.out.println("Выбор сервера");
+        xDebug.infoMessage("Выбор сервера");
 
         setLayout(null);
         setMinimumSize(new Dimension(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]));
@@ -70,11 +71,9 @@ public class xSelectTheme extends JPanel {
             this.serverFont = this.serverFont.deriveFont(Font.BOLD, xSettingsOfTheme.ServersFonts[1]);
             this.serverFont2 = this.serverFont.deriveFont(Font.BOLD, xSettingsOfTheme.ServersFonts[2]);
         } catch (FontFormatException e2) {
-            System.out.println("Failed load font");
-            System.out.println(e2.getMessage());
+            xDebug.errorMessage("Failed load font: " + e2.getMessage());
         } catch (IOException e2) {
-            System.out.println("Failed load font");
-            System.out.println(e2.getMessage());
+            xDebug.errorMessage("Failed load font: " + e2.getMessage());
         }
 
         if (xLauncher.getLauncher().getSound()) {
@@ -83,14 +82,11 @@ public class xSelectTheme extends JPanel {
                 this.clip = AudioSystem.getClip();
                 this.clip.open(audioIn);
             } catch (UnsupportedAudioFileException e2) {
-                System.out.println("Unsupported Audio Format");
-                System.out.println(e2.getMessage());
+                xDebug.errorMessage("Unsupported Audio Format: " + e2.getMessage());
             } catch (IOException e2) {
-                System.out.println("Failed load sound");
-                System.out.println(e2.getMessage());
+                xDebug.errorMessage("Failed load sound: " + e2.getMessage());
             } catch (LineUnavailableException e) {
-                System.out.println("Failed load clip");
-                System.out.println(e.getMessage());
+                xDebug.errorMessage("Failed load clip: " + e.getMessage());
             }
         }
 
@@ -100,8 +96,7 @@ public class xSelectTheme extends JPanel {
             this.offlineBar = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersBarImages[1]));
             this.onlineBarBg = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersBarImages[2]));
         } catch (IOException e) {
-            System.out.println("Failed load select server theme images");
-            System.out.println(e.getMessage());
+            xDebug.errorMessage("Failed load select server theme images: " + e.getMessage());
         }
 
         JLabel header = new JLabel(xSettings.LauncherName + " v" + xMain.getVersion());
@@ -128,7 +123,7 @@ public class xSelectTheme extends JPanel {
             try {
                 online = Integer.parseInt(args[i]);
             } catch (NumberFormatException e) {
-                System.out.println("Failed to parse server online");
+                xDebug.errorMessage("Failed to parse server online");
             }
 
             xServer server = xServer.getServer(i);

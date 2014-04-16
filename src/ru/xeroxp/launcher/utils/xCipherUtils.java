@@ -17,7 +17,7 @@ public class xCipherUtils {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             return Base64.encodeBase64String(cipher.doFinal(strToEncrypt.getBytes()));
         } catch (Exception e) {
-            System.out.println("Error while encrypting: " + e);
+            xDebug.errorMessage("Error while encrypting: " + e);
         }
         return null;
     }
@@ -29,7 +29,7 @@ public class xCipherUtils {
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return new String(cipher.doFinal(Base64.decodeBase64(strToDecrypt)));
         } catch (Exception e) {
-            System.out.println("Error while decrypting: " + e);
+            xDebug.errorMessage("Error while decrypting: " + e);
 
         }
         return null;

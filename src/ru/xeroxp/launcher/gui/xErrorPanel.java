@@ -1,6 +1,7 @@
 package ru.xeroxp.launcher.gui;
 
 import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.utils.xDebug;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -28,11 +29,9 @@ public class xErrorPanel extends JDialog {
             arial = Font.createFont(0, is);
             arial = arial.deriveFont(0, xSettingsOfTheme.ErrorPanelTextSize);
         } catch (FontFormatException e2) {
-            System.out.println("Failed load font");
-            System.out.println(e2.getMessage());
+            xDebug.errorMessage("Failed load font: " + e2.getMessage());
         } catch (IOException e2) {
-            System.out.println("Failed load font");
-            System.out.println(e2.getMessage());
+            xDebug.errorMessage("Failed load font: " + e2.getMessage());
         }
 
         JLabel errorLabel = new JLabel(error);

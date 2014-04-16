@@ -5,6 +5,7 @@ import ru.xeroxp.launcher.config.xSettingsOfTheme;
 import ru.xeroxp.launcher.gui.elements.xServer;
 import ru.xeroxp.launcher.gui.xTheme;
 import ru.xeroxp.launcher.utils.xCipherUtils;
+import ru.xeroxp.launcher.utils.xDebug;
 import ru.xeroxp.launcher.utils.xUtils;
 
 import javax.imageio.ImageIO;
@@ -145,7 +146,7 @@ public class xAuth implements Runnable {
         String salt;
 
         try {
-            System.out.println("Connection to authorization server");
+            xDebug.infoMessage("Connection to authorization server");
             InetAddress e = InetAddress.getByName(socketIp);
             SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
             SSLSocket socket = (SSLSocket) sf.createSocket(e, socketPort);
@@ -315,7 +316,7 @@ public class xAuth implements Runnable {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             launcherSize = calculateHash(md5, runningLauncher.getPath());
         } catch (Exception var5) {
-            System.out.println(var5.getMessage());
+            xDebug.errorMessage(var5.getMessage());
         }
     }
 
@@ -662,8 +663,7 @@ public class xAuth implements Runnable {
                             }
                         }
                     } catch (IOException var15) {
-                        System.out.println("Failed to open texturepack");
-                        System.out.println(var15.getMessage());
+                        xDebug.errorMessage("Failed to open texturepack: " + var15.getMessage());
                     }
 
                     if (col < 1) {

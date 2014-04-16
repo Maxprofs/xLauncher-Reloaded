@@ -6,6 +6,7 @@ import ru.xeroxp.launcher.gui.elements.xButton;
 import ru.xeroxp.launcher.gui.elements.xCheckbox;
 import ru.xeroxp.launcher.gui.elements.xLabel;
 import ru.xeroxp.launcher.gui.elements.xTextField;
+import ru.xeroxp.launcher.utils.xDebug;
 import ru.xeroxp.launcher.xAuth;
 import ru.xeroxp.launcher.xLauncher;
 import ru.xeroxp.launcher.xMain;
@@ -107,19 +108,16 @@ public class xTheme extends JPanel {
             this.arial = this.arial.deriveFont(0, xSettingsOfTheme.MainFonts[0]);
             this.arial2 = this.arial.deriveFont(Font.PLAIN, xSettingsOfTheme.MainFonts[1]);
         } catch (FontFormatException e2) {
-            System.out.println("Failed load font");
-            System.out.println(e2.getMessage());
+            xDebug.errorMessage("Failed load font: " + e2.getMessage());
         } catch (IOException e2) {
-            System.out.println("Failed load font");
-            System.out.println(e2.getMessage());
+            xDebug.errorMessage("Failed load font: " + e2.getMessage());
         }
 
         try {
             this.background = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.MainPanelBackgroundImage));
             this.logo = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.Logo));
         } catch (IOException e) {
-            System.out.println("Failed load Theme images");
-            System.out.println(e.getMessage());
+            xDebug.errorMessage("Failed load Theme images: " + e.getMessage());
         }
 
         if (xLauncher.getLauncher().getSound()) {
@@ -128,14 +126,11 @@ public class xTheme extends JPanel {
                 this.clip = AudioSystem.getClip();
                 this.clip.open(audioIn);
             } catch (UnsupportedAudioFileException e2) {
-                System.out.println("Unsupported Audio Format");
-                System.out.println(e2.getMessage());
+                xDebug.errorMessage("Unsupported Audio Format: " + e2.getMessage());
             } catch (IOException e2) {
-                System.out.println("Failed load sound");
-                System.out.println(e2.getMessage());
+                xDebug.errorMessage("Failed load sound: " + e2.getMessage());
             } catch (LineUnavailableException e) {
-                System.out.println("Failed load clip");
-                System.out.println(e.getMessage());
+                xDebug.errorMessage("Failed load clip: " + e.getMessage());
             }
         }
 
@@ -192,7 +187,7 @@ public class xTheme extends JPanel {
             Object o = Class.forName("java.awt.Desktop").getMethod("getDesktop", new Class[0]).invoke(null);
             o.getClass().getMethod("browse", new Class[]{URI.class}).invoke(o, uri);
         } catch (Throwable e) {
-            System.out.println("Failed to open link " + uri.toString());
+            xDebug.errorMessage("Failed to open link " + uri.toString());
         }
     }
 
@@ -291,12 +286,12 @@ public class xTheme extends JPanel {
 
     public void setAuth(String text) {
         this.error.setText(text);
-        System.out.println(text);
+        xDebug.infoMessage(text);
     }
 
     public void setError(String text) {
         this.error.setText(text);
-        System.out.println(text);
+        xDebug.errorMessage(text);
         lockAuth(false);
     }
 
@@ -557,8 +552,7 @@ public class xTheme extends JPanel {
                 try {
                     this.passField = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
                 } catch (IOException e) {
-                    System.out.println("Failed load password field image");
-                    System.out.println(e.getMessage());
+                    xDebug.errorMessage("Failed load password field image: " + e.getMessage());
                 }
 
                 add(passwordBar);
@@ -599,8 +593,7 @@ public class xTheme extends JPanel {
                 try {
                     this.loginField = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
                 } catch (IOException e) {
-                    System.out.println("Failed load login field image");
-                    System.out.println(e.getMessage());
+                    xDebug.errorMessage("Failed load login field image: " + e.getMessage());
                 }
 
                 add(loginBar);
@@ -635,8 +628,7 @@ public class xTheme extends JPanel {
                 try {
                     this.memoryField = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
                 } catch (IOException e) {
-                    System.out.println("Failed load memory field image");
-                    System.out.println(e.getMessage());
+                    xDebug.errorMessage("Failed load memory field image: " + e.getMessage());
                 }
 
                 add(xSliderValue);
