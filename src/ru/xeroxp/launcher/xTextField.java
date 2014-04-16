@@ -8,6 +8,10 @@ import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
 public class xTextField {
+    public final static byte LOGIN_ID = 0;
+    public final static byte PASS_ID = 1;
+    public final static byte RAM_ID = 2;
+
     private static final List fields = new ArrayList();
     private final int id;
     private final String fieldName;

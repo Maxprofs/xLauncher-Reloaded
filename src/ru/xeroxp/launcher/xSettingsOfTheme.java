@@ -23,15 +23,15 @@ class xSettingsOfTheme {
     }; // Название, цвет, координаты и размеры ссылки, сама ссылка
 
     public static final xButton[] Buttons = {
-            new xButton(0, "update_button.png", "update_button_pressed.png", "update_button_disabled.png", 730, 448, 39, 39, "UL", ""),
-            new xButton(1, "auth_button.png", "auth_button_pressed.png", "auth_button.png", 545, 448, 178, 39, "JL", "JKL"),
-            new xButton(2, "save_button.png", "save_button_pressed.png", "save_button.png", 730, 400, 39, 39, "RML", "")
-    }; // id, картинка, картинка при нажатии, картинка при деактивации кнопки, координаты и размеры, переменные(не менять!!!)
+            new xButton(0, "update_button.png", "update_button_pressed.png", "update_button_disabled.png", 730, 448, 39, 39),
+            new xButton(1, "auth_button.png", "auth_button_pressed.png", "auth_button.png", 545, 448, 178, 39),
+            new xButton(2, "save_button.png", "save_button_pressed.png", "save_button.png", 730, 400, 39, 39)
+    }; // id (не менять!), картинка, картинка при нажатии, картинка при деактивации кнопки, координаты и размеры
 
     public static final xCheckbox[] Checkboxes = {
-            new xCheckbox("Запомнить пароль", 573, 331, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 331, 16, 16, "RPL"),
-            new xCheckbox("Режим оффлайн", 573, 364, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 364, 16, 16, "GML")
-    }; // Название(выполняет роль текста), координаты и размеры, цвет, картинка, активированная картинка, координаты и размеры, переменные(не менять!!!)
+            new xCheckbox(0, "Запомнить пароль", 573, 331, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 331, 16, 16),
+            new xCheckbox(1, "Режим оффлайн", 573, 364, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 364, 16, 16)
+    }; // id(не менять!), название(выполняет роль текста), координаты и размеры, цвет, картинка, активированная картинка, координаты и размеры
 
     public static final xHeaderButton[] HeaderButtons = {
             new xHeaderButton("exit", "exit_button.png", "exit_button.png", 775, 6, 14, 14),
@@ -99,8 +99,8 @@ class xSettingsOfTheme {
     public static final int[] ServersInScrollPanelSize = {740, xSettingsOfTheme.Servers.length * 120}; // Размеры листа с серверами
     public static final int[] ServersScrollBarSize = {17, 479}; // Размеры полосы прокрутки панели серверов
 
-    public static final int[] ErrorPanelSize = {500, 200}; //размеры окна ошибок (выводится в самой игре)
-    public static final Color ErrorPanelTextColor = Color.red; //цвет текста в окне ошибок
-    public static final float ErrorPanelTextSize = 20.0F; //размер текста в окне ошибок
-    public static final String ErrorPanelImage = "errorpanel.png"; //фон в окне ошибок
+    public static final int[] ErrorPanelSize = {500, 200}; // Размеры окна ошибок (выводится в самой игре)
+    public static final Color ErrorPanelTextColor = Color.red; // Цвет текста в окне ошибок
+    public static final float ErrorPanelTextSize = 20.0F; // Размер текста в окне ошибок
+    public static final String ErrorPanelImage = "errorpanel.png"; // Фон в окне ошибок
 }

@@ -67,7 +67,7 @@ class xMain {
 
                                     new Thread(new Runnable() {
                                         public void run() {
-                                            new xErrorPanel(xLauncher.getLauncher(), "����� ������� �� ������ ��������").setVisible(true);
+                                            new xErrorPanel(xLauncher.getLauncher(), "Папка текстур не прошла проверку").setVisible(true);
                                             System.exit(1);
                                         }
                                     }).start();
@@ -81,7 +81,7 @@ class xMain {
                                     if (xLoader.process != null) xLoader.process.stop();
                                     new Thread(new Runnable() {
                                         public void run() {
-                                            new xErrorPanel(xLauncher.getLauncher(), "������ �� ������ ��������").setVisible(true);
+                                            new xErrorPanel(xLauncher.getLauncher(), "Клиент не прошел проверку").setVisible(true);
                                             System.exit(1);
                                         }
                                     }).start();
@@ -92,6 +92,7 @@ class xMain {
                                 check = false;
                             }
                         }
+
                         Thread.sleep(xSettings.checkTime);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();

@@ -28,6 +28,7 @@ public class xTheme extends JPanel {
     private final JTextField xSliderValue = new JTextField();
     public BufferedImage background;
     private final ActionListener JoinListener = new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
             xTheme.this.startAuth();
         }
@@ -403,26 +404,29 @@ public class xTheme extends JPanel {
             buttons[button.getId()].setBorder(null);
             buttons[button.getId()].setContentAreaFilled(false);
 
-            if (button.getKeyListener().equals("JKL")) {
-                buttons[button.getId()].addKeyListener(JoinKListener);
-            } else if (button.getActionListener().equals("JL")) {
-                buttons[button.getId()].addActionListener(JoinListener);
-            } else if (button.getActionListener().equals("UL")) {
-                buttons[button.getId()].addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        new Thread(new Runnable() {
-                            public void run() {
-                                xMain.xWebThread.updater.checkClientUpdate(true);
-                                revalidate();
-                                repaint();
-                            }
-                        }).start();
-                    }
-                });
+            switch (button.getId()) {
+                case xButton.UPDATE_ID:
+                    buttons[button.getId()].addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            new Thread(new Runnable() {
+                                public void run() {
+                                    xMain.xWebThread.updater.checkClientUpdate(true);
+                                    revalidate();
+                                    repaint();
+                                }
+                            }).start();
+                        }
+                    });
+                    break;
+                case xButton.AUTH_ID:
+                    buttons[button.getId()].addKeyListener(JoinKListener);
+                    buttons[button.getId()].addActionListener(JoinListener);
+                    break;
+                case xButton.RAM_ID:
+                    buttons[button.getId()].addActionListener(RememberMemListener);
+                    break;
             }
 
-            if (button.getActionListener().equals("RML"))
-                buttons[button.getId()].addActionListener(RememberMemListener);
             add(buttons[button.getId()]);
         }
     }
@@ -443,7 +447,7 @@ public class xTheme extends JPanel {
             checkboxes.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + checkbox.getImage())));
             checkboxes.setSelectedIcon(new ImageIcon(xTheme.class.getResource("/images/" + checkbox.getSelectedImage())));
 
-            if (checkbox.getItemListener().equals("RPL")) {
+            if (checkbox.getId() == xCheckbox.REMEMBER_PASS_ID) {
                 checkboxes.addItemListener(new ItemListener() {
                     public void itemStateChanged(ItemEvent e) {
                         xTheme.this.remember = checkboxes.isSelected();
@@ -459,7 +463,7 @@ public class xTheme extends JPanel {
                         checkboxes.setSelected(true);
                     }
                 }
-            } else if (checkbox.getItemListener().equals("GML")) checkboxes.addItemListener(new ItemListener() {
+            } else if (checkbox.getId() == xCheckbox.OFFLINE_MODE_ID) checkboxes.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     gameOffline = checkboxes.isSelected();
                 }
@@ -498,7 +502,7 @@ public class xTheme extends JPanel {
     void addFields() {
         String readFile = readLogin();
         for (final xTextField field : xTextField.getFields()) {
-            if (field.getId() == 1) {
+            if (field.getId() == xTextField.PASS_ID) {
                 passwordBar.setDocument(new xTextFieldLimit(field.getFieldLimit()));
                 passwordBar.setBounds(field.getFieldX(), field.getFieldY(), field.getFieldSizeX(), field.getFieldSizeY());
                 passwordBar.setOpaque(false);
@@ -546,7 +550,7 @@ public class xTheme extends JPanel {
                 }
 
                 add(passwordBar);
-            } else if (field.getId() == 0) {
+            } else if (field.getId() == xTextField.LOGIN_ID) {
                 loginBar.setDocument(new xTextFieldLimit(field.getFieldLimit()));
                 loginBar.setBounds(field.getFieldX(), field.getFieldY(), field.getFieldSizeX(), field.getFieldSizeY());
                 loginBar.setOpaque(false);
@@ -588,7 +592,7 @@ public class xTheme extends JPanel {
                 }
 
                 add(loginBar);
-            } else if (field.getId() == 2) {
+            } else if (field.getId() == xTextField.RAM_ID) {
                 xSliderValue.setDocument(new xTextFieldLimit(field.getFieldLimit()));
                 xSliderValue.setBounds(field.getFieldX(), field.getFieldY(), field.getFieldSizeX(), field.getFieldSizeY());
                 xSliderValue.setOpaque(false);

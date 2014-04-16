@@ -7,6 +7,10 @@ import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
 public class xButton {
+    public static final byte UPDATE_ID = 0;
+    public static final byte AUTH_ID = 1;
+    public static final byte RAM_ID = 2;
+
     private static final List buttons = new ArrayList();
     private final int id;
     private final String image;
@@ -16,10 +20,8 @@ public class xButton {
     private final int imageY;
     private final int imageSizeX;
     private final int imageSizeY;
-    private final String actionListener;
-    private final String keyListener;
 
-    public xButton(int id, String image, String pressedImage, String disabledImage, int imageX, int imageY, int imageSizeX, int imageSizeY, String actionListener, String keyListener) {
+    public xButton(int id, String image, String pressedImage, String disabledImage, int imageX, int imageY, int imageSizeX, int imageSizeY) {
         this.id = id;
         this.image = image;
         this.pressedImage = pressedImage;
@@ -28,8 +30,6 @@ public class xButton {
         this.imageY = imageY;
         this.imageSizeX = imageSizeX;
         this.imageSizeY = imageSizeY;
-        this.actionListener = actionListener;
-        this.keyListener = keyListener;
     }
 
     public static void loadButtons() {
@@ -80,13 +80,5 @@ public class xButton {
 
     public int getImageSizeY() {
         return this.imageSizeY;
-    }
-
-    public String getActionListener() {
-        return this.actionListener;
-    }
-
-    public String getKeyListener() {
-        return this.keyListener;
     }
 }

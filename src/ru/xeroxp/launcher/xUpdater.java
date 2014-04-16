@@ -70,10 +70,8 @@ public class xUpdater {
 
         for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
             xButton button = xButton.getButtons()[i];
-            if (button.getActionListener().equals("UL")) {
-                this.theme.buttons[button.getId()].setEnabled(false);
-            }
-            if (button.getActionListener().equals("RML")) {
+
+            if (button.getId() == xButton.UPDATE_ID || button.getId() == xButton.RAM_ID) {
                 this.theme.buttons[button.getId()].setEnabled(false);
             }
         }
@@ -158,10 +156,8 @@ public class xUpdater {
 
         for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
             xButton button = xButton.getButtons()[i];
-            if (button.getActionListener().equals("UL")) {
-                this.theme.buttons[button.getId()].setEnabled(false);
-            }
-            if (button.getActionListener().equals("RML")) {
+
+            if (button.getId() == xButton.UPDATE_ID || button.getId() == xButton.RAM_ID) {
                 this.theme.buttons[button.getId()].setEnabled(false);
             }
         }
@@ -185,7 +181,7 @@ public class xUpdater {
         for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
             xButton button = xButton.getButtons()[i];
 
-            if (button.getActionListener().equals("RML")) {
+            if (button.getId() == xButton.RAM_ID) {
                 this.theme.buttons[button.getId()].setEnabled(true);
                 break;
             }

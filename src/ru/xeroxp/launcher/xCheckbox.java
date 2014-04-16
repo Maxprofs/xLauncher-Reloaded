@@ -8,7 +8,11 @@ import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
 public class xCheckbox {
+    public static final byte REMEMBER_PASS_ID = 0;
+    public static final byte OFFLINE_MODE_ID = 1;
+
     private static final List checkboxes = new ArrayList();
+    private final int id;
     private final String checkboxLabel;
     private final int labelX;
     private final int labelY;
@@ -21,9 +25,9 @@ public class xCheckbox {
     private final int imageY;
     private final int imageSizeX;
     private final int imageSizeY;
-    private final String itemListener;
 
-    public xCheckbox(String checkboxLabel, int labelX, int labelY, int labelSizeX, int labelSizeY, Color labelColor, String image, String selectedImage, int imageX, int imageY, int imageSizeX, int imageSizeY, String itemListener) {
+    public xCheckbox(int id, String checkboxLabel, int labelX, int labelY, int labelSizeX, int labelSizeY, Color labelColor, String image, String selectedImage, int imageX, int imageY, int imageSizeX, int imageSizeY) {
+        this.id = id;
         this.checkboxLabel = checkboxLabel;
         this.labelX = labelX;
         this.labelY = labelY;
@@ -36,7 +40,6 @@ public class xCheckbox {
         this.imageY = imageY;
         this.imageSizeX = imageSizeX;
         this.imageSizeY = imageSizeY;
-        this.itemListener = itemListener;
     }
 
     public static void loadCheckboxes() {
@@ -55,6 +58,10 @@ public class xCheckbox {
         }
 
         return checkboxesList;
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     public String getCheckboxLabel() {
@@ -103,9 +110,5 @@ public class xCheckbox {
 
     public int getImageSizeY() {
         return this.imageSizeY;
-    }
-
-    public String getItemListener() {
-        return this.itemListener;
     }
 }
