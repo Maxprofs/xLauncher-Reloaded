@@ -10,8 +10,7 @@ class xStarter {
             if (memory == null || memory.isEmpty()) memory = Integer.toString(512);
 
             ArrayList<String> params = new ArrayList<String>();
-            xUtils utils = new xUtils();
-            if (utils.getPlatform().toString().equals("windows")) params.add("javaw");
+            if (xUtils.getPlatform().toString().equals("windows")) params.add("javaw");
             else params.add("java");
             params.add("-Xmx" + memory + "m");
             params.add("-Dsun.java2d.noddraw=true");

@@ -17,6 +17,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.regex.Pattern;
 
+import static ru.xeroxp.launcher.xUtils.getDirectory;
+
 @SuppressWarnings("SameParameterValue")
 public class xTheme extends JPanel {
     public static boolean gameOffline = false;
@@ -182,8 +184,7 @@ public class xTheme extends JPanel {
     }
 
     public static String readMemory() {
-        xUtils utils = new xUtils();
-        File dir = utils.getDirectory();
+        File dir = getDirectory();
         File versionFile = new File(dir, "memory");
 
         if (versionFile.exists()) {
@@ -221,7 +222,10 @@ public class xTheme extends JPanel {
     }
 
     public JScrollPane getUpdateNews() {
-        if (scrollPane != null) return scrollPane;
+        if (scrollPane != null) {
+            return scrollPane;
+        }
+
         try {
             final JTextPane editorPane = new JTextPane();
 
@@ -268,6 +272,7 @@ public class xTheme extends JPanel {
         } catch (Exception e2) {
             e2.printStackTrace();
         }
+
         return scrollPane;
     }
 
@@ -287,8 +292,7 @@ public class xTheme extends JPanel {
     }
 
     String readLogin() {
-        xUtils utils = new xUtils();
-        File dir = utils.getDirectory();
+        File dir = getDirectory();
         File versionFile = new File(dir, "login");
 
         if (versionFile.exists()) {
@@ -305,6 +309,7 @@ public class xTheme extends JPanel {
                 e.printStackTrace();
             }
         }
+
         return null;
     }
 
@@ -415,6 +420,7 @@ public class xTheme extends JPanel {
                     }
                 });
             }
+
             if (button.getActionListener().equals("RML"))
                 buttons[button.getId()].addActionListener(RememberMemListener);
             add(buttons[button.getId()]);

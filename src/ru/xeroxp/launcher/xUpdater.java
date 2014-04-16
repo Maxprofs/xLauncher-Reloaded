@@ -23,7 +23,6 @@ public class xUpdater {
     private int totalDownload;
     private double onePercent;
     private boolean firstBg = true;
-    private final xUtils utils = new xUtils();
 
     public xUpdater(xTheme theme) {
         try {
@@ -167,10 +166,10 @@ public class xUpdater {
             }
         }
 
-        this.utils.deleteFiles();
+        xUtils.deleteFiles();
 
         try {
-            this.unpackClient(new URL(xSettings.downClientLink + "client.zip"), this.utils.getDirectory());
+            this.unpackClient(new URL(xSettings.downClientLink + "client.zip"), xUtils.getDirectory());
         } catch (IOException var4) {
             System.out.println("Failed unpack client");
             System.out.println(var4.getMessage());
@@ -240,7 +239,7 @@ public class xUpdater {
     }
 
     String getVersion() throws Exception {
-        File dir = this.utils.getDirectory();
+        File dir = xUtils.getDirectory();
 
         dir.mkdirs();
 
@@ -256,7 +255,7 @@ public class xUpdater {
     }
 
     void updateVersion(String version) throws Exception {
-        File dir = this.utils.getDirectory();
+        File dir = xUtils.getDirectory();
         File versionFile = new File(dir, "version");
         DataOutputStream dos = new DataOutputStream(new FileOutputStream(versionFile));
         dos.writeUTF(version);
@@ -287,7 +286,7 @@ public class xUpdater {
         out.close();
     }
 
-    File unpackArchive(File theFile, File targetDir) throws IOException {
+    void unpackArchive(File theFile, File targetDir) throws IOException {
         if (!theFile.exists()) {
             throw new IOException(theFile.getAbsolutePath() + " does not exist");
         } else if (this.buildDirectory(targetDir)) {
@@ -314,7 +313,7 @@ public class xUpdater {
             zipFile.close();
             theFile.delete();
 
-            return theFile;
+            //return theFile;
         }
     }
 

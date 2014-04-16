@@ -197,15 +197,14 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
 
         @Override
         public void run() {
-            xUtils utils = new xUtils();
             File dir;
             if (folder.isEmpty()) {
-                dir = new File(utils.getDirectory() + File.separator + "bin" + File.separator);
+                dir = new File(xUtils.getDirectory() + File.separator + "bin" + File.separator);
             } else {
-                dir = new File(utils.getDirectory() + File.separator + folder + File.separator + "bin" + File.separator);
+                dir = new File(xUtils.getDirectory() + File.separator + folder + File.separator + "bin" + File.separator);
             }
             String[] jars = new String[4];
-            if (utils.getPlatform().ordinal() != 2 && utils.getPlatform().ordinal() != 3) {
+            if (xUtils.getPlatform().ordinal() != 2 && xUtils.getPlatform().ordinal() != 3) {
                 jars[0] = "lwjgl2.jar";
             } else {
                 jars[0] = "lwjgl.jar";
@@ -228,11 +227,11 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
 
             classLoader = new URLClassLoader(urls);
             if (folder.isEmpty()) {
-                System.setProperty("org.lwjgl.librarypath", utils.getDirectory() + File.separator + "bin" + File.separator + "natives");
-                System.setProperty("net.java.games.input.librarypath", utils.getDirectory() + File.separator + "bin" + File.separator + "natives");
+                System.setProperty("org.lwjgl.librarypath", xUtils.getDirectory() + File.separator + "bin" + File.separator + "natives");
+                System.setProperty("net.java.games.input.librarypath", xUtils.getDirectory() + File.separator + "bin" + File.separator + "natives");
             } else {
-                System.setProperty("org.lwjgl.librarypath", utils.getDirectory() + File.separator + folder + File.separator + "bin" + File.separator + "natives");
-                System.setProperty("net.java.games.input.librarypath", utils.getDirectory() + File.separator + folder + File.separator + "bin" + File.separator + "natives");
+                System.setProperty("org.lwjgl.librarypath", xUtils.getDirectory() + File.separator + folder + File.separator + "bin" + File.separator + "natives");
+                System.setProperty("net.java.games.input.librarypath", xUtils.getDirectory() + File.separator + folder + File.separator + "bin" + File.separator + "natives");
             }
         }
 
@@ -249,14 +248,15 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
                 for (int j = 0; j < xSettings.mcVersions.length; j++) {
                     String mcVerFromSettings = xSettings.mcVersions[j].split("::")[0];
                     if ((!mcVerFromSettings.contains("x") && mcver.equals(mcVerFromSettings)) || (mcver.substring(0, 3).equals(mcVerFromSettings.substring(0, 3)))) {
-                        xUtils utils = new xUtils();
                         Field f = classLoader.loadClass(xSettings.mcClass).getDeclaredField(xSettings.mcVersions[j].split("::")[1]);
                         Field.setAccessible(new Field[]{f}, true);
+
                         if (folder.isEmpty()) {
-                            f.set(null, utils.getDirectory());
+                            f.set(null, xUtils.getDirectory());
                         } else {
-                            f.set(null, new File(utils.getDirectory() + File.separator + folder));
+                            f.set(null, new File(xUtils.getDirectory() + File.separator + folder));
                         }
+
                         System.out.println("File patched: " + xSettings.mcClass + "::" + xSettings.mcVersions[j].split("::")[1]);
                         return;
                     }

@@ -210,16 +210,9 @@ class xAuth implements Runnable {
                 } else {
                     socket.setSoTimeout(20000);
                     String args = this.getHwid();
+                    salt = xCipherUtils.genSalt(symbolsCount);
 
-                    if (args != null) {
-                        salt = xCipherUtils.genSalt(symbolsCount);
-                        dataOutputStream.writeUTF("1:" + xCipherUtils.encrypt(salt + this.getHwid()));
-                    } else {
-                        xUtils launcher = new xUtils();
-                        salt = xCipherUtils.genSalt(symbolsCount);
-                        dataOutputStream.writeUTF("1:" + xCipherUtils.encrypt(salt + launcher.getPlatform()));
-                    }
-
+                    dataOutputStream.writeUTF("1:" + xCipherUtils.encrypt(salt + ((args != null) ? this.getHwid() : xUtils.getPlatform())));
                     dataOutputStream.flush();
                 }
             }
@@ -233,10 +226,10 @@ class xAuth implements Runnable {
     }
 
     private void remember() {
-        xUtils utils = new xUtils();
-        File dir = utils.getDirectory();
+        File dir = xUtils.getDirectory();
         File versionFile = new File(dir, "login");
         DataOutputStream dos;
+
         if (this.theme.getRemember()) {
             try {
                 dos = new DataOutputStream(new FileOutputStream(versionFile));
@@ -261,8 +254,7 @@ class xAuth implements Runnable {
     }
 
     public static void rememberMemory(String value) {
-        xUtils utils = new xUtils();
-        File dir = utils.getDirectory();
+        File dir = xUtils.getDirectory();
         File versionFile = new File(dir, "memory");
         DataOutputStream dos;
         try {
@@ -298,16 +290,10 @@ class xAuth implements Runnable {
                 result = result + line;
             }
         } catch (Exception var8) {
-            xUtils utils1 = new xUtils();
-            return utils1.getPlatform().toString();
+            return xUtils.getPlatform().toString();
         }
 
-        if (result.length() < 30) {
-            return result.trim();
-        } else {
-            xUtils utils2 = new xUtils();
-            return utils2.getPlatform().toString();
-        }
+        return (result.length() < 30) ? result.trim() : xUtils.getPlatform().toString();
     }
 
     private static void launcherSize() {
@@ -353,12 +339,12 @@ class xAuth implements Runnable {
     }
 
     boolean clientCheck(DataOutputStream out, DataInputStream in) {
-        xUtils utils = new xUtils();
         String result;
         String salt;
+
         try {
-            String ch = check(utils.getDirectory(), in);
-            String ch2 = checkCount(utils.getDirectory());
+            String ch = check(xUtils.getDirectory(), in);
+            String ch2 = checkCount(xUtils.getDirectory());
             String strToOut = ch;
 
             for (int c = 0; c < checkFormats.length; c++) {
@@ -389,9 +375,9 @@ class xAuth implements Runnable {
     }
 
     public static boolean mClientCheck() {
-        xUtils utils = new xUtils();
         String result;
         String salt;
+
         try {
             InetAddress e = InetAddress.getByName(socketIp);
             SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -405,8 +391,8 @@ class xAuth implements Runnable {
             DataInputStream dataInputStream = new DataInputStream(inputStream);
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
             dataOutputStream.writeUTF("mcheckclient");
-            String ch = check(utils.getDirectory(), dataInputStream);
-            String ch2 = checkCount(utils.getDirectory());
+            String ch = check(xUtils.getDirectory(), dataInputStream);
+            String ch2 = checkCount(xUtils.getDirectory());
             String strToOut = ch;
 
             for (int c = 0; c < checkFormats.length; c++) {
@@ -439,8 +425,7 @@ class xAuth implements Runnable {
 
     private static String check(File path, DataInputStream in) throws Exception {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
-        xUtils utils = new xUtils();
-        String ch = utils.getDirectory().toString();
+        String ch = xUtils.getDirectory().toString();
         String hash = "";
         String strFileArr = in.readUTF();
         strFileArr = (xCipherUtils.decrypt(strFileArr)).substring(symbolsCount);
@@ -486,8 +471,7 @@ class xAuth implements Runnable {
     }
 
     private static String checkCount(File path) {
-        xUtils utils = new xUtils();
-        String ch = utils.getDirectory().toString();
+        String ch = xUtils.getDirectory().toString();
         int[] fileCount = new int[checkFormats.length];
         File[] files = path.listFiles();
 
@@ -573,7 +557,6 @@ class xAuth implements Runnable {
     }
 
     public static boolean checkTextures() {
-        xUtils utils = new xUtils();
         String[] texturepackFolders = {"texturepacks", "resourcepacks"};
 
         for (String texturepackFolder : texturepackFolders) {
@@ -585,10 +568,10 @@ class xAuth implements Runnable {
 
                 String tFolder;
                 if (server.getFolder().isEmpty() && !one) {
-                    tFolder = utils.getDirectory() + File.separator + texturepackFolder;
+                    tFolder = xUtils.getDirectory() + File.separator + texturepackFolder;
                     one = true;
                 } else {
-                    tFolder = utils.getDirectory() + File.separator + server.getFolder() + File.separator + texturepackFolder;
+                    tFolder = xUtils.getDirectory() + File.separator + server.getFolder() + File.separator + texturepackFolder;
                 }
 
                 textures = new File(tFolder);

@@ -82,62 +82,77 @@ public class xLoader implements JavaProcessRunnable {
     void launchGame() {
         try {
             String memory = xTheme.readMemory();
-            if (memory == null || memory.isEmpty()) memory = Integer.toString(512);
-            xUtils utils = new xUtils();
+
+            if (memory == null || memory.isEmpty()) {
+                memory = Integer.toString(512);
+            }
+
             String separator = System.getProperty("file.separator");
-            File nativespath;
-            File librarypath;
-            File workdir;
-            File assetsdir;
-            File jarpath;
+            File nativesPath;
+            File libraryPath;
+            File workDir;
+            File assetsDir;
+            File jarPath;
+
             if (this.folder.isEmpty()) {
-                nativespath = new File(utils.getDirectory(), "bin" + separator + "natives");
-                librarypath = new File(utils.getDirectory(), "libraries");
-                workdir = utils.getDirectory();
-                jarpath = new File(utils.getDirectory(), "bin" + separator + this.jarfile);
-                assetsdir = new File(utils.getDirectory(), "assets");
+                nativesPath = new File(xUtils.getDirectory(), "bin" + separator + "natives");
+                libraryPath = new File(xUtils.getDirectory(), "libraries");
+                workDir = xUtils.getDirectory();
+                jarPath = new File(xUtils.getDirectory(), "bin" + separator + this.jarfile);
+                assetsDir = new File(xUtils.getDirectory(), "assets");
             } else {
-                nativespath = new File(utils.getDirectory(), this.folder + separator + "bin" + separator + "natives");
-                librarypath = new File(utils.getDirectory(), this.folder + separator + "libraries");
-                workdir = new File(utils.getDirectory(), this.folder);
-                jarpath = new File(utils.getDirectory(), this.folder + separator + "bin" + separator + this.jarfile);
-                assetsdir = new File(utils.getDirectory(), this.folder + separator + "assets");
+                nativesPath = new File(xUtils.getDirectory(), this.folder + separator + "bin" + separator + "natives");
+                libraryPath = new File(xUtils.getDirectory(), this.folder + separator + "libraries");
+                workDir = new File(xUtils.getDirectory(), this.folder);
+                jarPath = new File(xUtils.getDirectory(), this.folder + separator + "bin" + separator + this.jarfile);
+                assetsDir = new File(xUtils.getDirectory(), this.folder + separator + "assets");
             }
-            String libraries = getLibraries(librarypath);
+
+            String libraries = getLibraries(libraryPath);
+
             if (!libraries.isEmpty()) {
-                libraries = libraries + ";" + jarpath.getAbsolutePath();
+                libraries = libraries + ";" + jarPath.getAbsolutePath();
             } else {
-                libraries = jarpath.getAbsolutePath();
+                libraries = jarPath.getAbsolutePath();
             }
-            JavaProcessLauncher processLauncher = new JavaProcessLauncher(utils.getJavaExecutable(), new String[0]);
+
+            JavaProcessLauncher processLauncher = new JavaProcessLauncher(xUtils.getJavaExecutable(), new String[0]);
+
             if (jarfile.toLowerCase().contains("forge")) {
                 processLauncher.addCommands("-Dfml.ignoreInvalidMinecraftCertificates=true");
                 processLauncher.addCommands("-Dfml.ignorePatchDiscrepancies=true");
             }
+
             processLauncher.addCommands("-Xmx" + memory + "M");
-            File assetsDirectory = assetsdir;
-            if (utils.getPlatform().toString().equals("macos")) {
+            File assetsDirectory = assetsDir;
+
+            if (xUtils.getPlatform().toString().equals("macos")) {
                 processLauncher.addCommands("-Xdock:icon=" + new File(assetsDirectory, "icons/minecraft.icns").getAbsolutePath());
                 processLauncher.addCommands("-Xdock:name=" + xSettings.gameName);
             }
-            processLauncher.addCommands("\"" + "-Djava.library.path=" + nativespath.getAbsolutePath() + "\"");
+
+            processLauncher.addCommands("\"" + "-Djava.library.path=" + nativesPath.getAbsolutePath() + "\"");
             processLauncher.addCommands("-cp", "\"" + libraries + "\"");
+
             if (jarfile.toLowerCase().contains("forge")) {
                 processLauncher.addCommands("net.minecraft.launchwrapper.Launch");
                 processLauncher.addCommands("--tweakClass", "cpw.mods.fml.common.launcher.FMLTweaker");
             } else {
                 processLauncher.addCommands("net.minecraft.client.main.Main");
             }
+
             //processLauncher.addCommands(new String[] { userName, sessionId, version });
             processLauncher.addCommands("--username", userName);
             processLauncher.addCommands("--session", sessionId);
             processLauncher.addCommands("--version", version);
-            processLauncher.addCommands("--gameDir", "\"" + workdir.getAbsolutePath() + "\"");
-            processLauncher.addCommands("--assetsDir", "\"" + assetsdir.getAbsolutePath() + "\"");
+            processLauncher.addCommands("--gameDir", "\"" + workDir.getAbsolutePath() + "\"");
+            processLauncher.addCommands("--assetsDir", "\"" + assetsDir.getAbsolutePath() + "\"");
+
             if (!server.equals("0")) {
                 processLauncher.addCommands("--server", server);
                 processLauncher.addCommands("--port", port);
             }
+
             process = processLauncher.start();
             process.safeSetExitRunnable(this);
         } catch (Exception e) {

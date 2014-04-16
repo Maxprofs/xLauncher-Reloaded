@@ -39,8 +39,7 @@ public class xLauncher extends JFrame {
         this.theme = theme;
         getContentPane().add(theme);
 
-        xUtils utils = new xUtils();
-        if (utils.getPlatform().ordinal() == 0) {
+        if (xUtils.getPlatform().ordinal() == 0) {
             this.sound = false;
         }
 
