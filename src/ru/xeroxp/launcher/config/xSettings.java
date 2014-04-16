@@ -5,10 +5,11 @@ import ru.xeroxp.launcher.xServerConnect;
 public class xSettings {
     public static final String siteLink = "http://magicwars.high-sky.ru/"; // Ссылка на главную страницу сайта
     public static final String mineFolder = "magicwars"; // Папка в которой находится майнкрафт (.minecraft) без точки
-    public static final String downLauncherLink = "http://localhost/launcher/"; // Путь до папки, в которой лежит лаунчер (xLauncher.jar и xLauncher.exe)
+    public static final String downLauncherLink = "http://localhost/launcher/"; // Путь до папки, в которой лежит лаунчер
+    public static final String launcherFileName = "xLauncher"; // Названия файла лаунчера (.jar и .exe)
     public static final String downClientLink = "http://localhost/client/"; // Путь до папки, в которой хранится client.zip (в нем хранятся все файлы клиентов)
     public static final String mainInfoFile = "http://localhost/maininfo.php"; // Путь до файла информации
-    public static final String LauncherName = "MagicWars Launcher"; // Название лаунчера
+    public static final String launcherName = "MagicWars Launcher"; // Название лаунчера
     public static final String monitorLink = "http://localhost/data/monitor.txt"; // Ссылка на файл мониторинга
     public static final int checkTime = 70000; // Промежутки проверки клиента
     public static final String gameName = "MagicWars"; // Название окна игры
@@ -30,5 +31,8 @@ public class xSettings {
             "1.2.5::aj", "1.3.x::am", "1.4.x::an", "1.5.x::an", "1.6.x::an"
     }; // Версии и классы для автозамены дирректории игры
 
-    public static boolean debug = true; // Режим отладки - отключите если не знаете что это
+    /**
+     * Режим отладки
+     */
+    public static boolean debug = true; // Отключите если не знаете что это
 }

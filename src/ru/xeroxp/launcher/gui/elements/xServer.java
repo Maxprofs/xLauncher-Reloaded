@@ -10,7 +10,6 @@ import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
 public class xServer {
-
     private static final List<xServer> servers = new ArrayList<xServer>();
     private final int id;
     private final String serverName;

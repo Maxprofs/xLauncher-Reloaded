@@ -71,16 +71,7 @@ public class xUpdater {
     }
 
     private void updateLauncher(String checkVersion) {
-        xButton.loadButtons();
-
-        for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
-            xButton button = xButton.getButtons()[i];
-
-            if (button.getId() == xButton.UPDATE_ID || button.getId() == xButton.RAM_ID) {
-                this.theme.buttons[button.getId()].setEnabled(false);
-            }
-        }
-
+        disableButtons();
         File runningLauncher = null;
 
         try {
@@ -92,9 +83,9 @@ public class xUpdater {
         try {
             if (runningLauncher != null) {
                 if (runningLauncher.getPath().endsWith(".jar")) {
-                    this.unpackLauncher(new URL(xSettings.downLauncherLink + "xLauncher.jar"), runningLauncher);
+                    this.unpackLauncher(new URL(xSettings.downLauncherLink + xSettings.launcherFileName + ".jar"), runningLauncher);
                 } else if (runningLauncher.getPath().endsWith(".exe")) {
-                    this.unpackLauncher(new URL(xSettings.downLauncherLink + "xLauncher.exe"), runningLauncher);
+                    this.unpackLauncher(new URL(xSettings.downLauncherLink + xSettings.launcherFileName + ".exe"), runningLauncher);
                 }
             }
             xMain.setVersion(checkVersion);
@@ -155,16 +146,7 @@ public class xUpdater {
     }
 
     void updateClient(String version) {
-        xButton.loadButtons();
-
-        for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
-            xButton button = xButton.getButtons()[i];
-
-            if (button.getId() == xButton.UPDATE_ID || button.getId() == xButton.RAM_ID) {
-                this.theme.buttons[button.getId()].setEnabled(false);
-            }
-        }
-
+        disableButtons();
         xUtils.deleteFiles();
 
         try {
@@ -325,6 +307,18 @@ public class xUpdater {
 
         in.close();
         out.close();
+    }
+
+    private void disableButtons() {
+        xButton.loadButtons();
+
+        for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
+            xButton button = xButton.getButtons()[i];
+
+            if (button.getId() == xButton.UPDATE_ID || button.getId() == xButton.RAM_ID) {
+                this.theme.buttons[button.getId()].setEnabled(false);
+            }
+        }
     }
 
     boolean buildDirectory(File file) {

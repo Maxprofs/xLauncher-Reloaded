@@ -39,7 +39,7 @@ public class xLauncher extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setTitle(xSettings.LauncherName + " v" + xMain.getVersion());
+        setTitle(xSettings.launcherName + " v" + xMain.getVersion());
 
         xTheme theme = new xTheme();
         this.theme = theme;
@@ -184,14 +184,10 @@ public class xLauncher extends JFrame {
                 var8.printStackTrace();
             }
 
-            String versionr = version.replaceAll("\\.", "");
-            boolean old = true;
-            if (((versionr.length() == 3) && (Integer.parseInt(versionr) >= 160)) || ((versionr.length() == 2) && (Integer.parseInt(versionr) >= 16))) {
-                old = false;
-            }
-            oldVer = old;
+            oldVer = isOld(version);
             xMain.cm.start();
-            if (old) {
+
+            if (oldVer) {
                 Launcher applet = new Launcher();
                 applet.init(login, session, server, port, folder, jar, version);
                 this.add(applet);
@@ -217,14 +213,10 @@ public class xLauncher extends JFrame {
                 var3.printStackTrace();
             }
 
-            String versionr = xSettings.offlineClient[2].replaceAll("\\.", "");
-            boolean old = true;
-            if (((versionr.length() == 3) && (Integer.parseInt(versionr) >= 160)) || ((versionr.length() == 2) && (Integer.parseInt(versionr) >= 16))) {
-                old = false;
-            }
-            oldVer = old;
+            oldVer = isOld(xSettings.offlineClient[2]);
             xMain.cm.start();
-            if (old) {
+
+            if (oldVer) {
                 Launcher applet = new Launcher();
                 applet.init(userName);
                 this.add(applet);
@@ -235,5 +227,10 @@ public class xLauncher extends JFrame {
                 new xLoader(userName);
             }
         }
+
+        private boolean isOld(String version) {
+            String versionNum = version.replaceAll("\\.", "");
+            return ((versionNum.length() == 3) && (Integer.parseInt(versionNum) >= 160)) || ((versionNum.length() == 2) && (Integer.parseInt(versionNum) >= 16));
+        }
     }
-}
+    }

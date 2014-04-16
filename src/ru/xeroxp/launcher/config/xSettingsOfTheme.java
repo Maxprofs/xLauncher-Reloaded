@@ -34,7 +34,7 @@ public class xSettingsOfTheme {
     public static final xCheckbox[] Checkboxes = {
             new xCheckbox(0, "Запомнить пароль", 573, 331, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 331, 16, 16),
             new xCheckbox(1, "Режим оффлайн", 573, 364, 120, 14, new Color(63, 63, 63), "checkbox.png", "checkbox_select.png", 549, 364, 16, 16)
-    }; // id(не менять!), название(выполняет роль текста), координаты и размеры, цвет, картинка, активированная картинка, координаты и размеры
+    }; // id (не менять!), название(выполняет роль текста), координаты и размеры, цвет, картинка, активированная картинка, координаты и размеры
 
     public static final xHeaderButton[] HeaderButtons = {
             new xHeaderButton("exit", "exit_button.png", "exit_button.png", 775, 6, 14, 14),
@@ -45,7 +45,7 @@ public class xSettingsOfTheme {
             new xTextField(0, "Логин", new Color(114, 114, 114), 20, 560, 232, 200, 14, "login_field.png"),
             new xTextField(1, "Пароль", new Color(114, 114, 114), 26, 560, 281, 200, 14, "password_field.png"),
             new xTextField(2, "Память", new Color(114, 114, 114), 6, 560, 411, 120, 20, "memory_field.png")
-    }; // id(не менять!), название, цвет, максимальное количество символов, координаты и размеры, картинка
+    }; // id (не менять!), название, цвет, максимальное количество символов, координаты и размеры, картинка
 
     public static final int[] LoginFieldBounds = {549, 225}; // Координаты картинки для логина
     public static final int[] PasswordFieldBounds = {549, 273}; // Координаты картинки для пароля

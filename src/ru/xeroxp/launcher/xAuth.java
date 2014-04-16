@@ -451,15 +451,7 @@ public class xAuth implements Runnable {
         }
 
         for (File file : files) {
-            xServer.loadServers();
-            for (int s = 0; s < xSettingsOfTheme.Servers.length; ++s) {
-                xServer server = xServer.getServers()[s];
-
-                if (!server.getFolder().isEmpty() && path.toString().equals(ch + File.separator + server.getFolder())) {
-                    ch += File.separator + server.getFolder();
-                    break;
-                }
-            }
+            ch = getServerPath(ch);
 
             if (file.isDirectory() && (!path.toString().equals(ch) || (!file.getName().endsWith("texturepacks") && !file.getName().endsWith("resourcepacks")))) {
                 String sHash = check(new File(file.toString()), in);
@@ -475,6 +467,20 @@ public class xAuth implements Runnable {
         }
 
         return md5(hash);
+    }
+
+    private static String getServerPath(String path) {
+        xServer.loadServers();
+        for (int s = 0; s < xSettingsOfTheme.Servers.length; ++s) {
+            xServer server = xServer.getServers()[s];
+
+            if (!server.getFolder().isEmpty() && path.equals(path + File.separator + server.getFolder())) {
+                path += File.separator + server.getFolder();
+                break;
+            }
+        }
+
+        return path;
     }
 
     private static String checkCount(File path) {
@@ -494,16 +500,7 @@ public class xAuth implements Runnable {
         }
 
         for (File file : files) {
-            xServer.loadServers();
-
-            for (int s = 0; s < xSettingsOfTheme.Servers.length; ++s) {
-                xServer server = xServer.getServers()[s];
-
-                if (!server.getFolder().isEmpty() && path.toString().equals(ch + File.separator + server.getFolder())) {
-                    ch += File.separator + server.getFolder();
-                    break;
-                }
-            }
+            ch = getServerPath(ch);
 
             if (file.isDirectory()) {
                 if (path.toString().equals(ch)) {

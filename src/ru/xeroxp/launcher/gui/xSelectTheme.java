@@ -99,7 +99,7 @@ public class xSelectTheme extends JPanel {
             xDebug.errorMessage("Failed load select server theme images: " + e.getMessage());
         }
 
-        JLabel header = new JLabel(xSettings.LauncherName + " v" + xMain.getVersion());
+        JLabel header = new JLabel(xSettings.launcherName + " v" + xMain.getVersion());
         header.setForeground(xSettingsOfTheme.HeaderColor);
         header.setBounds(xSettingsOfTheme.HeaderBounds[0], xSettingsOfTheme.HeaderBounds[1], xSettingsOfTheme.HeaderBounds[2], xSettingsOfTheme.HeaderBounds[3]);
         header.setFont(arial);

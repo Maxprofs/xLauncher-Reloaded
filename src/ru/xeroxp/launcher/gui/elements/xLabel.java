@@ -10,7 +10,6 @@ import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
 public class xLabel {
-
     private static final List<xLabel> labels = new ArrayList<xLabel>();
     private final String labelName;
     private final Color labelColor;
