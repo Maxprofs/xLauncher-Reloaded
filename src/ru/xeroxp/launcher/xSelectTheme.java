@@ -13,31 +13,31 @@ import java.io.InputStream;
 class xSelectTheme extends JPanel {
     private final JLabel[] serverOnline = new JLabel[xServer.getSize()];
     private BufferedImage background;
-    private BufferedImage onlinebar;
-    private BufferedImage onlinebarBg;
-    private BufferedImage offlinebar;
+    private BufferedImage onlineBar;
+    private BufferedImage onlineBarBg;
+    private BufferedImage offlineBar;
     private final BufferedImage image = new BufferedImage(xSettingsOfTheme.ServersInScrollPanelSize[0], xSettingsOfTheme.ServersInScrollPanelSize[1], BufferedImage.TYPE_INT_ARGB);
     private final JScrollPane scrollPane;
-    private final JPanel serverpanel = new JPanel();
-    private final JPanel serversbackground = new BgPanel();
+    private final JPanel serverPanel = new JPanel();
+    private final JPanel serversBackground = new BgPanel();
 
-    private boolean sendready = false;
+    private boolean sendReady = false;
     private Clip clip = null;
     private Font serverFont = null;
     private Font serverFont2 = null;
 
     public xSelectTheme() {
-        System.out.println("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+        System.out.println("Выбор сервера");
 
         setLayout(null);
         setMinimumSize(new Dimension(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]));
         setSize(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]);
 
-        serverpanel.setLayout(null);
-        serverpanel.setBorder(null);
-        serverpanel.setOpaque(false);
-        serverpanel.setPreferredSize(new Dimension(xSettingsOfTheme.ServersInScrollPanelSize[0], xSettingsOfTheme.ServersInScrollPanelSize[1]));
-        scrollPane = new JScrollPane(serverpanel);
+        serverPanel.setLayout(null);
+        serverPanel.setBorder(null);
+        serverPanel.setOpaque(false);
+        serverPanel.setPreferredSize(new Dimension(xSettingsOfTheme.ServersInScrollPanelSize[0], xSettingsOfTheme.ServersInScrollPanelSize[1]));
+        scrollPane = new JScrollPane(serverPanel);
         scrollPane.setBorder(null);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
@@ -51,11 +51,12 @@ class xSelectTheme extends JPanel {
         s_bar.setOpaque(false);
         sp.setVerticalScrollBar(s_bar);
         scrollPane.setBounds(xSettingsOfTheme.ServersScrollPanelBounds[0], xSettingsOfTheme.ServersScrollPanelBounds[1], xSettingsOfTheme.ServersScrollPanelBounds[2], xSettingsOfTheme.ServersScrollPanelBounds[3]);
-        serversbackground.setSize(new Dimension(xSettingsOfTheme.ServersInScrollPanelSize[0], xSettingsOfTheme.ServersInScrollPanelSize[1]));
+        serversBackground.setSize(new Dimension(xSettingsOfTheme.ServersInScrollPanelSize[0], xSettingsOfTheme.ServersInScrollPanelSize[1]));
 
         InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.FontFile1);
         InputStream is2 = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.FontFile2);
         Font arial = null;
+
         try {
             arial = Font.createFont(0, is);
             arial = arial.deriveFont(Font.BOLD, xSettingsOfTheme.ServersFonts[0]);
@@ -86,11 +87,12 @@ class xSelectTheme extends JPanel {
                 System.out.println(e.getMessage());
             }
         }
+
         try {
             this.background = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersPanelBackgroundImage));
-            this.onlinebar = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersBarImages[0]));
-            this.offlinebar = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersBarImages[1]));
-            this.onlinebarBg = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersBarImages[2]));
+            this.onlineBar = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersBarImages[0]));
+            this.offlineBar = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersBarImages[1]));
+            this.onlineBarBg = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.ServersBarImages[2]));
         } catch (IOException e) {
             System.out.println("Failed load select server theme images");
             System.out.println(e.getMessage());
@@ -115,6 +117,7 @@ class xSelectTheme extends JPanel {
 
         for (int i = 0; i < xServer.getSize(); i++) {
             int online = 0;
+
             try {
                 online = Integer.parseInt(args[i]);
             } catch (NumberFormatException e) {
@@ -126,21 +129,22 @@ class xSelectTheme extends JPanel {
 
             if (online > 0) {
                 this.serverOnline[i].setText(online + "/" + maxOnline);
-                g2.drawImage(this.onlinebarBg, server.getBarX(), server.getBarY(), this);
+                g2.drawImage(this.onlineBarBg, server.getBarX(), server.getBarY(), this);
 
                 if (online > maxOnline) {
                     online = maxOnline;
                 }
 
-                g2.drawImage(this.onlinebar.getSubimage(0, 0, (int) (server.getBarSizeX() / server.getOnline() * online), server.getBarSizeY()), server.getBarX(), server.getBarY(), null);
+                g2.drawImage(this.onlineBar.getSubimage(0, 0, (int) (server.getBarSizeX() / server.getOnline() * online), server.getBarSizeY()), server.getBarX(), server.getBarY(), null);
             } else if (online == -1) {
                 this.serverOnline[i].setText("OFF");
-                g2.drawImage(this.offlinebar, server.getBarX(), server.getBarY(), this);
+                g2.drawImage(this.offlineBar, server.getBarX(), server.getBarY(), this);
             } else {
                 this.serverOnline[i].setText(online + "/" + maxOnline);
-                g2.drawImage(this.onlinebarBg, server.getBarX(), server.getBarY(), this);
+                g2.drawImage(this.onlineBarBg, server.getBarX(), server.getBarY(), this);
             }
         }
+
         g2.dispose();
         repaint();
     }
@@ -184,13 +188,13 @@ class xSelectTheme extends JPanel {
 
             serverImage.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    if (!xSelectTheme.this.sendready) {
+                    if (!xSelectTheme.this.sendReady) {
                         if (xSelectTheme.this.clip != null) {
                             xSelectTheme.this.clip.start();
                         }
 
                         xLauncher.getLauncher().drawMinecraft(server.getIp(), server.getPort(), server.getFolder(), server.getJar(), server.getVersion());
-                        xSelectTheme.this.sendready = true;
+                        xSelectTheme.this.sendReady = true;
                     }
                 }
 
@@ -205,13 +209,13 @@ class xSelectTheme extends JPanel {
 
             serverIcon.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    if (!xSelectTheme.this.sendready) {
+                    if (!xSelectTheme.this.sendReady) {
                         if (xSelectTheme.this.clip != null) {
                             xSelectTheme.this.clip.start();
                         }
 
                         xLauncher.getLauncher().drawMinecraft(server.getIp(), server.getPort(), server.getFolder(), server.getJar(), server.getVersion());
-                        xSelectTheme.this.sendready = true;
+                        xSelectTheme.this.sendReady = true;
                     }
                 }
 
@@ -238,23 +242,20 @@ class xSelectTheme extends JPanel {
             this.serverOnline[id].setBounds(server.getOnlineX(), server.getOnlineY(), server.getOnlineSizeX(), server.getOnlineSizeY());
             this.serverOnline[id].setForeground(server.getOnlineColor());
 
-            serverpanel.add(serverTitle);
-            serverpanel.add(this.serverOnline[id]);
-            serverpanel.add(serverImage);
-            serverpanel.add(serverIcon);
+            serverPanel.add(serverTitle);
+            serverPanel.add(this.serverOnline[id]);
+            serverPanel.add(serverImage);
+            serverPanel.add(serverIcon);
         }
+
         add(scrollPane);
-        serverpanel.add(serversbackground);
+        serverPanel.add(serversBackground);
     }
 
-    class BgPanel extends JPanel {
+    private class BgPanel extends JPanel {
         @Override
         public void paintComponent(Graphics g) {
-            g.drawImage(iimage, 0, 0, getWidth(), getHeight(), this);
+            g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
         }
-
-        final BufferedImage iimage = image;
-
-
     }
 }

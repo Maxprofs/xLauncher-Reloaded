@@ -66,7 +66,7 @@ class xMain {
 
                                     new Thread(new Runnable() {
                                         public void run() {
-                                            new xErrorPanel(xLauncher.getLauncher(), "Папка текстур не прошла проверку").setVisible(true);
+                                            new xErrorPanel(xLauncher.getLauncher(), "пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ").setVisible(true);
                                             System.exit(1);
                                         }
                                     }).start();
@@ -80,7 +80,7 @@ class xMain {
                                     if (xLoader.process != null) xLoader.process.stop();
                                     new Thread(new Runnable() {
                                         public void run() {
-                                            new xErrorPanel(xLauncher.getLauncher(), "Клиент не прошел проверку").setVisible(true);
+                                            new xErrorPanel(xLauncher.getLauncher(), "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ").setVisible(true);
                                             System.exit(1);
                                         }
                                     }).start();
@@ -176,7 +176,7 @@ class xMain {
         public void run() {
             xTheme theme = this.launcher.getTheme();
             theme.getUpdateNews();
-            updater = new xUpdater(theme, false);
+            updater = new xUpdater(theme);
             this.launcher.repaint();
         }
     }

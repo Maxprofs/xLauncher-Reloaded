@@ -22,7 +22,7 @@ public class xUpdater {
     private boolean firstBg = true;
     private final xUtils utils = new xUtils();
 
-    public xUpdater(xTheme theme, boolean n) {
+    public xUpdater(xTheme theme) {
         try {
             this.update = ImageIO.read(xUpdater.class.getResource("/images/updatebar_ok.png"));
             this.image = ImageIO.read(xUpdater.class.getResource("/images/updatebar.png"));
@@ -39,7 +39,7 @@ public class xUpdater {
         this.theme.revalidate();
         this.theme.repaint();
         this.checkLauncherUpdate();
-        this.checkClientUpdate(n);
+        this.checkClientUpdate(false);
     }
 
     private void checkLauncherUpdate() {

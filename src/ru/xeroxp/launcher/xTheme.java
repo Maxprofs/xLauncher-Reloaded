@@ -35,8 +35,7 @@ public class xTheme extends JPanel {
             new Thread(new Runnable() {
                 public void run() {
                     String mem = xSliderValue.getText();
-                    if (Integer.parseInt(mem) < 128) xAuth.rememberMemory("128");
-                    else xAuth.rememberMemory(mem);
+                    xAuth.rememberMemory((Integer.parseInt(mem) < 128) ? "128" : mem);
                 }
             }).start();
         }
@@ -50,11 +49,12 @@ public class xTheme extends JPanel {
         }
 
         public void keyPressed(KeyEvent e) {
-            int key = e.getKeyCode();
-            if (key == 10)
+            if (e.getKeyCode() == 10) {
                 xTheme.this.startAuth();
+            }
         }
     };
+
     private BufferedImage logo;
     private BufferedImage loginField;
     private BufferedImage passField;
@@ -83,6 +83,7 @@ public class xTheme extends JPanel {
         setOpaque(false);
 
         InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.FontFile1);
+
         try {
             this.arial = Font.createFont(0, is);
             this.arial = this.arial.deriveFont(0, xSettingsOfTheme.MainFonts[0]);
@@ -94,6 +95,7 @@ public class xTheme extends JPanel {
             System.out.println("Failed load font");
             System.out.println(e2.getMessage());
         }
+
         try {
             this.background = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.MainPanelBackgroundImage));
             this.logo = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.Logo));
@@ -118,6 +120,7 @@ public class xTheme extends JPanel {
                 System.out.println(e.getMessage());
             }
         }
+
         JLabel header = new JLabel(xSettings.LauncherName + " v" + xMain.getVersion());
         header.setForeground(xSettingsOfTheme.HeaderColor);
         header.setBounds(xSettingsOfTheme.HeaderBounds[0], xSettingsOfTheme.HeaderBounds[1], xSettingsOfTheme.HeaderBounds[2], xSettingsOfTheme.HeaderBounds[3]);
@@ -133,6 +136,7 @@ public class xTheme extends JPanel {
         this.error.setHorizontalAlignment(JLabel.CENTER);
 
         String readFile = readLogin();
+
         if (readFile != null) {
             String[] args = readFile.split(":");
             if (args.length != 1) {
@@ -178,17 +182,20 @@ public class xTheme extends JPanel {
         xUtils utils = new xUtils();
         File dir = utils.getDirectory();
         File versionFile = new File(dir, "memory");
+
         if (versionFile.exists()) {
             DataInputStream dis;
             try {
                 dis = new DataInputStream(new FileInputStream(versionFile));
                 String readMemory = dis.readUTF();
                 dis.close();
+
                 return readMemory;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
         return null;
     }
 
@@ -226,6 +233,7 @@ public class xTheme extends JPanel {
                         }
                 }
             });
+
             new Thread(new Runnable() {
                 public void run() {
                     try {
@@ -236,6 +244,7 @@ public class xTheme extends JPanel {
                     }
                 }
             }).start();
+
             editorPane.setOpaque(false);
             editorPane.setEditable(false);
             scrollPane = new JScrollPane(editorPane);
@@ -284,6 +293,7 @@ public class xTheme extends JPanel {
                 dis = new DataInputStream(new FileInputStream(versionFile));
                 String readLogin = dis.readUTF();
                 dis.close();
+
                 return readLogin;
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
@@ -330,6 +340,7 @@ public class xTheme extends JPanel {
             }
 
             lockAuth(true);
+
             if ((this.savedPassword != null) && (password.equals("password"))) {
                 Thread authThread = new Thread(new xAuth(login, this, this.savedPassword));
                 authThread.start();
@@ -369,6 +380,7 @@ public class xTheme extends JPanel {
 
     void addButtons() {
         for (final xButton button : xButton.getButtons()) {
+
             buttons[button.getId()] = new JButton();
             buttons[button.getId()].setBounds(button.getImageX(), button.getImageY(), button.getImageSizeX(), button.getImageSizeY());
             buttons[button.getId()].setIcon(new ImageIcon(xTheme.class.getResource("/images/" + button.getImage())));
@@ -378,9 +390,12 @@ public class xTheme extends JPanel {
             buttons[button.getId()].setOpaque(false);
             buttons[button.getId()].setBorder(null);
             buttons[button.getId()].setContentAreaFilled(false);
-            if (button.getKeyListener().equals("JKL")) buttons[button.getId()].addKeyListener(JoinKListener);
-            if (button.getActionListener().equals("JL")) buttons[button.getId()].addActionListener(JoinListener);
-            if (button.getActionListener().equals("UL")) {
+
+            if (button.getKeyListener().equals("JKL")) {
+                buttons[button.getId()].addKeyListener(JoinKListener);
+            } else if (button.getActionListener().equals("JL")) {
+                buttons[button.getId()].addActionListener(JoinListener);
+            } else if (button.getActionListener().equals("UL")) {
                 buttons[button.getId()].addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         new Thread(new Runnable() {
@@ -414,25 +429,29 @@ public class xTheme extends JPanel {
             checkboxes.setOpaque(false);
             checkboxes.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + checkbox.getImage())));
             checkboxes.setSelectedIcon(new ImageIcon(xTheme.class.getResource("/images/" + checkbox.getSelectedImage())));
+
             if (checkbox.getItemListener().equals("RPL")) {
                 checkboxes.addItemListener(new ItemListener() {
                     public void itemStateChanged(ItemEvent e) {
                         xTheme.this.remember = checkboxes.isSelected();
                     }
                 });
+
                 String readFile = readLogin();
+
                 if (readFile != null) {
                     String[] args = readFile.split(":");
+
                     if (args.length != 1) {
                         checkboxes.setSelected(true);
                     }
                 }
-            }
-            if (checkbox.getItemListener().equals("GML")) checkboxes.addItemListener(new ItemListener() {
+            } else if (checkbox.getItemListener().equals("GML")) checkboxes.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     gameOffline = checkboxes.isSelected();
                 }
             });
+
             add(labels);
             add(checkboxes);
         }
@@ -458,6 +477,7 @@ public class xTheme extends JPanel {
                     }
                 }
             });
+
             add(labels);
         }
     }
@@ -489,6 +509,7 @@ public class xTheme extends JPanel {
                         }
                     }
                 });
+
                 passwordBar.addKeyListener(JoinKListener);
                 if (readFile != null) {
                     String[] args = readFile.split(":");
@@ -496,16 +517,19 @@ public class xTheme extends JPanel {
                         passwordBar.setText("password");
                     }
                 }
+
                 if (passwordBar.getPassword().length == 0) {
                     passwordBar.setEchoChar((char) 0);
                     passwordBar.setText("Пароль");
                 }
+
                 try {
                     this.passField = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
                 } catch (IOException e) {
                     System.out.println("Failed load password field image");
                     System.out.println(e.getMessage());
                 }
+
                 add(passwordBar);
             } else if (field.getFieldName().equals("Логин")) {
                 loginBar.setDocument(new xTextFieldLimit(field.getFieldLimit()));
@@ -523,22 +547,29 @@ public class xTheme extends JPanel {
                         if (loginBar.getText().length() == 0) loginBar.setText("Логин");
                     }
                 });
+
                 loginBar.addKeyListener(JoinKListener);
                 if (readFile != null) {
                     String[] args = readFile.split(":");
+
                     if (args.length == 1) {
                         loginBar.setText(args[0]);
                     } else {
                         loginBar.setText(args[0]);
                     }
                 }
-                if (loginBar.getText().length() == 0) loginBar.setText("Логин");
+
+                if (loginBar.getText().length() == 0) {
+                    loginBar.setText("Логин");
+                }
+
                 try {
                     this.loginField = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
                 } catch (IOException e) {
                     System.out.println("Failed load login field image");
                     System.out.println(e.getMessage());
                 }
+
                 add(loginBar);
             } else if (field.getFieldName().equals("Память")) {
                 xSliderValue.setDocument(new xTextFieldLimit(field.getFieldLimit()));
@@ -548,8 +579,15 @@ public class xTheme extends JPanel {
                 xSliderValue.setFont(this.arial);
                 xSliderValue.setForeground(field.getFieldColor());
                 String memory = xTheme.readMemory();
-                if (memory != null) xSliderValue.setText(memory);
-                if (xSliderValue.getText().length() == 0) xSliderValue.setText("512");
+
+                if (memory != null) {
+                    xSliderValue.setText(memory);
+                }
+
+                if (xSliderValue.getText().length() == 0) {
+                    xSliderValue.setText("512");
+                }
+
                 xSliderValue.addFocusListener(new FocusListener() {
                     public void focusGained(FocusEvent e) {
                     }
@@ -558,12 +596,14 @@ public class xTheme extends JPanel {
                         if (xSliderValue.getText().length() == 0) xSliderValue.setText("512");
                     }
                 });
+
                 try {
                     this.memoryField = ImageIO.read(xTheme.class.getResource("/images/" + field.getImage()));
                 } catch (IOException e) {
                     System.out.println("Failed load memory field image");
                     System.out.println(e.getMessage());
                 }
+
                 add(xSliderValue);
             }
         }
@@ -573,6 +613,7 @@ public class xTheme extends JPanel {
         JPanel animpanel = new JPanel();
         animpanel.setLayout(null);
         animpanel.setOpaque(false);
+
         if (xSettings.animatedNews) {
             bPanel = new JPanel();
             bPanel.setLayout(null);
@@ -596,7 +637,9 @@ public class xTheme extends JPanel {
             animpanel.setBounds(-1, xSettingsOfTheme.NewsPanelY2, xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight2);
             animpanel.setSize(xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight2);
         }
+
         animpanel.add(getNPane());
+
         if (xSettings.animatedNews) {
             bPanel.add(newsButton);
             animpanel.add(bPanel);
@@ -618,15 +661,23 @@ public class xTheme extends JPanel {
                         public void run() {
                             try {
                                 newsButton.setEnabled(false);
+
                                 while (true) {
                                     if (newsOpened) {
-                                        if (nPanel.getX() == -1) break;
-                                        else Thread.sleep(100);
+                                        if (nPanel.getX() == -1) {
+                                            break;
+                                        }
+
+                                        Thread.sleep(100);
                                     } else {
-                                        if (nPanel.getX() == -xSettingsOfTheme.NewsPanelWidth1) break;
-                                        else Thread.sleep(100);
+                                        if (nPanel.getX() == -xSettingsOfTheme.NewsPanelWidth1) {
+                                            break;
+                                        }
+
+                                        Thread.sleep(100);
                                     }
                                 }
+
                                 newsButton.setEnabled(true);
                             } catch (InterruptedException ex) {
                                 ex.printStackTrace();
@@ -636,6 +687,7 @@ public class xTheme extends JPanel {
                 }
             });
         }
+
         add(animpanel);
     }
 
@@ -643,40 +695,42 @@ public class xTheme extends JPanel {
         nPanel = new JPanel();
         nPanel.setLayout(null);
         nPanel.setOpaque(false);
-        JPanel newspanel = new JPanel();
-        JPanel gpanel = new JPanel();
-        newspanel.setOpaque(false);
-        JPanel newsbackground;
+        JPanel newsPanel = new JPanel();
+        JPanel gPanel = new JPanel();
+        newsPanel.setOpaque(false);
+        JPanel newsBackground;
+
         if (xSettings.animatedNews) {
             getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1 - 25));
-            gpanel.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1));
-            gpanel.setBackground(xSettingsOfTheme.NewsPanelBgColor2);
-            newsbackground = new BgPanel();
-            newsbackground.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1));
-            newspanel.setBounds(15, 12, xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1 - 15);
+            gPanel.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1));
+            gPanel.setBackground(xSettingsOfTheme.NewsPanelBgColor2);
+            newsBackground = new BgPanel();
+            newsBackground.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1));
+            newsPanel.setBounds(15, 12, xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1 - 15);
             nPanel.setBounds(-xSettingsOfTheme.NewsPanelWidth1, 0, xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1);
         } else {
             getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2 - 25, xSettingsOfTheme.NewsPanelHeight2 - 25));
-            gpanel.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2));
-            gpanel.setBackground(xSettingsOfTheme.NewsPanelBgColor2);
-            newsbackground = new JPanel();
-            newsbackground.setOpaque(false);
-            newsbackground.setBackground(new Color(0, 0, 0, 0));
-            newsbackground.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2));
-            newspanel.setBounds(5, 12, xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2 - 15);
+            gPanel.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2));
+            gPanel.setBackground(xSettingsOfTheme.NewsPanelBgColor2);
+            newsBackground = new JPanel();
+            newsBackground.setOpaque(false);
+            newsBackground.setBackground(new Color(0, 0, 0, 0));
+            newsBackground.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2));
+            newsPanel.setBounds(5, 12, xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2 - 15);
             nPanel.setBounds(xSettingsOfTheme.NewsPanelX2, 0, xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2);
         }
-        newspanel.add(getUpdateNews());
-        nPanel.add(newspanel);
-        nPanel.add(newsbackground);
-        nPanel.add(gpanel);
+
+        newsPanel.add(getUpdateNews());
+        nPanel.add(newsPanel);
+        nPanel.add(newsBackground);
+        nPanel.add(gPanel);
     }
 
     JPanel getNPane() {
-        if (nPanel != null)
-            return nPanel;
-        else
+        if (nPanel == null) {
             buildNPane();
+        }
+
         return nPanel;
     }
 
@@ -690,6 +744,7 @@ public class xTheme extends JPanel {
         public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
             if (str != null) {
                 super.insertString(offset, str, attr);
+
                 if (this.getLength() > this.limit) {
                     super.remove(this.limit, this.getLength() - this.limit);
                 }

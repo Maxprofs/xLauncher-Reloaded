@@ -22,17 +22,15 @@ class xAuth implements Runnable {
     private final String password;
     private final xTheme theme;
     private final Random rand = new Random();
-    private static String socketip;
-    private static int socketport;
-    private static String[] checkformats;
-    private static int symbolscount = 0;
-    private static String launcherformat;
-    private static String launchersize;
+    private static String socketIp;
+    private static int socketPort;
+    private static String[] checkFormats;
+    private static int symbolsCount = 0;
+    private static String launcherFormat;
+    private static String launcherSize;
 
     public xAuth(String login, String password, xTheme theme) {
-        this.theme = theme;
-        this.login = login;
-        this.password = strToInt(xorEncode(password));
+        this(login, theme, strToInt(xorEncode(password)));
     }
     
     public xAuth(String login, xTheme theme, String password) {
@@ -54,6 +52,7 @@ class xAuth implements Runnable {
         } catch (NoSuchAlgorithmException var4) {
             var4.printStackTrace();
         }
+
         return string;
     }
     
@@ -62,11 +61,14 @@ class xAuth implements Runnable {
 
         for (byte aBArr : bArr) {
             int unsigned = aBArr & 255;
+
             if (unsigned < 16) {
                 sb.append("0");
             }
+
             sb.append(Integer.toHexString(unsigned));
         }
+
         return sb.toString();
     }
     
@@ -76,37 +78,42 @@ class xAuth implements Runnable {
 
     void getCheckFormats() {
         try {
-            InetAddress e = InetAddress.getByName(socketip);
+            InetAddress e = InetAddress.getByName(socketIp);
             SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
-            SSLSocket socket = (SSLSocket) sf.createSocket(e, socketport);
+            SSLSocket socket = (SSLSocket) sf.createSocket(e, socketPort);
             String[] suites = socket.getSupportedCipherSuites();
             socket.setEnabledCipherSuites(suites);
             socket.startHandshake();
             socket.setSoTimeout(10000);
-            InputStream sine = socket.getInputStream();
-            OutputStream soute = socket.getOutputStream();
-            DataInputStream ine = new DataInputStream(sine);
-            DataOutputStream oute = new DataOutputStream(soute);
-            oute.writeUTF("formats");
-            oute.flush();
-            String formats = ine.readUTF();
+            InputStream inputStream = socket.getInputStream();
+            OutputStream outputStream = socket.getOutputStream();
+            DataInputStream dataInputStream = new DataInputStream(inputStream);
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+            dataOutputStream.writeUTF("formats");
+            dataOutputStream.flush();
+            String formats = dataInputStream.readUTF();
             formats = xCipherUtils.decrypt(formats);
             socket.close();
-            checkformats = new String[0];
+            checkFormats = new String[0];
+
             if (!formats.isEmpty()) {
-            String[] formatsarr = formats.split(";");
-            if (symbolscount == 0) symbolscount = formatsarr[0].length();
-            for(int i = 1; i < formatsarr.length; i++) {
-                addtoarraycf(formatsarr[i]);
-            }
+                String[] formatsArr = formats.split(";");
+
+                if (symbolsCount == 0) {
+                    symbolsCount = formatsArr[0].length();
+                }
+
+                for (int i = 1; i < formatsArr.length; i++) {
+                    addToArrayCf(formatsArr[i]);
+                }
             }
         } catch (Exception var12) {
             var12.printStackTrace();
         }
     }
 
-    private static void addtoarraycf(String text) {
-        checkformats = addToArray(checkformats, text);
+    private static void addToArrayCf(String text) {
+        checkFormats = addToArray(checkFormats, text);
     }
 
     void getServerConnect() {
@@ -119,12 +126,12 @@ class xAuth implements Runnable {
         }
 
         int randomNum = this.rand.nextInt(servers.length);
-        socketip = servers[randomNum].split(";")[0];
-        socketport = Integer.parseInt(servers[randomNum].split(";")[1]);
+        socketIp = servers[randomNum].split(";")[0];
+        socketPort = Integer.parseInt(servers[randomNum].split(";")[1]);
     }
     
     private void sendAuth() {
-        this.theme.setAuth("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+        this.theme.setAuth("Авторизация");
         getServerConnect();
         launcherSize();
         getCheckFormats();
@@ -132,9 +139,9 @@ class xAuth implements Runnable {
         
         try {
             System.out.println("Connection to authorization server");
-            InetAddress e = InetAddress.getByName(socketip);
+            InetAddress e = InetAddress.getByName(socketIp);
             SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
-            SSLSocket socket = (SSLSocket) sf.createSocket(e, socketport);
+            SSLSocket socket = (SSLSocket) sf.createSocket(e, socketPort);
             String[] suites = socket.getSupportedCipherSuites();
             socket.setEnabledCipherSuites(suites);
             socket.startHandshake();
@@ -143,88 +150,84 @@ class xAuth implements Runnable {
             OutputStream sout = socket.getOutputStream();
             DataInputStream in = new DataInputStream(sin);
             DataOutputStream out = new DataOutputStream(sout);
-            salt = xCipherUtils.genSalt(symbolscount);
-            out.writeUTF("0:" + xCipherUtils.encrypt(salt + this.login + ":" + this.password + ":" + xMain.getVersion() + ":" + launcherformat + ":" + launchersize));
+            salt = xCipherUtils.genSalt(symbolsCount);
+            out.writeUTF("0:" + xCipherUtils.encrypt(salt + this.login + ":" + this.password + ":" + xMain.getVersion() + ":" + launcherFormat + ":" + launcherSize));
             out.flush();
 
-            label63:
             while(true) {
-                while(true) {
-                    while(true) {
-                        String input = in.readUTF();
-                        String response = (xCipherUtils.decrypt(input)).substring(symbolscount);
-                        if(!response.equals("0")) {
-                            if(!response.equals("1")) {
-                                    if(!response.equals("2")) {
-                                        if(response.equals("abuse")) {
-                                            this.setError("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
-                                        } else if(response.equals("fail")) {
-                                            this.setError("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
-                                        } else if(response.equals("abanned")) {
-                                            this.setError("пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
-                                        } else if(response.equals("banned")) {
-                                            this.setError("пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
-                                        } else if(response.equals("abuseSize")) {
-                                            this.setError("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
-                                        } else if(response.equals("abuseLauncherSize")) {
-                                            this.setError("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
-                                        } else if(response.equals("abuseTexture")) {
-                                            this.setError("пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ X-Ray");
-                                        } else if(response.equals("abuseMod")) {
-                                            this.setError("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
-                                        } else if(response.equals("oldLauncher")) {
-                                            this.setError("пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
-                                            new xUpdater(this.theme, false);
-                                        } else {
-                                            String[] args1 = response.split(":");
-                                            this.remember();
-                                            xLauncher launcher1 = xLauncher.getLauncher();
-                                            launcher1.drawServerSelect(this.login, args1[1]);
-                                        }
-                                        break label63;
-                                    }
-                                } else {
-                                boolean args2 = this.clientCheck(out, in);
-                                boolean args3 = checkTextures();
-                                if(!args2) {
-                                    salt = xCipherUtils.genSalt(symbolscount);
-                                    out.writeUTF(xCipherUtils.encrypt(salt + "false"));
-                                    break label63;
-                                } else {
-                                    if(!args3) {
-                                        salt = xCipherUtils.genSalt(symbolscount);
-                                        out.writeUTF(xCipherUtils.encrypt(salt + "3"));
-                                    } else {
-                                        salt = xCipherUtils.genSalt(symbolscount);
-                                        out.writeUTF(xCipherUtils.encrypt(salt + "false"));
-                                        this.setError("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
-                                        break label63;
-                                    }
-                                }
-                                out.flush();
-                            }
-                        } else {
-                            socket.setSoTimeout(20000);
-                            String args = this.getHwid();
-                            if(args != null) {
-                                salt = xCipherUtils.genSalt(symbolscount);
-                                out.writeUTF("1:" + xCipherUtils.encrypt(salt + this.getHwid()));
-                            } else {
-                                xUtils launcher = new xUtils();
-                                salt = xCipherUtils.genSalt(symbolscount);
-                                out.writeUTF("1:" + xCipherUtils.encrypt(salt + launcher.getPlatform()));
-                            }
-                            out.flush();
+                String input = in.readUTF();
+                String response = (xCipherUtils.decrypt(input)).substring(symbolsCount);
+
+                if (!response.equals("0")) {
+                    if (!response.equals("1")) {
+                        if (response.equals("abuse")) {
+                            this.setError("Ошибка авторизаци");
+                        } else if (response.equals("fail")) {
+                            this.setError("Неправильный логин или пароль");
+                        } else if (response.equals("abanned")) {
+                            this.setError("Ваш аккаунт заблокирован");
+                        } else if (response.equals("banned")) {
+                            this.setError("Вы заблокированы");
+                        } else if (response.equals("abuseSize")) {
+                            this.setError("Нельзя модифицировать клиент");
+                        } else if (response.equals("abuseLauncherSize")) {
+                            this.setError("Лаунчер не прошел проверку");
+                        } else if (response.equals("abuseTexture")) {
+                            this.setError("У вас обнаружен X-Ray");
+                        } else if (response.equals("abuseMod")) {
+                            this.setError("Нельзя добавлять моды в клиент");
+                        } else if (response.equals("oldLauncher")) {
+                            this.setError("Лаунчер устарел");
+                            new xUpdater(this.theme);
+                        } else if (!response.equals("2")) {
+                            String[] args1 = response.split(":");
+                            this.remember();
+                            xLauncher launcher1 = xLauncher.getLauncher();
+                            launcher1.drawServerSelect(this.login, args1[1]);
                         }
+
+                        break;
+                    } else {
+                        if (!this.clientCheck(out, in)) {
+                            salt = xCipherUtils.genSalt(symbolsCount);
+                            out.writeUTF(xCipherUtils.encrypt(salt + "false"));
+                            break;
+                        } else {
+                            if (!checkTextures()) {
+                                salt = xCipherUtils.genSalt(symbolsCount);
+                                out.writeUTF(xCipherUtils.encrypt(salt + "3"));
+                            } else {
+                                salt = xCipherUtils.genSalt(symbolsCount);
+                                out.writeUTF(xCipherUtils.encrypt(salt + "false"));
+                                this.setError("Текстуры не прошли проверку");
+                                break;
+                            }
+                        }
+
+                        out.flush();
                     }
+                } else {
+                    socket.setSoTimeout(20000);
+                    String args = this.getHwid();
+
+                    if (args != null) {
+                        salt = xCipherUtils.genSalt(symbolsCount);
+                        out.writeUTF("1:" + xCipherUtils.encrypt(salt + this.getHwid()));
+                    } else {
+                        xUtils launcher = new xUtils();
+                        salt = xCipherUtils.genSalt(symbolsCount);
+                        out.writeUTF("1:" + xCipherUtils.encrypt(salt + launcher.getPlatform()));
+                    }
+
+                    out.flush();
                 }
             }
             
             socket.close();
         } catch (SocketTimeoutException var11) {
-            this.setError("пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+            this.setError("Время подключения истекло");
         } catch (IOException var12) {
-            this.setError("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+            this.setError("Сервер авторизации недоступен");
         }
     }
     
@@ -312,18 +315,18 @@ class xAuth implements Runnable {
       try {
          runningLauncher = new File(xUpdater.class.getProtectionDomain().getCodeSource().getLocation().toURI());
          if(runningLauncher.getPath().endsWith(".jar")) {
-             launcherformat = "jar";
+             launcherFormat = "jar";
          } else if(runningLauncher.getPath().endsWith(".exe")) {
-             launcherformat = "exe";
+             launcherFormat = "exe";
          }
          MessageDigest md5 = MessageDigest.getInstance("MD5");
-         launchersize = calculateHash(md5, runningLauncher.getPath());
+          launcherSize = calculateHash(md5, runningLauncher.getPath());
       } catch (Exception var5) {
           System.out.println(var5.getMessage());
       }
    }
 
-    public static String xorEncode(String text)
+    private static String xorEncode(String text)
    {
        String res = ""; 
        int j = 0;
@@ -336,7 +339,7 @@ class xAuth implements Runnable {
        return res;
    }
 
-    public static String strToInt(String text)
+    private static String strToInt(String text)
    {
        String res = "";
        for (int i = 0; i < text.length(); i++) res += (int)text.charAt(i) + "-";
@@ -358,21 +361,25 @@ class xAuth implements Runnable {
         try {
             String ch = check(utils.getDirectory(), in);
             String ch2 = checkCount(utils.getDirectory());
-            String strtoout = ch;
-            for(int c = 0; c < checkformats.length; c++) {
-                strtoout = strtoout + ":" + ch2.split(":")[c + 1];
+            String strToOut = ch;
+
+            for (int c = 0; c < checkFormats.length; c++) {
+                strToOut = strToOut + ":" + ch2.split(":")[c + 1];
             }
-            salt = xCipherUtils.genSalt(symbolscount);
-            out.writeUTF(xCipherUtils.encrypt(salt + strtoout));
+
+            salt = xCipherUtils.genSalt(symbolsCount);
+            out.writeUTF(xCipherUtils.encrypt(salt + strToOut));
             result = in.readUTF();
+
             if (!result.equals("noconnect")){
-                result = (xCipherUtils.decrypt(result)).substring(symbolscount);
+                result = (xCipherUtils.decrypt(result)).substring(symbolsCount);
             }
+
             if (result.equals("nofiles")){
-                this.setError("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+                this.setError("Клиент не прошел проверку");
                 return false;
             } else if (result.equals("noconnect")){
-                this.setError("пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
+                this.setError("Нет соединения");
                 return false;
             } else {
                 return true;
@@ -388,34 +395,34 @@ class xAuth implements Runnable {
         String result;
         String salt;
         try {
-            InetAddress e = InetAddress.getByName(socketip);
+            InetAddress e = InetAddress.getByName(socketIp);
             SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
-            SSLSocket socket = (SSLSocket) sf.createSocket(e, socketport);
+            SSLSocket socket = (SSLSocket) sf.createSocket(e, socketPort);
             String[] suites = socket.getSupportedCipherSuites();
             socket.setEnabledCipherSuites(suites);
             socket.startHandshake();
             socket.setSoTimeout(20000);
-            InputStream sin = socket.getInputStream();
-            OutputStream sout = socket.getOutputStream();
-            DataInputStream in = new DataInputStream(sin);
-            DataOutputStream out = new DataOutputStream(sout);
-            out.writeUTF("mcheckclient");
-            String ch = check(utils.getDirectory(), in);
+            InputStream inputStream = socket.getInputStream();
+            OutputStream outputStream = socket.getOutputStream();
+            DataInputStream dataInputStream = new DataInputStream(inputStream);
+            DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+            dataOutputStream.writeUTF("mcheckclient");
+            String ch = check(utils.getDirectory(), dataInputStream);
             String ch2 = checkCount(utils.getDirectory());
-            String strtoout = ch;
+            String strToOut = ch;
 
-            for(int c = 0; c < checkformats.length; c++) {
-                strtoout = strtoout + ":" + ch2.split(":")[c + 1];
+            for (int c = 0; c < checkFormats.length; c++) {
+                strToOut = strToOut + ":" + ch2.split(":")[c + 1];
             }
 
-            salt = xCipherUtils.genSalt(symbolscount);
-            out.writeUTF(xCipherUtils.encrypt(salt + strtoout));
-            out.flush();
-            result = in.readUTF();
+            salt = xCipherUtils.genSalt(symbolsCount);
+            dataOutputStream.writeUTF(xCipherUtils.encrypt(salt + strToOut));
+            dataOutputStream.flush();
+            result = dataInputStream.readUTF();
             socket.close();
 
             if (!result.equals("noconnect")){
-                result = (xCipherUtils.decrypt(result)).substring(symbolscount);
+                result = (xCipherUtils.decrypt(result)).substring(symbolsCount);
             }
 
             return !result.equals("nofiles") && !result.equals("noconnect");
@@ -437,16 +444,18 @@ class xAuth implements Runnable {
         xUtils utils = new xUtils();
         String ch = utils.getDirectory().toString();
         String hash = "";
-        String strfilearr = in.readUTF();
-        strfilearr = (xCipherUtils.decrypt(strfilearr)).substring(symbolscount);
-        String[] filearray = strfilearr.split(", ");
+        String strFileArr = in.readUTF();
+        strFileArr = (xCipherUtils.decrypt(strFileArr)).substring(symbolsCount);
+        String[] fileArray = strFileArr.split(", ");
         File[] files = {};
-        for (String aFilearray : filearray) {
-            if (!strfilearr.isEmpty()) {
-                File ff = new File(ch + File.separator + aFilearray);
+
+        for (String file : fileArray) {
+            if (!strFileArr.isEmpty()) {
+                File ff = new File(ch + File.separator + file);
                 files = addToFileArray(files, ff);
             }
         }
+
         if (files.length == 0) {
             return "0";
         }
@@ -457,15 +466,16 @@ class xAuth implements Runnable {
                 xServer server = xServer.getServers()[s];
 
                 if (!server.getFolder().isEmpty() && path.toString().equals(ch + File.separator + server.getFolder())) {
-                    ch = ch + File.separator + server.getFolder();
+                    ch += File.separator + server.getFolder();
                     break;
                 }
             }
+
             if (file.isDirectory() && (!path.toString().equals(ch) || (!file.getName().endsWith("texturepacks") && !file.getName().endsWith("resourcepacks")))) {
                 String sHash = check(new File(file.toString()), in);
                 hash += (sHash.equals("0")) ? "" : sHash;
             } else if (file.isFile()) {
-                for (String checkFormat : checkformats) {
+                for (String checkFormat : checkFormats) {
                     if (file.getName().endsWith(checkFormat)) {
                         hash += calculateHash(md5, file.toString());
                         break;
@@ -480,14 +490,14 @@ class xAuth implements Runnable {
     private static String checkCount(File path) {
         xUtils utils = new xUtils();
         String ch = utils.getDirectory().toString();
-        int[] fileCount = new int[checkformats.length];
+        int[] fileCount = new int[checkFormats.length];
         File[] files = path.listFiles();
 
         assert files != null;
         if (files.length == 0) {
             String count = "0";
 
-            for (String ignored : checkformats) {
+            for (String ignored : checkFormats) {
                 count = count + ":0";
             }
 
@@ -496,45 +506,50 @@ class xAuth implements Runnable {
 
         for (File file : files) {
             xServer.loadServers();
+
             for (int s = 0; s < xSettingsOfTheme.Servers.length; ++s) {
                 xServer server = xServer.getServers()[s];
-                if (!server.getFolder().isEmpty()) {
-                    if (path.toString().equals(ch + File.separator + server.getFolder())) {
-                        ch = ch + File.separator + server.getFolder();
-                        break;
-                    }
+
+                if (!server.getFolder().isEmpty() && path.toString().equals(ch + File.separator + server.getFolder())) {
+                    ch += File.separator + server.getFolder();
+                    break;
                 }
             }
+
             if (file.isDirectory()) {
                 if (path.toString().equals(ch)) {
                     if (!file.getName().endsWith("texturepacks") && !file.getName().endsWith("resourcepacks")) {
                         String shash = checkCount(new File(path + File.separator + file.getName()));
-                        for (int c = 0; c < checkformats.length; c++) {
+                        for (int c = 0; c < checkFormats.length; c++) {
                             int sFileCount = Integer.parseInt(shash.split(":")[c + 1]);
                             fileCount[c] = sFileCount + fileCount[c];
                         }
                     }
                 } else {
                     String shash = checkCount(new File(path + File.separator + file.getName()));
-                    for (int c = 0; c < checkformats.length; c++) {
+                    for (int c = 0; c < checkFormats.length; c++) {
                         int sFileCount = Integer.parseInt(shash.split(":")[c + 1]);
                         fileCount[c] = sFileCount + fileCount[c];
                     }
                 }
             }
+
             if (file.isFile()) {
-                for (int c = 0; c < checkformats.length; c++) {
-                    if (file.getName().endsWith(checkformats[c])) {
+                for (int c = 0; c < checkFormats.length; c++) {
+                    if (file.getName().endsWith(checkFormats[c])) {
                         ++fileCount[c];
                         break;
                     }
                 }
             }
         }
+
         String result = "0";
-        for(int c = 0; c < checkformats.length; c++) {
+
+        for (int c = 0; c < checkFormats.length; c++) {
             result = result + ":" + fileCount[c];
         }
+
         return result;
     }
 
@@ -551,36 +566,37 @@ class xAuth implements Runnable {
     
     private static String byteArray2Hex(byte[] hash) {
         Formatter formatter = new Formatter();
+
         for (byte b : hash) {
             formatter.format("%02x", b);
         }
+
         return formatter.toString();
     }
     
     public static boolean checkTextures() {
         xUtils utils = new xUtils();
         String[] texturepackFolders = {"texturepacks", "resourcepacks"};
+
         for (String texturepackFolder : texturepackFolders) {
             File textures;
             xServer.loadServers();
             boolean one = false;
             for (int s = 0; s < xSettingsOfTheme.Servers.length; ++s) {
                 xServer server = xServer.getServers()[s];
-                if (server.getFolder().isEmpty()) {
-                    if (!one) {
-                        String tFolder = utils.getDirectory() + File.separator + texturepackFolder;
-                        textures = new File(tFolder);
-                        if (chTextures(textures)) {
-                            return true;
-                        }
-                        one = true;
-                    }
+
+                String tFolder;
+                if (server.getFolder().isEmpty() && !one) {
+                    tFolder = utils.getDirectory() + File.separator + texturepackFolder;
+                    one = true;
                 } else {
-                    String tFolder = utils.getDirectory() + File.separator + server.getFolder() + File.separator + texturepackFolder;
-                    textures = new File(tFolder);
-                    if (chTextures(textures)) {
-                        return true;
-                    }
+                    tFolder = utils.getDirectory() + File.separator + server.getFolder() + File.separator + texturepackFolder;
+                }
+
+                textures = new File(tFolder);
+
+                if (chTextures(textures)) {
+                    return true;
                 }
             }
         }
@@ -595,79 +611,85 @@ class xAuth implements Runnable {
             for (File listOfTexture : listOfTextures) {
                 if (listOfTexture.isFile()) {
                     String texture = listOfTexture.getName();
-                    if (texture.toLowerCase().endsWith(".zip")) {
-                        int col = 0;
-                        try {
-                            ZipFile e = new ZipFile(listOfTexture.getPath());
-                            Enumeration entries = e.entries();
 
-                            while (entries.hasMoreElements()) {
-                                ZipEntry entry = (ZipEntry) entries.nextElement();
-                                String entryName = entry.getName();
-                                if (entryName.equals("pack.png")) {
-                                    ++col;
-                                }
-                                boolean op = false;
-                                if ((entryName.contains("ctm") || entryName.contains("blocks")) && entryName.contains(".png") && (!(entryName.contains("torch") || entryName.contains("overlay") || entryName.contains("dust")))) {
-                                    if (entryName.contains("ore") || entryName.contains("wool") || entryName.contains("brick") || entryName.contains("stone") || entryName.contains("sand") || entryName.contains("dirt") || entryName.contains("_block.") || entryName.contains("clay") || entryName.contains("grass_") || entryName.contains("planks") || entryName.contains("log_")) {
-                                        op = true;
-                                    }
-                                }
-                                if (op) {
-                                    ++col;
-                                    InputStream entryStream = e.getInputStream(entry);
-                                    BufferedImage textureImage = ImageIO.read(entryStream);
-                                    int alphaPixels = 0;
+                    if (!texture.toLowerCase().endsWith(".zip")) {
+                        return true;
+                    }
 
-                                    for (int x = 0; x < textureImage.getWidth(); ++x) {
-                                        for (int y = 0; y < textureImage.getHeight(); ++y) {
-                                            int pixel = textureImage.getRGB(x, y);
-                                            if (pixel >> 24 == 0) {
-                                                ++alphaPixels;
-                                            }
-                                        }
-                                    }
+                    int col = 0;
+                    try {
+                        ZipFile e = new ZipFile(listOfTexture.getPath());
+                        Enumeration entries = e.entries();
 
-                                    if (alphaPixels > (textureImage.getWidth() * textureImage.getHeight() / textureImage.getWidth())) {
-                                        return true;
-                                    }
-                                }
-                                if (entry.getName().equals("terrain.png")) {
-                                    ++col;
-                                    InputStream entryStream = e.getInputStream(entry);
-                                    BufferedImage textureImage = ImageIO.read(entryStream);
-                                    int alphaPixels = 0;
-
-                                    for (int x = 0; x < 50; ++x) {
-                                        for (int y = 0; y < 50; ++y) {
-                                            int pixel = textureImage.getRGB(x, y);
-                                            if (pixel >> 24 == 0) {
-                                                ++alphaPixels;
-                                            }
-                                        }
-                                    }
-
-                                    if (alphaPixels / 25 > 5) {
-                                        return true;
-                                    }
+                        while (entries.hasMoreElements()) {
+                            ZipEntry entry = (ZipEntry) entries.nextElement();
+                            String entryName = entry.getName();
+                            if (entryName.equals("pack.png")) {
+                                ++col;
+                            }
+                            boolean op = false;
+                            if ((entryName.contains("ctm") || entryName.contains("blocks")) && entryName.contains(".png") && (!(entryName.contains("torch") || entryName.contains("overlay") || entryName.contains("dust")))) {
+                                if (entryName.contains("ore") || entryName.contains("wool") || entryName.contains("brick") || entryName.contains("stone") || entryName.contains("sand") || entryName.contains("dirt") || entryName.contains("_block.") || entryName.contains("clay") || entryName.contains("grass_") || entryName.contains("planks") || entryName.contains("log_")) {
+                                    op = true;
                                 }
                             }
-                        } catch (IOException var15) {
-                            System.out.println("Failed to open texturepack");
-                            System.out.println(var15.getMessage());
+                            if (op) {
+                                ++col;
+                                InputStream entryStream = e.getInputStream(entry);
+                                BufferedImage textureImage = ImageIO.read(entryStream);
+                                int alphaPixels = 0;
+
+                                for (int x = 0; x < textureImage.getWidth(); ++x) {
+                                    for (int y = 0; y < textureImage.getHeight(); ++y) {
+                                        int pixel = textureImage.getRGB(x, y);
+
+                                        if (pixel >> 24 == 0) {
+                                            ++alphaPixels;
+                                        }
+                                    }
+                                }
+
+                                if (alphaPixels > (textureImage.getWidth() * textureImage.getHeight() / textureImage.getWidth())) {
+                                    return true;
+                                }
+                            }
+                            if (entry.getName().equals("terrain.png")) {
+                                ++col;
+                                InputStream entryStream = e.getInputStream(entry);
+                                BufferedImage textureImage = ImageIO.read(entryStream);
+                                int alphaPixels = 0;
+
+                                for (int x = 0; x < 50; ++x) {
+                                    for (int y = 0; y < 50; ++y) {
+                                        int pixel = textureImage.getRGB(x, y);
+
+                                        if (pixel >> 24 == 0) {
+                                            ++alphaPixels;
+                                        }
+                                    }
+                                }
+
+                                if (alphaPixels / 25 > 5) {
+                                    return true;
+                                }
+                            }
                         }
-                        if (col < 1) {
-                            return true;
-                        }
-                    } else {
+                    } catch (IOException var15) {
+                        System.out.println("Failed to open texturepack");
+                        System.out.println(var15.getMessage());
+                    }
+
+                    if (col < 1) {
                         return true;
                     }
                 }
+
                 if (listOfTexture.isDirectory()) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 }
