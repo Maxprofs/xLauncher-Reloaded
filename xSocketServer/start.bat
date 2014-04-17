@@ -1,0 +1,1 @@
+java -Xincgc -Xmx1G -jar xSocketServer.jar "start"
