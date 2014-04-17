@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ru.xeroxp.server.utils;
+package ru.xeroxp.server.utils.base;
 
 import java.nio.charset.Charset;
 

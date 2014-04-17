@@ -1,5 +1,8 @@
 package ru.xeroxp.server;
 
+import ru.xeroxp.server.config.Settings;
+import ru.xeroxp.server.utils.Debug;
+
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -24,16 +27,18 @@ class MultiThreadedServer implements Runnable {
                 clientSocket = (SSLSocket) this.serverSocket.accept();
             } catch (IOException e) {
                 if (isStopped()) {
-                    System.out.println("Server Stopped.");
+                    Debug.infoMessage("Server Stopped.");
                     return;
                 }
                 throw new RuntimeException("Error accepting client connection", e);
             }
+
             new Thread(
                     new Worker(clientSocket)
             ).start();
         }
-        System.out.println("Server Stopped.");
+
+        Debug.infoMessage("Server Stopped.");
     }
 
 
@@ -51,7 +56,8 @@ class MultiThreadedServer implements Runnable {
     }
 
     private void openServerSocket() {
-        System.out.println("Opening server socket...");
+        Debug.infoMessage("Opening server socket...");
+
         try {
             SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             this.serverSocket = (SSLServerSocket) ssf.createServerSocket(this.serverPort);

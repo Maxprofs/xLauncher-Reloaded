@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ru.xeroxp.server.utils;
+package ru.xeroxp.server.utils.base;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;

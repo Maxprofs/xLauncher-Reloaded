@@ -1,12 +1,13 @@
-package ru.xeroxp.server;
+package ru.xeroxp.server.utils;
 
-import ru.xeroxp.server.utils.Base64;
+import ru.xeroxp.server.config.Settings;
+import ru.xeroxp.server.utils.base.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Random;
 
-class CipherUtils {
+public class CipherUtils {
     private static byte[] key;
     private static final byte[] key1 = Settings.KEY_1;
     private static final byte[] key2 = Settings.KEY_2;

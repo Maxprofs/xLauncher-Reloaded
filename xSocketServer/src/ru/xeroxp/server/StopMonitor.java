@@ -1,5 +1,8 @@
 package ru.xeroxp.server;
 
+import ru.xeroxp.server.config.Settings;
+import ru.xeroxp.server.utils.Debug;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -13,6 +16,7 @@ class StopMonitor extends Thread {
     public StopMonitor() {
         setDaemon(true);
         setName("StopMonitor");
+
         try {
             serverSocket = new ServerSocket(Settings.PORT_STOP, 1, InetAddress.getByName(Settings.STOP_IP));
         } catch (Exception e) {
@@ -22,13 +26,13 @@ class StopMonitor extends Thread {
 
     @Override
     public void run() {
-        System.out.println("stop monitor thread listening on: " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
+        Debug.infoMessage("Stop monitor thread listening on: " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
         Socket socket;
         try {
             socket = serverSocket.accept();
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             reader.readLine();
-            System.out.println("stop signal received, stopping server");
+            Debug.infoMessage("Stop signal received, stopping server");
             socket.close();
             serverSocket.close();
         } catch (Exception e) {

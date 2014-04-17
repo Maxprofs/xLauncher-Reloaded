@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package ru.xeroxp.server.utils;
+package ru.xeroxp.server.utils.base;
 
-interface BinaryEncoder extends Encoder {
-    byte[] encode(byte[] source);
+interface BinaryDecoder extends Decoder {
+    byte[] decode(byte[] source);
 }
 

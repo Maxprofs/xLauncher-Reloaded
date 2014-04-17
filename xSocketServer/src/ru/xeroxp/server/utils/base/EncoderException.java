@@ -15,9 +15,25 @@
  * limitations under the License.
  */
 
-package ru.xeroxp.server.utils;
+package ru.xeroxp.server.utils.base;
 
-interface Encoder {
-    Object encode(Object source) throws EncoderException;
+public class EncoderException extends Exception {
+
+    private static final long serialVersionUID = 1L;
+
+    public EncoderException() {
+        super();
+    }
+
+    public EncoderException(final String message) {
+        super(message);
+    }
+
+    public EncoderException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public EncoderException(final Throwable cause) {
+        super(cause);
+    }
 }
-

@@ -1,5 +1,9 @@
 package ru.xeroxp.server;
 
+import ru.xeroxp.server.config.Settings;
+import ru.xeroxp.server.utils.CipherUtils;
+import ru.xeroxp.server.utils.Debug;
+
 import javax.net.ssl.SSLSocket;
 import java.io.*;
 import java.net.URL;
@@ -240,8 +244,8 @@ class Worker implements Runnable {
     public static void launcherSize(String path) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
-            Main.launcherSizeJar = calculateHash(md5, path + File.separator + "launcher" + File.separator + "xLauncher.jar");
-            Main.launcherSizeExe = calculateHash(md5, path + File.separator + "launcher" + File.separator + "xLauncher.exe");
+            Main.launcherSizeJar = calculateHash(md5, path + File.separator + "launcher" + File.separator + Settings.LAUNCHER_FILE_NAME + ".jar");
+            Main.launcherSizeExe = calculateHash(md5, path + File.separator + "launcher" + File.separator + Settings.LAUNCHER_FILE_NAME + ".exe");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -253,10 +257,8 @@ class Worker implements Runnable {
         String hash = "";
         int[] fileCount = new int[Settings.CHECK_FORMATS.length];
 
-        File cDir = new File(dir);
-        if (!cDir.exists()) {
-            System.out.println("Maybe the server is running in the wrong place!");
-            System.out.println("Folder 'Check' does not exist!");
+        if (!new File(dir).exists()) {
+            Debug.errorMessage("Maybe the server is running in the wrong place!\nFolder 'check' does not exist!\n" + dir);
         }
 
         File[] files = path.listFiles();
@@ -264,9 +266,7 @@ class Worker implements Runnable {
         String filesArray = "";
         assert files != null;
         for (int f = 0; f < files.length; f++) {
-            String ff = files[f].toString().substring(dir.length());
-            if (f == 0) filesArray = ff;
-            else filesArray = filesArray + ", " + ff;
+            filesArray = ((f == 0) ? "" : filesArray) + files[f].toString().substring(dir.length());
         }
 
         addToArray(filesArray);
@@ -280,40 +280,35 @@ class Worker implements Runnable {
 
             return count;
         }
+
         for (File file : files) {
-            if (file.isDirectory()) {
-                if (!file.getName().endsWith("texturepacks") && !file.getName().endsWith("resourcepacks")) {
-                    String shash = check(new File(path + File.separator + file.getName()));
-                    String sshash;
+            if (file.isDirectory() && !file.getName().endsWith("texturepacks") && !file.getName().endsWith("resourcepacks")) {
+                String sHash = check(new File(path + File.separator + file.getName()));
 
-                    if (shash.split(":")[0].equals("0")) {
-                        sshash = "";
-                    } else {
-                        sshash = shash.split(":")[0];
-                    }
-
-                    for (int c = 0; c < Settings.CHECK_FORMATS.length; c++) {
-                        int sFileCount = Integer.parseInt(shash.split(":")[c + 1]);
-                        fileCount[c] += sFileCount;
-                    }
-
-                    hash += sshash;
+                for (int c = 0; c < Settings.CHECK_FORMATS.length; c++) {
+                    int sFileCount = Integer.parseInt(sHash.split(":")[c + 1]);
+                    fileCount[c] += sFileCount;
                 }
+
+                hash += (sHash.split(":")[0].equals("0")) ? "" : sHash.split(":")[0];
             }
+
             if (file.isFile()) {
                 for (int c = 0; c < Settings.CHECK_FORMATS.length; c++) {
                     if (file.getName().endsWith(Settings.CHECK_FORMATS[c])) {
-                        hash = hash + calculateHash(md5, path + File.separator + file.getName());
+                        hash += calculateHash(md5, path + File.separator + file.getName());
                         ++fileCount[c];
                         break;
                     }
                 }
             }
         }
+
         String result = md5(hash);
         for (int c = 0; c < Settings.CHECK_FORMATS.length; c++) {
-            result = result + ":" + fileCount[c];
+            result += ":" + fileCount[c];
         }
+
         return result;
     }
 }
