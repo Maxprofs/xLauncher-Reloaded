@@ -1,7 +1,7 @@
 package ru.xeroxp.launcher.gui;
 
 import ru.xeroxp.launcher.config.xSettings;
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 import ru.xeroxp.launcher.gui.elements.xButton;
 import ru.xeroxp.launcher.gui.elements.xCheckbox;
 import ru.xeroxp.launcher.gui.elements.xLabel;
@@ -32,7 +32,7 @@ import static ru.xeroxp.launcher.utils.xUtils.getDirectory;
 @SuppressWarnings("SameParameterValue")
 public class xTheme extends JPanel {
     public static boolean gameOffline = false;
-    public final JButton[] buttons = new JButton[xSettingsOfTheme.BUTTONS.length];
+    public final JButton[] buttons = new JButton[xThemeSettings.BUTTONS.length];
     private final JPasswordField passwordBar = new JPasswordField();
     private final JTextField loginBar = new JTextField();
     private final JTextField xSliderValue = new JTextField();
@@ -93,18 +93,18 @@ public class xTheme extends JPanel {
 
     public xTheme() {
         setLayout(null);
-        setMinimumSize(new Dimension(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]));
-        setSize(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]);
+        setMinimumSize(new Dimension(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]));
+        setSize(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]);
         setBackground(new Color(0, 0, 0, 0));
         setBorder(null);
         setOpaque(false);
 
-        InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.MAIN_FONT_FILE);
+        InputStream is = xTheme.class.getResourceAsStream("/font/" + xThemeSettings.MAIN_FONT_FILE);
 
         try {
             this.arial = Font.createFont(0, is);
-            this.arial = this.arial.deriveFont(0, xSettingsOfTheme.FONTS_SIZE[0]);
-            this.arial2 = this.arial.deriveFont(Font.PLAIN, xSettingsOfTheme.FONTS_SIZE[1]);
+            this.arial = this.arial.deriveFont(0, xThemeSettings.FONTS_SIZE[0]);
+            this.arial2 = this.arial.deriveFont(Font.PLAIN, xThemeSettings.FONTS_SIZE[1]);
         } catch (FontFormatException e2) {
             xDebug.errorMessage("Failed load font: " + e2.getMessage());
         } catch (IOException e2) {
@@ -112,22 +112,22 @@ public class xTheme extends JPanel {
         }
 
         try {
-            this.background = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.MAIN_PANEL_BACKGROUND_IMAGE));
-            this.logo = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.LOGO));
+            this.background = ImageIO.read(xTheme.class.getResource("/images/" + xThemeSettings.MAIN_PANEL_BACKGROUND_IMAGE));
+            this.logo = ImageIO.read(xTheme.class.getResource("/images/" + xThemeSettings.LOGO));
         } catch (IOException e) {
             xDebug.errorMessage("Failed load Theme images: " + e.getMessage());
         }
 
         JLabel header = new JLabel(xSettings.LAUNCHER_NAME + " v" + xMain.getVersion());
-        header.setForeground(xSettingsOfTheme.HEADER_COLOR);
-        header.setBounds(xSettingsOfTheme.HEADER_BOUNDS[0], xSettingsOfTheme.HEADER_BOUNDS[1], xSettingsOfTheme.HEADER_BOUNDS[2], xSettingsOfTheme.HEADER_BOUNDS[3]);
+        header.setForeground(xThemeSettings.HEADER_COLOR);
+        header.setBounds(xThemeSettings.HEADER_BOUNDS[0], xThemeSettings.HEADER_BOUNDS[1], xThemeSettings.HEADER_BOUNDS[2], xThemeSettings.HEADER_BOUNDS[3]);
         header.setFont(this.arial);
 
-        this.percent.setBounds(xSettingsOfTheme.PERCENT_LABEL_BOUNDS[0], xSettingsOfTheme.PERCENT_LABEL_BOUNDS[1], xSettingsOfTheme.PERCENT_LABEL_BOUNDS[2], xSettingsOfTheme.PERCENT_LABEL_BOUNDS[3]);
-        this.percent.setForeground(xSettingsOfTheme.PERCENT_LABEL_COLOR);
+        this.percent.setBounds(xThemeSettings.PERCENT_LABEL_BOUNDS[0], xThemeSettings.PERCENT_LABEL_BOUNDS[1], xThemeSettings.PERCENT_LABEL_BOUNDS[2], xThemeSettings.PERCENT_LABEL_BOUNDS[3]);
+        this.percent.setForeground(xThemeSettings.PERCENT_LABEL_COLOR);
 
-        this.error.setBounds(xSettingsOfTheme.ERROR_LABEL_BOUNDS[0], xSettingsOfTheme.ERROR_LABEL_BOUNDS[1], xSettingsOfTheme.ERROR_LABEL_BOUNDS[2], xSettingsOfTheme.ERROR_LABEL_BOUNDS[3]);
-        this.error.setForeground(xSettingsOfTheme.ERROR_LABEL_COLOR);
+        this.error.setBounds(xThemeSettings.ERROR_LABEL_BOUNDS[0], xThemeSettings.ERROR_LABEL_BOUNDS[1], xThemeSettings.ERROR_LABEL_BOUNDS[2], xThemeSettings.ERROR_LABEL_BOUNDS[3]);
+        this.error.setForeground(xThemeSettings.ERROR_LABEL_COLOR);
         this.error.setFont(this.arial2);
         this.error.setHorizontalTextPosition(JLabel.CENTER);
         this.error.setHorizontalAlignment(JLabel.CENTER);
@@ -141,12 +141,12 @@ public class xTheme extends JPanel {
             }
         }
 
-        JLabel mb = new JLabel(xSettingsOfTheme.MEMORY_LABEL_TEXT);
+        JLabel mb = new JLabel(xThemeSettings.MEMORY_LABEL_TEXT);
         mb.setOpaque(false);
         mb.setBorder(null);
-        mb.setBounds(xSettingsOfTheme.MEMORY_LABEL_BOUNDS[0], xSettingsOfTheme.MEMORY_LABEL_BOUNDS[1], xSettingsOfTheme.MEMORY_LABEL_BOUNDS[2], xSettingsOfTheme.MEMORY_LABEL_BOUNDS[3]);
+        mb.setBounds(xThemeSettings.MEMORY_LABEL_BOUNDS[0], xThemeSettings.MEMORY_LABEL_BOUNDS[1], xThemeSettings.MEMORY_LABEL_BOUNDS[2], xThemeSettings.MEMORY_LABEL_BOUNDS[3]);
         mb.setFont(this.arial);
-        mb.setForeground(xSettingsOfTheme.MEMORY_LABEL_COLOR);
+        mb.setForeground(xThemeSettings.MEMORY_LABEL_COLOR);
 
         add(mb);
         xButton.loadButtons();
@@ -198,10 +198,10 @@ public class xTheme extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         g.drawImage(this.background, 0, 0, this);
-        g.drawImage(this.logo, xSettingsOfTheme.LOGO_BOUNDS[0], xSettingsOfTheme.LOGO_BOUNDS[1], this);
-        g.drawImage(this.loginField, xSettingsOfTheme.LOGIN_FIELD_BOUNDS[0], xSettingsOfTheme.LOGIN_FIELD_BOUNDS[1], this);
-        g.drawImage(this.passField, xSettingsOfTheme.PASSWORD_FIELD_BOUNDS[0], xSettingsOfTheme.PASSWORD_FIELD_BOUNDS[1], this);
-        g.drawImage(this.memoryField, xSettingsOfTheme.MEMORY_FIELD_BOUNDS[0], xSettingsOfTheme.MEMORY_FIELD_BOUNDS[1], this);
+        g.drawImage(this.logo, xThemeSettings.LOGO_BOUNDS[0], xThemeSettings.LOGO_BOUNDS[1], this);
+        g.drawImage(this.loginField, xThemeSettings.LOGIN_FIELD_BOUNDS[0], xThemeSettings.LOGIN_FIELD_BOUNDS[1], this);
+        g.drawImage(this.passField, xThemeSettings.PASSWORD_FIELD_BOUNDS[0], xThemeSettings.PASSWORD_FIELD_BOUNDS[1], this);
+        g.drawImage(this.memoryField, xThemeSettings.MEMORY_FIELD_BOUNDS[0], xThemeSettings.MEMORY_FIELD_BOUNDS[1], this);
     }
 
     public void updatePercent(int done) {
@@ -254,7 +254,7 @@ public class xTheme extends JPanel {
             JScrollBar s_bar = new JScrollBar();
             JScrollPane sp = this.scrollPane;
             s_bar.setUI(new xScrollBar.MyScrollbarUI());
-            Dimension dim = new Dimension(xSettingsOfTheme.NEWS_SCROLL_BAR_SIZE[0], xSettingsOfTheme.NEWS_SCROLL_BAR_SIZE[1]);
+            Dimension dim = new Dimension(xThemeSettings.NEWS_SCROLL_BAR_SIZE[0], xThemeSettings.NEWS_SCROLL_BAR_SIZE[1]);
             s_bar.setPreferredSize(dim);
             s_bar.setBackground(new Color(0, 0, 0, 0));
             s_bar.setForeground(new Color(0, 0, 0, 0));
@@ -626,23 +626,23 @@ public class xTheme extends JPanel {
             bPanel.setLayout(null);
             bPanel.setBorder(null);
             bPanel.setOpaque(false);
-            bPanel.setBounds(0, 0, xSettingsOfTheme.NEWS_BUTTON_BOUNDS[2], xSettingsOfTheme.NEWS_PANEL_HEIGHT_1);
+            bPanel.setBounds(0, 0, xThemeSettings.NEWS_BUTTON_BOUNDS[2], xThemeSettings.NEWS_PANEL_HEIGHT_1);
             newsButton = new JButton();
-            newsButton.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NEWS_BUTTON_ICONS[0])));
-            newsButton.setPressedIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NEWS_BUTTON_ICONS[1])));
-            newsButton.setDisabledIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NEWS_BUTTON_ICONS[2])));
-            newsButton.setSize(new Dimension(xSettingsOfTheme.NEWS_BUTTON_BOUNDS[2], xSettingsOfTheme.NEWS_BUTTON_BOUNDS[3]));
+            newsButton.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + xThemeSettings.NEWS_BUTTON_ICONS[0])));
+            newsButton.setPressedIcon(new ImageIcon(xTheme.class.getResource("/images/" + xThemeSettings.NEWS_BUTTON_ICONS[1])));
+            newsButton.setDisabledIcon(new ImageIcon(xTheme.class.getResource("/images/" + xThemeSettings.NEWS_BUTTON_ICONS[2])));
+            newsButton.setSize(new Dimension(xThemeSettings.NEWS_BUTTON_BOUNDS[2], xThemeSettings.NEWS_BUTTON_BOUNDS[3]));
             newsButton.setOpaque(false);
             newsButton.setBackground(new Color(0, 0, 0, 0));
             newsButton.setFocusPainted(false);
             newsButton.setBorder(null);
             newsButton.setContentAreaFilled(false);
             newsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            animPanel.setBounds(-1, xSettingsOfTheme.TOP_SPACE_1, xSettingsOfTheme.LAUNCHER_SIZE[0] + 1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1);
-            animPanel.setSize(xSettingsOfTheme.LAUNCHER_SIZE[0] + 1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1);
+            animPanel.setBounds(-1, xThemeSettings.TOP_SPACE_1, xThemeSettings.LAUNCHER_SIZE[0] + 1, xThemeSettings.NEWS_PANEL_HEIGHT_1);
+            animPanel.setSize(xThemeSettings.LAUNCHER_SIZE[0] + 1, xThemeSettings.NEWS_PANEL_HEIGHT_1);
         } else {
-            animPanel.setBounds(-1, xSettingsOfTheme.TOP_SPACE_2, xSettingsOfTheme.LAUNCHER_SIZE[0] + 1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2);
-            animPanel.setSize(xSettingsOfTheme.LAUNCHER_SIZE[0] + 1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2);
+            animPanel.setBounds(-1, xThemeSettings.TOP_SPACE_2, xThemeSettings.LAUNCHER_SIZE[0] + 1, xThemeSettings.NEWS_PANEL_HEIGHT_2);
+            animPanel.setSize(xThemeSettings.LAUNCHER_SIZE[0] + 1, xThemeSettings.NEWS_PANEL_HEIGHT_2);
         }
 
         animPanel.add(getNPane());
@@ -650,7 +650,7 @@ public class xTheme extends JPanel {
         if (xSettings.ANIMATED_NEWS) {
             bPanel.add(newsButton);
             animPanel.add(bPanel);
-            newsButton.setBounds(xSettingsOfTheme.NEWS_BUTTON_BOUNDS[0], xSettingsOfTheme.NEWS_BUTTON_BOUNDS[1], xSettingsOfTheme.NEWS_BUTTON_BOUNDS[2], xSettingsOfTheme.NEWS_BUTTON_BOUNDS[3]);
+            newsButton.setBounds(xThemeSettings.NEWS_BUTTON_BOUNDS[0], xThemeSettings.NEWS_BUTTON_BOUNDS[1], xThemeSettings.NEWS_BUTTON_BOUNDS[2], xThemeSettings.NEWS_BUTTON_BOUNDS[3]);
             newsButton.addActionListener(new ActionListener() {
 
                 @Override
@@ -677,7 +677,7 @@ public class xTheme extends JPanel {
 
                                         Thread.sleep(100);
                                     } else {
-                                        if (nPanel.getX() == -xSettingsOfTheme.NEWS_PANEL_WIDTH_1) {
+                                        if (nPanel.getX() == -xThemeSettings.NEWS_PANEL_WIDTH_1) {
                                             break;
                                         }
 
@@ -708,23 +708,23 @@ public class xTheme extends JPanel {
         JPanel newsBackground;
 
         if (xSettings.ANIMATED_NEWS) {
-            getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1 - 25));
-            gPanel.setSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1));
-            gPanel.setBackground(xSettingsOfTheme.NEWS_PANEL_BG_COLOR);
+            getUpdateNews().setPreferredSize(new Dimension(xThemeSettings.NEWS_PANEL_WIDTH_1, xThemeSettings.NEWS_PANEL_HEIGHT_1 - 25));
+            gPanel.setSize(new Dimension(xThemeSettings.NEWS_PANEL_WIDTH_1, xThemeSettings.NEWS_PANEL_HEIGHT_1));
+            gPanel.setBackground(xThemeSettings.NEWS_PANEL_BG_COLOR);
             newsBackground = new BgPanel();
-            newsBackground.setSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1));
-            newsPanel.setBounds(15, 12, xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1 - 15);
-            nPanel.setBounds(-xSettingsOfTheme.NEWS_PANEL_WIDTH_1, 0, xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1);
+            newsBackground.setSize(new Dimension(xThemeSettings.NEWS_PANEL_WIDTH_1, xThemeSettings.NEWS_PANEL_HEIGHT_1));
+            newsPanel.setBounds(15, 12, xThemeSettings.NEWS_PANEL_WIDTH_1, xThemeSettings.NEWS_PANEL_HEIGHT_1 - 15);
+            nPanel.setBounds(-xThemeSettings.NEWS_PANEL_WIDTH_1, 0, xThemeSettings.NEWS_PANEL_WIDTH_1, xThemeSettings.NEWS_PANEL_HEIGHT_1);
         } else {
-            getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_2 - 25, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2 - 25));
-            gPanel.setSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_2, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2));
-            gPanel.setBackground(xSettingsOfTheme.NEWS_PANEL_BG_COLOR);
+            getUpdateNews().setPreferredSize(new Dimension(xThemeSettings.NEWS_PANEL_WIDTH_2 - 25, xThemeSettings.NEWS_PANEL_HEIGHT_2 - 25));
+            gPanel.setSize(new Dimension(xThemeSettings.NEWS_PANEL_WIDTH_2, xThemeSettings.NEWS_PANEL_HEIGHT_2));
+            gPanel.setBackground(xThemeSettings.NEWS_PANEL_BG_COLOR);
             newsBackground = new JPanel();
             newsBackground.setOpaque(false);
             newsBackground.setBackground(new Color(0, 0, 0, 0));
-            newsBackground.setSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_2, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2));
-            newsPanel.setBounds(5, 12, xSettingsOfTheme.NEWS_PANEL_WIDTH_2, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2 - 15);
-            nPanel.setBounds(xSettingsOfTheme.LEFT_SPACE, 0, xSettingsOfTheme.NEWS_PANEL_WIDTH_2, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2);
+            newsBackground.setSize(new Dimension(xThemeSettings.NEWS_PANEL_WIDTH_2, xThemeSettings.NEWS_PANEL_HEIGHT_2));
+            newsPanel.setBounds(5, 12, xThemeSettings.NEWS_PANEL_WIDTH_2, xThemeSettings.NEWS_PANEL_HEIGHT_2 - 15);
+            nPanel.setBounds(xThemeSettings.LEFT_SPACE, 0, xThemeSettings.NEWS_PANEL_WIDTH_2, xThemeSettings.NEWS_PANEL_HEIGHT_2);
         }
 
         newsPanel.add(getUpdateNews());
@@ -761,7 +761,7 @@ public class xTheme extends JPanel {
     }
 
     class BgPanel extends JPanel {
-        final Image bg = new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NEWS_BG_IMAGE)).getImage();
+        final Image bg = new ImageIcon(xTheme.class.getResource("/images/" + xThemeSettings.NEWS_BG_IMAGE)).getImage();
 
         @Override
         public void paintComponent(Graphics g) {

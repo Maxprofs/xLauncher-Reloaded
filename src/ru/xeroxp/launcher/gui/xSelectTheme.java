@@ -1,7 +1,7 @@
 package ru.xeroxp.launcher.gui;
 
 import ru.xeroxp.launcher.config.xSettings;
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 import ru.xeroxp.launcher.gui.elements.xServer;
 import ru.xeroxp.launcher.utils.xDebug;
 import ru.xeroxp.launcher.xLauncher;
@@ -22,7 +22,7 @@ public class xSelectTheme extends JPanel {
     private BufferedImage onlineBar;
     private BufferedImage onlineBarBg;
     private BufferedImage offlineBar;
-    private final BufferedImage image = new BufferedImage(xSettingsOfTheme.SERVERS_IN_SCROLL_PANEL_SIZE[0], xSettingsOfTheme.SERVERS_IN_SCROLL_PANEL_SIZE[1], BufferedImage.TYPE_INT_ARGB);
+    private final BufferedImage image = new BufferedImage(xThemeSettings.SERVERS_IN_SCROLL_PANEL_SIZE[0], xThemeSettings.SERVERS_IN_SCROLL_PANEL_SIZE[1], BufferedImage.TYPE_INT_ARGB);
     private final JScrollPane scrollPane;
     private final JPanel serverPanel = new JPanel();
     private final JPanel serversBackground = new BgPanel();
@@ -35,13 +35,13 @@ public class xSelectTheme extends JPanel {
         xDebug.infoMessage("Выбор сервера");
 
         setLayout(null);
-        setMinimumSize(new Dimension(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]));
-        setSize(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]);
+        setMinimumSize(new Dimension(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]));
+        setSize(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]);
 
         serverPanel.setLayout(null);
         serverPanel.setBorder(null);
         serverPanel.setOpaque(false);
-        serverPanel.setPreferredSize(new Dimension(xSettingsOfTheme.SERVERS_IN_SCROLL_PANEL_SIZE[0], xSettingsOfTheme.SERVERS_IN_SCROLL_PANEL_SIZE[1]));
+        serverPanel.setPreferredSize(new Dimension(xThemeSettings.SERVERS_IN_SCROLL_PANEL_SIZE[0], xThemeSettings.SERVERS_IN_SCROLL_PANEL_SIZE[1]));
         scrollPane = new JScrollPane(serverPanel);
         scrollPane.setBorder(null);
         scrollPane.setOpaque(false);
@@ -49,25 +49,25 @@ public class xSelectTheme extends JPanel {
         JScrollBar s_bar = new JScrollBar();
         JScrollPane sp = this.scrollPane;
         s_bar.setUI(new xScrollBar.MyScrollbarUI());
-        Dimension dim = new Dimension(xSettingsOfTheme.SERVERS_SCROLL_BAR_SIZE[0], xSettingsOfTheme.SERVERS_SCROLL_BAR_SIZE[1]);
+        Dimension dim = new Dimension(xThemeSettings.SERVERS_SCROLL_BAR_SIZE[0], xThemeSettings.SERVERS_SCROLL_BAR_SIZE[1]);
         s_bar.setPreferredSize(dim);
         s_bar.setBackground(new Color(0, 0, 0, 0));
         s_bar.setForeground(new Color(0, 0, 0, 0));
         s_bar.setOpaque(false);
         sp.setVerticalScrollBar(s_bar);
-        scrollPane.setBounds(xSettingsOfTheme.SERVERS_SCROLL_PANEL_BOUNDS[0], xSettingsOfTheme.SERVERS_SCROLL_PANEL_BOUNDS[1], xSettingsOfTheme.SERVERS_SCROLL_PANEL_BOUNDS[2], xSettingsOfTheme.SERVERS_SCROLL_PANEL_BOUNDS[3]);
-        serversBackground.setSize(new Dimension(xSettingsOfTheme.SERVERS_IN_SCROLL_PANEL_SIZE[0], xSettingsOfTheme.SERVERS_IN_SCROLL_PANEL_SIZE[1]));
+        scrollPane.setBounds(xThemeSettings.SERVERS_SCROLL_PANEL_BOUNDS[0], xThemeSettings.SERVERS_SCROLL_PANEL_BOUNDS[1], xThemeSettings.SERVERS_SCROLL_PANEL_BOUNDS[2], xThemeSettings.SERVERS_SCROLL_PANEL_BOUNDS[3]);
+        serversBackground.setSize(new Dimension(xThemeSettings.SERVERS_IN_SCROLL_PANEL_SIZE[0], xThemeSettings.SERVERS_IN_SCROLL_PANEL_SIZE[1]));
 
-        InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.MAIN_FONT_FILE);
-        InputStream is2 = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.SERVER_FONT_FILE);
+        InputStream is = xTheme.class.getResourceAsStream("/font/" + xThemeSettings.MAIN_FONT_FILE);
+        InputStream is2 = xTheme.class.getResourceAsStream("/font/" + xThemeSettings.SERVER_FONT_FILE);
         Font arial = null;
 
         try {
             arial = Font.createFont(0, is);
-            arial = arial.deriveFont(Font.BOLD, xSettingsOfTheme.SERVER_FONTS_SIZE[0]);
+            arial = arial.deriveFont(Font.BOLD, xThemeSettings.SERVER_FONTS_SIZE[0]);
             this.serverFont = Font.createFont(0, is2);
-            this.serverFont = this.serverFont.deriveFont(Font.BOLD, xSettingsOfTheme.SERVER_FONTS_SIZE[1]);
-            this.serverFont2 = this.serverFont.deriveFont(Font.BOLD, xSettingsOfTheme.SERVER_FONTS_SIZE[2]);
+            this.serverFont = this.serverFont.deriveFont(Font.BOLD, xThemeSettings.SERVER_FONTS_SIZE[1]);
+            this.serverFont2 = this.serverFont.deriveFont(Font.BOLD, xThemeSettings.SERVER_FONTS_SIZE[2]);
         } catch (FontFormatException e2) {
             xDebug.errorMessage("Failed load font: " + e2.getMessage());
         } catch (IOException e2) {
@@ -75,17 +75,17 @@ public class xSelectTheme extends JPanel {
         }
 
         try {
-            this.background = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.SERVERS_PANEL_BACKGROUND_IMAGE));
-            this.onlineBar = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.SERVERS_BAR_IMAGES[0]));
-            this.offlineBar = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.SERVERS_BAR_IMAGES[1]));
-            this.onlineBarBg = ImageIO.read(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.SERVERS_BAR_IMAGES[2]));
+            this.background = ImageIO.read(xSelectTheme.class.getResource("/images/" + xThemeSettings.SERVERS_PANEL_BACKGROUND_IMAGE));
+            this.onlineBar = ImageIO.read(xSelectTheme.class.getResource("/images/" + xThemeSettings.SERVERS_BAR_IMAGES[0]));
+            this.offlineBar = ImageIO.read(xSelectTheme.class.getResource("/images/" + xThemeSettings.SERVERS_BAR_IMAGES[1]));
+            this.onlineBarBg = ImageIO.read(xSelectTheme.class.getResource("/images/" + xThemeSettings.SERVERS_BAR_IMAGES[2]));
         } catch (IOException e) {
             xDebug.errorMessage("Failed load select server theme images: " + e.getMessage());
         }
 
         JLabel header = new JLabel(xSettings.LAUNCHER_NAME + " v" + xMain.getVersion());
-        header.setForeground(xSettingsOfTheme.HEADER_COLOR);
-        header.setBounds(xSettingsOfTheme.HEADER_BOUNDS[0], xSettingsOfTheme.HEADER_BOUNDS[1], xSettingsOfTheme.HEADER_BOUNDS[2], xSettingsOfTheme.HEADER_BOUNDS[3]);
+        header.setForeground(xThemeSettings.HEADER_COLOR);
+        header.setBounds(xThemeSettings.HEADER_BOUNDS[0], xThemeSettings.HEADER_BOUNDS[1], xThemeSettings.HEADER_BOUNDS[2], xThemeSettings.HEADER_BOUNDS[3]);
         header.setFont(arial);
 
         add(header);
@@ -172,7 +172,7 @@ public class xSelectTheme extends JPanel {
 
             final JLabel serverImage = new JLabel();
             serverImage.setBounds(server.getImageX(), server.getImageY(), server.getImageSizeX(), server.getImageSizeY());
-            serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.SERVERS_IMAGES[0])));
+            serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xThemeSettings.SERVERS_IMAGES[0])));
             serverImage.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
             serverImage.addMouseListener(new MouseAdapter() {
@@ -186,12 +186,12 @@ public class xSelectTheme extends JPanel {
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.SERVERS_IMAGES[1])));
+                    serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xThemeSettings.SERVERS_IMAGES[1])));
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.SERVERS_IMAGES[0])));
+                    serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xThemeSettings.SERVERS_IMAGES[0])));
                 }
             });
 
@@ -206,12 +206,12 @@ public class xSelectTheme extends JPanel {
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.SERVERS_IMAGES[1])));
+                    serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xThemeSettings.SERVERS_IMAGES[1])));
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xSettingsOfTheme.SERVERS_IMAGES[0])));
+                    serverImage.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + xThemeSettings.SERVERS_IMAGES[0])));
                 }
             });
 

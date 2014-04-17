@@ -1,7 +1,7 @@
 package ru.xeroxp.launcher;
 
 import ru.xeroxp.launcher.config.xSettings;
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 import ru.xeroxp.launcher.gui.elements.xButton;
 import ru.xeroxp.launcher.gui.xTheme;
 import ru.xeroxp.launcher.utils.xDebug;
@@ -14,14 +14,8 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 public class xUpdater {
-    private final static String TYPE_LAUNCHER = "launcher";
-    private final static String TYPE_CLIENT = "version";
-
     private BufferedImage update;
     private BufferedImage bg;
     private BufferedImage image;
@@ -52,7 +46,7 @@ public class xUpdater {
 
     private void checkLauncherUpdate() {
         try {
-            String e = this.checkVersion(TYPE_LAUNCHER);
+            String e = this.checkVersion(UpdateType.launcher);
 
             if (e != null) {
                 String getVersion = xMain.getVersion();
@@ -147,12 +141,17 @@ public class xUpdater {
 
     void updateClient(String version) {
         disableButtons();
-        xUtils.deleteFiles();
+
+        try {
+            xUtils.deleteClientFiles();
+        } catch (IOException e) {
+            xDebug.errorMessage(e.getMessage());
+        }
 
         try {
             this.unpackClient(new URL(xSettings.DOWN_CLIENT_LINK + "client.zip"), xUtils.getDirectory());
         } catch (IOException var4) {
-            xDebug.errorMessage("Failed unpack client: " + var4.getMessage());
+            xDebug.errorMessage(var4.getMessage());
         }
 
         try {
@@ -161,7 +160,7 @@ public class xUpdater {
             xDebug.errorMessage("Failed update client version: " + var3.getMessage());
         }
 
-        for (int i = 0; i < xSettingsOfTheme.BUTTONS.length; ++i) {
+        for (int i = 0; i < xThemeSettings.BUTTONS.length; ++i) {
             xButton button = xButton.getButtons()[i];
 
             if (button.getId() == xButton.RAM_ID) {
@@ -171,9 +170,9 @@ public class xUpdater {
         }
     }
 
-    String checkVersion(String type) {
+    String checkVersion(UpdateType type) {
         try {
-            URL e = new URL(xSettings.MAIN_INFO_FILE + "?action=" + type);
+            URL e = new URL(xSettings.MAIN_INFO_FILE + "?action=" + type.getParameter());
             URLConnection getVer = e.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(getVer.getInputStream()));
             String inputLine = in.readLine();
@@ -181,7 +180,7 @@ public class xUpdater {
 
             return inputLine;
         } catch (Exception var5) {
-            xDebug.errorMessage("Failed check " + type + " version: " + var5.getMessage());
+            xDebug.errorMessage("Failed check " + type.name() + " version: " + var5.getMessage());
         }
 
         return null;
@@ -189,7 +188,8 @@ public class xUpdater {
 
     public void checkClientUpdate(boolean n) {
         try {
-            String e = this.checkVersion(TYPE_CLIENT);
+            String e = this.checkVersion(UpdateType.client);
+
             if (e != null) {
                 String getVersion;
                 getVersion = n ? "0" : this.getVersion();
@@ -217,7 +217,9 @@ public class xUpdater {
     String getVersion() throws Exception {
         File dir = xUtils.getDirectory();
 
-        dir.mkdirs();
+        if (!xUtils.buildDirectory(dir)) {
+            throw new IOException("Could not create directory: " + dir);
+        }
 
         File versionFile = new File(dir, "version");
         if (!versionFile.exists()) {
@@ -239,7 +241,9 @@ public class xUpdater {
     }
 
     void unpackClient(URL url, File targetDir) throws IOException {
-        targetDir.mkdirs();
+        if (!xUtils.buildDirectory(targetDir)) {
+            throw new IOException("Could not create directory: " + targetDir);
+        }
 
         URLConnection urlconnection = url.openConnection();
         this.totalDownload = urlconnection.getContentLength() / 1024;
@@ -249,7 +253,7 @@ public class xUpdater {
         BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(zip));
         this.copyInputStream(in, out, false);
         out.close();
-        this.unpackArchive(zip, targetDir);
+        xUtils.unpackArchive(zip, targetDir);
     }
 
     void unpackLauncher(URL url, File target) throws IOException {
@@ -260,37 +264,6 @@ public class xUpdater {
         BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(target));
         this.copyInputStream(in, out, false);
         out.close();
-    }
-
-    void unpackArchive(File theFile, File targetDir) throws IOException {
-        if (!theFile.exists()) {
-            throw new IOException(theFile.getAbsolutePath() + " does not exist");
-        } else if (this.buildDirectory(targetDir)) {
-            throw new IOException("Could not create directory: " + targetDir);
-        } else {
-            ZipFile zipFile = new ZipFile(theFile);
-            Enumeration entries = zipFile.entries();
-
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = (ZipEntry) entries.nextElement();
-                File file = new File(targetDir, File.separator + entry.getName());
-
-                if (this.buildDirectory(file.getParentFile())) {
-                    throw new IOException("Could not create directory: " + file.getParentFile());
-                }
-
-                if (!entry.isDirectory()) {
-                    this.copyInputStream(zipFile.getInputStream(entry), new BufferedOutputStream(new FileOutputStream(file)), true);
-                } else if (this.buildDirectory(file)) {
-                    throw new IOException("Could not create directory: " + file);
-                }
-            }
-
-            zipFile.close();
-            theFile.delete();
-
-            //return theFile;
-        }
     }
 
     void copyInputStream(InputStream in, OutputStream out, boolean zip) throws IOException {
@@ -312,7 +285,7 @@ public class xUpdater {
     private void disableButtons() {
         xButton.loadButtons();
 
-        for (int i = 0; i < xSettingsOfTheme.BUTTONS.length; ++i) {
+        for (int i = 0; i < xThemeSettings.BUTTONS.length; ++i) {
             xButton button = xButton.getButtons()[i];
 
             if (button.getId() == xButton.UPDATE_ID || button.getId() == xButton.RAM_ID) {
@@ -321,7 +294,21 @@ public class xUpdater {
         }
     }
 
-    boolean buildDirectory(File file) {
-        return !file.exists() && !file.mkdirs();
+    private enum UpdateType {
+        client {
+            @Override
+            public String getParameter() {
+                return "version";
+            }
+        },
+
+        launcher {
+            @Override
+            public String getParameter() {
+                return "launcher";
+            }
+        };
+
+        public abstract String getParameter();
     }
 }

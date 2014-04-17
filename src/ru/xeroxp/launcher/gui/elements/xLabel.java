@@ -1,6 +1,6 @@
 package ru.xeroxp.launcher.gui.elements;
 
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class xLabel {
 
     public static void loadLabels() {
         labels.clear();
-        Collections.addAll(labels, xSettingsOfTheme.LABELS);
+        Collections.addAll(labels, xThemeSettings.LABELS);
     }
 
     public static xLabel[] getLabels() {

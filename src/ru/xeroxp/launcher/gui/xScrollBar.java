@@ -1,6 +1,6 @@
 package ru.xeroxp.launcher.gui;
 
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,8 +21,8 @@ public class xScrollBar {
 
         public MyScrollbarUI() {
             try {
-                imageThumb = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.SCROLLBAR_IMAGES[0]));
-                imageTrack = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.SCROLLBAR_IMAGES[1]));
+                imageThumb = ImageIO.read(xTheme.class.getResource("/images/" + xThemeSettings.SCROLLBAR_IMAGES[0]));
+                imageTrack = ImageIO.read(xTheme.class.getResource("/images/" + xThemeSettings.SCROLLBAR_IMAGES[1]));
             } catch (IOException ignored) {
             }
         }

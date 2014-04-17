@@ -1,6 +1,6 @@
 package ru.xeroxp.launcher.gui.elements;
 
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -77,13 +77,11 @@ public class xServer {
 
     public static void loadServers() {
         servers.clear();
-        Collections.addAll(servers, xSettingsOfTheme.SERVERS);
+        Collections.addAll(servers, xThemeSettings.SERVERS);
     }
 
     public static xServer getServer(int id) {
-
-        for (Object server1 : servers) {
-            xServer server = (xServer) server1;
+        for (xServer server : servers) {
             if (server.getId() == id) {
                 return server;
             }

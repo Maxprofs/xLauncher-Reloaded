@@ -1,15 +1,16 @@
 package ru.xeroxp.launcher.utils;
 
 import ru.xeroxp.launcher.config.xSettings;
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 import ru.xeroxp.launcher.gui.elements.xServer;
 
-import java.io.File;
-import java.io.FilenameFilter;
+import java.io.*;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class xUtils {
     private static boolean one = false;
-    private static final String SEP = System.getProperty("file.separator");
 
     private static boolean deleteDir(File dir) {
         if (!dir.exists()) {
@@ -29,18 +30,20 @@ public class xUtils {
         return dir.delete();
     }
 
-    public static void deleteFiles() {
+    public static void deleteClientFiles() throws IOException {
         File[] files = getDirectory().listFiles();
 
         assert files != null;
         for (File file : files) {
             if (file.isFile() && file.getName().contains("client") && file.getName().endsWith(".zip")) {
-                file.delete();
+                if (!file.delete()) {
+                    throw new IOException("Failed to delete file: " + file.getAbsolutePath());
+                }
             }
         }
 
         xServer.loadServers();
-        for (int i = 0; i < xSettingsOfTheme.SERVERS.length; ++i) {
+        for (int i = 0; i < xThemeSettings.SERVERS.length; ++i) {
             xServer server = xServer.getServers()[i];
 
             if (!server.getFolder().isEmpty()) {
@@ -95,6 +98,47 @@ public class xUtils {
         return workingDirectory;
     }
 
+    public static void unpackArchive(File theFile, File targetDir) throws IOException {
+        if (!theFile.exists()) {
+            throw new IOException(theFile.getAbsolutePath() + " does not exist");
+        }
+
+        ZipFile zipFile = new ZipFile(theFile);
+        Enumeration entries = zipFile.entries();
+
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = (ZipEntry) entries.nextElement();
+            File file = new File(String.valueOf(targetDir) + File.separator + entry.getName());
+
+            if (!entry.isDirectory()) {
+                InputStream inputStream = zipFile.getInputStream(entry);
+                OutputStream outputStream = new FileOutputStream(file);
+
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = inputStream.read(buffer)) >= 0) {
+                    outputStream.write(buffer, 0, len);
+                }
+
+                inputStream.close();
+                outputStream.close();
+            } else if (buildDirectory(file)) {
+                throw new IOException("Could not create directory: " + file.getAbsolutePath());
+            }
+        }
+
+        zipFile.close();
+
+        if (!theFile.delete()) {
+            throw new IOException("Failed to delete the client file: " + theFile.getAbsolutePath());
+        }
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean buildDirectory(File file) {
+        return file.exists() || file.mkdirs();
+    }
+
     public static OS getPlatform() {
         String osName = System.getProperty("os.name").toLowerCase();
 
@@ -130,7 +174,7 @@ public class xUtils {
     }
 
     public static String getJavaPath(String dir) {
-        return System.getProperty("java.home") + SEP + (dir.isEmpty() ? "" : dir + SEP);
+        return System.getProperty("java.home") + File.separator + (dir.isEmpty() ? "" : dir + File.separator);
     }
 
     public static String getJavaExecutable() {

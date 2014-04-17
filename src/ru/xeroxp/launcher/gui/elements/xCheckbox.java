@@ -1,6 +1,6 @@
 package ru.xeroxp.launcher.gui.elements;
 
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class xCheckbox {
 
     public static void loadCheckboxes() {
         checkboxes.clear();
-        Collections.addAll(checkboxes, xSettingsOfTheme.CHECKBOXES);
+        Collections.addAll(checkboxes, xThemeSettings.CHECKBOXES);
     }
 
     public static xCheckbox[] getCheckboxes() {

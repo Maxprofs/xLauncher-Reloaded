@@ -2,7 +2,7 @@ package ru.xeroxp.launcher;
 
 import net.minecraft.Launcher;
 import ru.xeroxp.launcher.config.xSettings;
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 import ru.xeroxp.launcher.gui.elements.xServer;
 import ru.xeroxp.launcher.gui.xSelectTheme;
 import ru.xeroxp.launcher.gui.xTheme;
@@ -31,8 +31,8 @@ public class xLauncher extends JFrame {
 
     public xLauncher() {
         launcher = this;
-        setMinimumSize(new Dimension(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]));
-        setSize(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]);
+        setMinimumSize(new Dimension(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]));
+        setSize(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]);
         setUndecorated(true);
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -68,7 +68,7 @@ public class xLauncher extends JFrame {
             }
         });
         try {
-            setIconImage(ImageIO.read(xLauncher.class.getResource("/images/" + xSettingsOfTheme.FAVICON)));
+            setIconImage(ImageIO.read(xLauncher.class.getResource("/images/" + xThemeSettings.FAVICON)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -170,7 +170,7 @@ public class xLauncher extends JFrame {
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             try {
-                this.setIconImage(ImageIO.read(ru.xeroxp.launcher.xLauncher.class.getResource("/images/" + xSettingsOfTheme.FAVICON)));
+                this.setIconImage(ImageIO.read(ru.xeroxp.launcher.xLauncher.class.getResource("/images/" + xThemeSettings.FAVICON)));
             } catch (IOException var8) {
                 var8.printStackTrace();
             }
@@ -199,7 +199,7 @@ public class xLauncher extends JFrame {
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             try {
-                this.setIconImage(ImageIO.read(ru.xeroxp.launcher.xLauncher.class.getResource("/images/" + xSettingsOfTheme.FAVICON)));
+                this.setIconImage(ImageIO.read(ru.xeroxp.launcher.xLauncher.class.getResource("/images/" + xThemeSettings.FAVICON)));
             } catch (IOException var3) {
                 var3.printStackTrace();
             }

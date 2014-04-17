@@ -1,6 +1,6 @@
 package ru.xeroxp.launcher.gui.elements;
 
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class xButton {
 
     public static void loadButtons() {
         buttons.clear();
-        Collections.addAll(buttons, xSettingsOfTheme.BUTTONS);
+        Collections.addAll(buttons, xThemeSettings.BUTTONS);
     }
 
     public static xButton[] getButtons() {

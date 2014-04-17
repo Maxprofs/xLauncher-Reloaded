@@ -1,6 +1,6 @@
 package ru.xeroxp.launcher.gui.elements;
 
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class xTextField {
 
     public static void loadFields() {
         fields.clear();
-        Collections.addAll(fields, xSettingsOfTheme.FIELDS);
+        Collections.addAll(fields, xThemeSettings.FIELDS);
     }
 
     public static xTextField[] getFields() {

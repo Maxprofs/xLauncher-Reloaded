@@ -5,7 +5,7 @@ import ru.xeroxp.launcher.gui.xHeaderButton;
 
 import java.awt.*;
 
-public class xSettingsOfTheme {
+public final class xThemeSettings {
     public static final xServer[] SERVERS = {
             new xServer(0, "MagicWars", "localhost", "25565", "client", "Forge1.6.4.jar", "1.6.4", 100, 0, 0, 724, 110, 6, 6, 180, 98, 500, 30, 200, 24, new Color(114, 114, 114), 450, 78, 70, 14, new Color(114, 114, 114), 231, 71, 484.0D, 29),
             new xServer(1, "Hitech", "localhost", "25565", "sandbox", "minecraft.jar", "1.4.7", 100, 0, 120, 724, 110, 6, 126, 180, 98, 500, 150, 200, 24, new Color(114, 114, 114), 450, 198, 70, 14, new Color(114, 114, 114), 231, 191, 484.0D, 29),
@@ -109,7 +109,7 @@ public class xSettingsOfTheme {
     public static final String[] SERVERS_BAR_IMAGES = {"serverbar_on.png", "serverbar_off.png", "serverbar_bg.png"}; // Картинки полосы загруженности серверов
     public static final float[] SERVER_FONTS_SIZE = {12.0F, 16.0F, 24.0F}; // Размеры шрифтов панели серверов
     public static final int[] SERVERS_SCROLL_PANEL_BOUNDS = {20, 65, 760, 495}; // Координаты панели с серверами в панели выбора серверов
-    public static final int[] SERVERS_IN_SCROLL_PANEL_SIZE = {740, xSettingsOfTheme.SERVERS.length * 120}; // Размеры листа с серверами
+    public static final int[] SERVERS_IN_SCROLL_PANEL_SIZE = {740, xThemeSettings.SERVERS.length * 120}; // Размеры листа с серверами
     public static final int[] SERVERS_SCROLL_BAR_SIZE = {17, 479}; // Размеры полосы прокрутки панели серверов
 
     /**

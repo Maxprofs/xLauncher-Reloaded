@@ -2,7 +2,7 @@ package ru.xeroxp.launcher.config;
 
 import ru.xeroxp.launcher.xServerConnect;
 
-public class xSettings {
+public final class xSettings {
     public static final String SITE_LINK = "http://magicwars.high-sky.ru/"; // Ссылка на главную страницу сайта
     public static final String MINE_FOLDER = "magicwars"; // Папка в которой находится майнкрафт (.minecraft) без точки
     public static final String DOWN_LAUNCHER_LINK = "http://localhost/launcher/"; // Путь до папки, в которой лежит лаунчер

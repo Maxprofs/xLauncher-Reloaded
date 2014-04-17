@@ -1,7 +1,7 @@
 package ru.xeroxp.launcher;
 
 import ru.xeroxp.launcher.config.xSettings;
-import ru.xeroxp.launcher.config.xSettingsOfTheme;
+import ru.xeroxp.launcher.config.xThemeSettings;
 import ru.xeroxp.launcher.gui.elements.xServer;
 import ru.xeroxp.launcher.gui.xTheme;
 import ru.xeroxp.launcher.utils.xCipherUtils;
@@ -355,7 +355,7 @@ public class xAuth implements Runnable {
             String strToOut = ch;
 
             for (int c = 0; c < checkFormats.length; c++) {
-                strToOut = strToOut + ":" + ch2.split(":")[c + 1];
+                strToOut += ":" + ch2.split(":")[c + 1];
             }
 
             salt = xCipherUtils.genSalt(symbolsCount);
@@ -403,7 +403,7 @@ public class xAuth implements Runnable {
             String strToOut = ch;
 
             for (int c = 0; c < checkFormats.length; c++) {
-                strToOut = strToOut + ":" + ch2.split(":")[c + 1];
+                strToOut += ":" + ch2.split(":")[c + 1];
             }
 
             salt = xCipherUtils.genSalt(symbolsCount);
@@ -471,7 +471,7 @@ public class xAuth implements Runnable {
 
     private static String getServerPath(String path) {
         xServer.loadServers();
-        for (int s = 0; s < xSettingsOfTheme.SERVERS.length; ++s) {
+        for (int s = 0; s < xThemeSettings.SERVERS.length; ++s) {
             xServer server = xServer.getServers()[s];
 
             if (!server.getFolder().isEmpty() && path.equals(path + File.separator + server.getFolder())) {
@@ -493,7 +493,7 @@ public class xAuth implements Runnable {
             String count = "0";
 
             for (String ignored : checkFormats) {
-                count = count + ":0";
+                count += ":0";
             }
 
             return count;
@@ -502,21 +502,13 @@ public class xAuth implements Runnable {
         for (File file : files) {
             ch = getServerPath(ch);
 
-            if (file.isDirectory()) {
-                if (path.toString().equals(ch)) {
-                    if (!file.getName().endsWith("texturepacks") && !file.getName().endsWith("resourcepacks")) {
-                        String shash = checkCount(new File(path + File.separator + file.getName()));
-                        for (int c = 0; c < checkFormats.length; c++) {
-                            int sFileCount = Integer.parseInt(shash.split(":")[c + 1]);
-                            fileCount[c] = sFileCount + fileCount[c];
-                        }
-                    }
-                } else {
-                    String shash = checkCount(new File(path + File.separator + file.getName()));
-                    for (int c = 0; c < checkFormats.length; c++) {
-                        int sFileCount = Integer.parseInt(shash.split(":")[c + 1]);
-                        fileCount[c] = sFileCount + fileCount[c];
-                    }
+            if (file.isDirectory() && (!path.toString().equals(ch)
+                    || (!file.getName().endsWith("texturepacks") && !file.getName().endsWith("resourcepacks")))) {
+                String sHash = checkCount(new File(path + File.separator + file.getName()));
+
+                for (int c = 0; c < checkFormats.length; c++) {
+                    int sFileCount = Integer.parseInt(sHash.split(":")[c + 1]);
+                    fileCount[c] = sFileCount + fileCount[c];
                 }
             }
 
@@ -533,7 +525,7 @@ public class xAuth implements Runnable {
         String result = "0";
 
         for (int c = 0; c < checkFormats.length; c++) {
-            result = result + ":" + fileCount[c];
+            result += ":" + fileCount[c];
         }
 
         return result;
@@ -567,7 +559,7 @@ public class xAuth implements Runnable {
             File textures;
             xServer.loadServers();
             boolean one = false;
-            for (int s = 0; s < xSettingsOfTheme.SERVERS.length; ++s) {
+            for (int s = 0; s < xThemeSettings.SERVERS.length; ++s) {
                 xServer server = xServer.getServers()[s];
 
                 String tFolder;
