@@ -11,7 +11,7 @@ public class xSettings {
     public static final String MAIN_INFO_FILE = "http://localhost/maininfo.php"; // Путь до файла информации
     public static final String LAUNCHER_NAME = "MagicWars Launcher"; // Название лаунчера
     public static final String MONITOR_LINK = "http://localhost/data/monitor.txt"; // Ссылка на файл мониторинга
-    public static final int CHECK_TIME = 70000; // Промежутки проверки клиента
+    public static final int CHECK_TIME = 70000; // Время между проверками клиента
     public static final String GAME_NAME = "MagicWars"; // Название окна игры
     public static final String LAUNCHER_VERSION = "1.0.0"; // Версия лаунчера
     public static final String[] OFFLINE_CLIENT = {"magicwars", "Forge1.6.4.jar", "1.6.4"}; // Клиент, который будет запускаться в оффлайн режиме

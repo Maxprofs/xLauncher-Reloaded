@@ -161,7 +161,7 @@ public class xUpdater {
             xDebug.errorMessage("Failed update client version: " + var3.getMessage());
         }
 
-        for (int i = 0; i < xSettingsOfTheme.ButtoBUTTONSs.length; ++i) {
+        for (int i = 0; i < xSettingsOfTheme.BUTTONS.length; ++i) {
             xButton button = xButton.getButtons()[i];
 
             if (button.getId() == xButton.RAM_ID) {
@@ -312,7 +312,7 @@ public class xUpdater {
     private void disableButtons() {
         xButton.loadButtons();
 
-        for (int i = 0; i < xSettingsOfTheme.ButtoBUTTONSs.length; ++i) {
+        for (int i = 0; i < xSettingsOfTheme.BUTTONS.length; ++i) {
             xButton button = xButton.getButtons()[i];
 
             if (button.getId() == xButton.UPDATE_ID || button.getId() == xButton.RAM_ID) {

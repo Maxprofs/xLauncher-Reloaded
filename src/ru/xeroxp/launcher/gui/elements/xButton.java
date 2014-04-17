@@ -36,7 +36,7 @@ public class xButton {
 
     public static void loadButtons() {
         buttons.clear();
-        Collections.addAll(buttons, xSettingsOfTheme.ButtoBUTTONSs);
+        Collections.addAll(buttons, xSettingsOfTheme.BUTTONS);
     }
 
     public static xButton[] getButtons() {
