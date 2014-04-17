@@ -3,36 +3,36 @@ package ru.xeroxp.launcher.config;
 import ru.xeroxp.launcher.xServerConnect;
 
 public class xSettings {
-    public static final String siteLink = "http://magicwars.high-sky.ru/"; // Ссылка на главную страницу сайта
-    public static final String mineFolder = "magicwars"; // Папка в которой находится майнкрафт (.minecraft) без точки
-    public static final String downLauncherLink = "http://localhost/launcher/"; // Путь до папки, в которой лежит лаунчер
-    public static final String launcherFileName = "xLauncher"; // Названия файла лаунчера (.jar и .exe)
-    public static final String downClientLink = "http://localhost/client/"; // Путь до папки, в которой хранится client.zip (в нем хранятся все файлы клиентов)
-    public static final String mainInfoFile = "http://localhost/maininfo.php"; // Путь до файла информации
-    public static final String launcherName = "MagicWars Launcher"; // Название лаунчера
-    public static final String monitorLink = "http://localhost/data/monitor.txt"; // Ссылка на файл мониторинга
-    public static final int checkTime = 70000; // Промежутки проверки клиента
-    public static final String gameName = "MagicWars"; // Название окна игры
-    public static final String launcherVersion = "1.0.0"; // Версия лаунчера
-    public static final String[] offlineClient = {"magicwars", "Forge1.6.4.jar", "1.6.4"}; // Клиент, который будет запускаться в оффлайн режиме
-    public static final String newsUrl = "http://localhost/MineCraft/news.html"; // Ссылка на файл с новостями
-    public static final String passIdKey = "QWERTY1"; // Ключ защиты пароля (такой же должен быть в сервере)
-    public static final int localPort = 6565; // Порт проверки лаунчера из клиента
-    public static final byte[] key = {
+    public static final String SITE_LINK = "http://magicwars.high-sky.ru/"; // Ссылка на главную страницу сайта
+    public static final String MINE_FOLDER = "magicwars"; // Папка в которой находится майнкрафт (.minecraft) без точки
+    public static final String DOWN_LAUNCHER_LINK = "http://localhost/launcher/"; // Путь до папки, в которой лежит лаунчер
+    public static final String LAUNCHER_FILE_NAME = "xLauncher"; // Названия файла лаунчера (.jar и .exe)
+    public static final String DOWN_CLIENT_LINK = "http://localhost/client/"; // Путь до папки, в которой хранится client.zip (в нем хранятся все файлы клиентов)
+    public static final String MAIN_INFO_FILE = "http://localhost/maininfo.php"; // Путь до файла информации
+    public static final String LAUNCHER_NAME = "MagicWars Launcher"; // Название лаунчера
+    public static final String MONITOR_LINK = "http://localhost/data/monitor.txt"; // Ссылка на файл мониторинга
+    public static final int CHECK_TIME = 70000; // Промежутки проверки клиента
+    public static final String GAME_NAME = "MagicWars"; // Название окна игры
+    public static final String LAUNCHER_VERSION = "1.0.0"; // Версия лаунчера
+    public static final String[] OFFLINE_CLIENT = {"magicwars", "Forge1.6.4.jar", "1.6.4"}; // Клиент, который будет запускаться в оффлайн режиме
+    public static final String NEWS_URL = "http://localhost/MineCraft/news.html"; // Ссылка на файл с новостями
+    public static final String PASS_ID_KEY = "QWERTY1"; // Ключ защиты пароля (такой же должен быть в сервере)
+    public static final int LOCAL_PORT = 6565; // Порт проверки лаунчера из клиента
+    public static final byte[] KEY = {
             0x74, 0x68, 0x68, 0x73, 0x49, 0x73, 0x41, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x4b, 0x65, 0x79
     }; // Ключ обмена информацией между лаунчером и сокет-сервером (в сокет-сервере должен быть такой же)
-    public static final boolean animatedNews = false; // Переключение вида новостей
-    public static final xServerConnect[] connectServers = {
+    public static final boolean ANIMATED_NEWS = false; // Переключение вида новостей
+    public static final xServerConnect[] SERVER_CONNECTS = {
             new xServerConnect("192.168.10.3", 4444)
     }; // id, ip адрес и port сокет-серверов
-    public static final boolean patchDir = true; //Использовать автоматическую замену директории игры
-    public static final String mcClass = "net.minecraft.client.Minecraft";
-    public static final String[] mcVersions = {
+    public static final boolean PATCH_DIR = true; //Использовать автоматическую замену директории игры
+    public static final String MC_CLASS = "net.minecraft.client.Minecraft";
+    public static final String[] MC_VERSIONS = {
             "1.2.5::aj", "1.3.x::am", "1.4.x::an", "1.5.x::an", "1.6.x::an"
     }; // Версии и классы для автозамены дирректории игры
 
     /**
      * Режим отладки
      */
-    public static boolean debug = true; // Отключите если не знаете что это
+    public static final boolean DEBUG_MODE = true; // Отключите если не знаете что это
 }

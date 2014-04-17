@@ -324,9 +324,9 @@ public class xAuth implements Runnable {
         String res = "";
         int j = 0;
         for (int i = 0; i < text.length(); i++) {
-            res += (char) (text.charAt(i) ^ xSettings.passIdKey.charAt(j));
+            res += (char) (text.charAt(i) ^ xSettings.PASS_ID_KEY.charAt(j));
             j++;
-            if (j == xSettings.passIdKey.length()) j = 0;
+            if (j == xSettings.PASS_ID_KEY.length()) j = 0;
         }
         return res;
     }
@@ -471,7 +471,7 @@ public class xAuth implements Runnable {
 
     private static String getServerPath(String path) {
         xServer.loadServers();
-        for (int s = 0; s < xSettingsOfTheme.Servers.length; ++s) {
+        for (int s = 0; s < xSettingsOfTheme.SERVERS.length; ++s) {
             xServer server = xServer.getServers()[s];
 
             if (!server.getFolder().isEmpty() && path.equals(path + File.separator + server.getFolder())) {
@@ -567,7 +567,7 @@ public class xAuth implements Runnable {
             File textures;
             xServer.loadServers();
             boolean one = false;
-            for (int s = 0; s < xSettingsOfTheme.Servers.length; ++s) {
+            for (int s = 0; s < xSettingsOfTheme.SERVERS.length; ++s) {
                 xServer server = xServer.getServers()[s];
 
                 String tFolder;

@@ -39,7 +39,7 @@ public class xTextField {
 
     public static void loadFields() {
         fields.clear();
-        Collections.addAll(fields, xSettingsOfTheme.Fields);
+        Collections.addAll(fields, xSettingsOfTheme.FIELDS);
     }
 
     public static xTextField[] getFields() {

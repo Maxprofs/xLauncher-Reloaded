@@ -13,7 +13,7 @@ public class xErrorPanel extends JDialog {
     public xErrorPanel(Frame parent, String error) {
         super(parent);
         setTitle("Ошибка");
-        setSize(xSettingsOfTheme.ErrorPanelSize[0], xSettingsOfTheme.ErrorPanelSize[1] + 20);
+        setSize(xSettingsOfTheme.ERROR_PANEL_SIZE[0], xSettingsOfTheme.ERROR_PANEL_SIZE[1] + 20);
         setResizable(false);
         setModal(true);
         setLocationRelativeTo(parent);
@@ -22,12 +22,12 @@ public class xErrorPanel extends JDialog {
         backgroundBg.setBorder(null);
         backgroundBg.setOpaque(false);
         add(backgroundBg);
-        InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.FontFile1);
+        InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.MAIN_FONT_FILE);
         Font arial = null;
 
         try {
             arial = Font.createFont(0, is);
-            arial = arial.deriveFont(0, xSettingsOfTheme.ErrorPanelTextSize);
+            arial = arial.deriveFont(0, xSettingsOfTheme.ERROR_PANEL_TEXT_SIZE);
         } catch (FontFormatException e2) {
             xDebug.errorMessage("Failed load font: " + e2.getMessage());
         } catch (IOException e2) {
@@ -35,9 +35,9 @@ public class xErrorPanel extends JDialog {
         }
 
         JLabel errorLabel = new JLabel(error);
-        errorLabel.setBounds(0, 0, xSettingsOfTheme.ErrorPanelSize[0], xSettingsOfTheme.ErrorPanelSize[1]);
+        errorLabel.setBounds(0, 0, xSettingsOfTheme.ERROR_PANEL_SIZE[0], xSettingsOfTheme.ERROR_PANEL_SIZE[1]);
         errorLabel.setFont(arial);
-        errorLabel.setForeground(xSettingsOfTheme.ErrorPanelTextColor);
+        errorLabel.setForeground(xSettingsOfTheme.ERROR_PANEL_TEXT_COLOR);
         errorLabel.setHorizontalAlignment(JLabel.CENTER);
         backgroundBg.add(errorLabel);
     }
@@ -50,7 +50,7 @@ public class xErrorPanel extends JDialog {
             setOpaque(true);
 
             try {
-                bgImage = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.ErrorPanelImage)).getScaledInstance(xSettingsOfTheme.ErrorPanelSize[0], xSettingsOfTheme.ErrorPanelSize[1], 1);
+                bgImage = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.ERROR_PANEL_IMAGE)).getScaledInstance(xSettingsOfTheme.ERROR_PANEL_SIZE[0], xSettingsOfTheme.ERROR_PANEL_SIZE[1], 1);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -65,9 +65,9 @@ public class xErrorPanel extends JDialog {
                 img = createImage(w, h);
 
                 Graphics g = img.getGraphics();
-                for (int x = 0; x <= w / xSettingsOfTheme.ErrorPanelSize[0]; x++) {
-                    for (int y = 0; y <= h / xSettingsOfTheme.ErrorPanelSize[1]; y++)
-                        g.drawImage(bgImage, x * xSettingsOfTheme.ErrorPanelSize[0], y * xSettingsOfTheme.ErrorPanelSize[1], null);
+                for (int x = 0; x <= w / xSettingsOfTheme.ERROR_PANEL_SIZE[0]; x++) {
+                    for (int y = 0; y <= h / xSettingsOfTheme.ERROR_PANEL_SIZE[1]; y++)
+                        g.drawImage(bgImage, x * xSettingsOfTheme.ERROR_PANEL_SIZE[0], y * xSettingsOfTheme.ERROR_PANEL_SIZE[1], null);
                 }
 
                 g.dispose();

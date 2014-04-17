@@ -46,7 +46,7 @@ public class xCheckbox {
 
     public static void loadCheckboxes() {
         checkboxes.clear();
-        Collections.addAll(checkboxes, xSettingsOfTheme.Checkboxes);
+        Collections.addAll(checkboxes, xSettingsOfTheme.CHECKBOXES);
     }
 
     public static xCheckbox[] getCheckboxes() {

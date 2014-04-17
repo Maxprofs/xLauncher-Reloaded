@@ -58,9 +58,9 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
         this.customParameters.put("stand-alone", "true");
         this.customParameters.put("username", userName);
         this.customParameters.put("sessionid", "1");
-        this.minecraft = new xMinecraft(xSettings.offlineClient[1]);
-        folder = xSettings.offlineClient[0];
-        version = xSettings.offlineClient[2];
+        this.minecraft = new xMinecraft(xSettings.OFFLINE_CLIENT[1]);
+        folder = xSettings.OFFLINE_CLIENT[0];
+        version = xSettings.OFFLINE_CLIENT[2];
     }
 
     @Override
@@ -156,7 +156,7 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
     @Override
     public URL getDocumentBase() {
         try {
-            return new URL(xSettings.siteLink);
+            return new URL(xSettings.SITE_LINK);
         } catch (MalformedURLException var2) {
             var2.printStackTrace();
             return null;
@@ -242,13 +242,13 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
 
         public void patchDir() {
             //noinspection ConstantConditions,PointlessBooleanExpression
-            if (!xSettings.patchDir) return;
+            if (!xSettings.PATCH_DIR) return;
             try {
                 String mcver = version;
-                for (int j = 0; j < xSettings.mcVersions.length; j++) {
-                    String mcVerFromSettings = xSettings.mcVersions[j].split("::")[0];
+                for (int j = 0; j < xSettings.MC_VERSIONS.length; j++) {
+                    String mcVerFromSettings = xSettings.MC_VERSIONS[j].split("::")[0];
                     if ((!mcVerFromSettings.contains("x") && mcver.equals(mcVerFromSettings)) || (mcver.substring(0, 3).equals(mcVerFromSettings.substring(0, 3)))) {
-                        Field f = classLoader.loadClass(xSettings.mcClass).getDeclaredField(xSettings.mcVersions[j].split("::")[1]);
+                        Field f = classLoader.loadClass(xSettings.MC_CLASS).getDeclaredField(xSettings.MC_VERSIONS[j].split("::")[1]);
                         Field.setAccessible(new Field[]{f}, true);
 
                         if (folder.isEmpty()) {
@@ -257,7 +257,7 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
                             f.set(null, new File(xUtils.getDirectory() + File.separator + folder));
                         }
 
-                        System.out.println("File patched: " + xSettings.mcClass + "::" + xSettings.mcVersions[j].split("::")[1]);
+                        System.out.println("File patched: " + xSettings.MC_CLASS + "::" + xSettings.MC_VERSIONS[j].split("::")[1]);
                         return;
                     }
                 }

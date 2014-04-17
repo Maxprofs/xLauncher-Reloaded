@@ -21,8 +21,8 @@ public class xScrollBar {
 
         public MyScrollbarUI() {
             try {
-                imageThumb = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.ScrollbarImages[0]));
-                imageTrack = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.ScrollbarImages[1]));
+                imageThumb = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.SCROLLBAR_IMAGES[0]));
+                imageTrack = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.SCROLLBAR_IMAGES[1]));
             } catch (IOException ignored) {
             }
         }
@@ -48,9 +48,7 @@ public class xScrollBar {
 
         @Override
         protected JButton createDecreaseButton(int orientation) {
-            b.setVisible(false);
-            b.setOpaque(false);
-            return b;
+            return createIncreaseButton(orientation);
         }
 
         @Override

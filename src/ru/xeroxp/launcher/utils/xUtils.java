@@ -9,6 +9,7 @@ import java.io.FilenameFilter;
 
 public class xUtils {
     private static boolean one = false;
+    private static final String SEP = System.getProperty("file.separator");
 
     private static boolean deleteDir(File dir) {
         if (!dir.exists()) {
@@ -39,7 +40,7 @@ public class xUtils {
         }
 
         xServer.loadServers();
-        for (int i = 0; i < xSettingsOfTheme.Servers.length; ++i) {
+        for (int i = 0; i < xSettingsOfTheme.SERVERS.length; ++i) {
             xServer server = xServer.getServers()[i];
 
             if (!server.getFolder().isEmpty()) {
@@ -67,7 +68,7 @@ public class xUtils {
     }
 
     public static File getDirectory() {
-        String applicationName = xSettings.mineFolder;
+        String applicationName = xSettings.MINE_FOLDER;
         String userHome = System.getProperty("user.home", ".");
         File workingDirectory;
 
@@ -124,9 +125,16 @@ public class xUtils {
         return OS.unknown;
     }
 
+    public static String getJavaPath() {
+        return getJavaPath("");
+    }
+
+    public static String getJavaPath(String dir) {
+        return System.getProperty("java.home") + SEP + (dir.isEmpty() ? "" : dir + SEP);
+    }
+
     public static String getJavaExecutable() {
-        String separator = System.getProperty("file.separator");
-        String path = System.getProperty("java.home") + separator + "bin" + separator;
+        String path = getJavaPath("bin");
         return getPlatform() == OS.windows && (new File(path + "javaw.exe")).isFile() ? path + "javaw.exe" : path + "java";
     }
 

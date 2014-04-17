@@ -35,9 +35,9 @@ public class xLoader implements JavaProcessRunnable {
 
     public xLoader(String userName) {
         this.userName = userName;
-        this.jarFile = xSettings.offlineClient[1];
-        this.folder = xSettings.offlineClient[0];
-        this.version = xSettings.offlineClient[2];
+        this.jarFile = xSettings.OFFLINE_CLIENT[1];
+        this.folder = xSettings.OFFLINE_CLIENT[0];
+        this.version = xSettings.OFFLINE_CLIENT[2];
         playGame();
     }
 
@@ -123,7 +123,7 @@ public class xLoader implements JavaProcessRunnable {
 
             if (xUtils.getPlatform().toString().equals("macos")) {
                 processLauncher.addCommands("-Xdock:icon=" + new File(assetsDirectory, "icons/minecraft.icns").getAbsolutePath());
-                processLauncher.addCommands("-Xdock:name=" + xSettings.gameName);
+                processLauncher.addCommands("-Xdock:name=" + xSettings.GAME_NAME);
             }
 
             processLauncher.addCommands("\"" + "-Djava.library.path=" + nativesPath.getAbsolutePath() + "\"");

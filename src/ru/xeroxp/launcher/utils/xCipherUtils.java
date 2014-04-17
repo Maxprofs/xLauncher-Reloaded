@@ -8,7 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Random;
 
 public class xCipherUtils {
-    private static final byte[] key = xSettings.key;
+    private static final byte[] key = xSettings.KEY;
 
     public static String encrypt(String strToEncrypt) {
         try {

@@ -83,9 +83,9 @@ public class xUpdater {
         try {
             if (runningLauncher != null) {
                 if (runningLauncher.getPath().endsWith(".jar")) {
-                    this.unpackLauncher(new URL(xSettings.downLauncherLink + xSettings.launcherFileName + ".jar"), runningLauncher);
+                    this.unpackLauncher(new URL(xSettings.DOWN_LAUNCHER_LINK + xSettings.LAUNCHER_FILE_NAME + ".jar"), runningLauncher);
                 } else if (runningLauncher.getPath().endsWith(".exe")) {
-                    this.unpackLauncher(new URL(xSettings.downLauncherLink + xSettings.launcherFileName + ".exe"), runningLauncher);
+                    this.unpackLauncher(new URL(xSettings.DOWN_LAUNCHER_LINK + xSettings.LAUNCHER_FILE_NAME + ".exe"), runningLauncher);
                 }
             }
             xMain.setVersion(checkVersion);
@@ -150,7 +150,7 @@ public class xUpdater {
         xUtils.deleteFiles();
 
         try {
-            this.unpackClient(new URL(xSettings.downClientLink + "client.zip"), xUtils.getDirectory());
+            this.unpackClient(new URL(xSettings.DOWN_CLIENT_LINK + "client.zip"), xUtils.getDirectory());
         } catch (IOException var4) {
             xDebug.errorMessage("Failed unpack client: " + var4.getMessage());
         }
@@ -161,7 +161,7 @@ public class xUpdater {
             xDebug.errorMessage("Failed update client version: " + var3.getMessage());
         }
 
-        for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
+        for (int i = 0; i < xSettingsOfTheme.ButtoBUTTONSs.length; ++i) {
             xButton button = xButton.getButtons()[i];
 
             if (button.getId() == xButton.RAM_ID) {
@@ -173,7 +173,7 @@ public class xUpdater {
 
     String checkVersion(String type) {
         try {
-            URL e = new URL(xSettings.mainInfoFile + "?action=" + type);
+            URL e = new URL(xSettings.MAIN_INFO_FILE + "?action=" + type);
             URLConnection getVer = e.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(getVer.getInputStream()));
             String inputLine = in.readLine();
@@ -312,7 +312,7 @@ public class xUpdater {
     private void disableButtons() {
         xButton.loadButtons();
 
-        for (int i = 0; i < xSettingsOfTheme.Buttons.length; ++i) {
+        for (int i = 0; i < xSettingsOfTheme.ButtoBUTTONSs.length; ++i) {
             xButton button = xButton.getButtons()[i];
 
             if (button.getId() == xButton.UPDATE_ID || button.getId() == xButton.RAM_ID) {

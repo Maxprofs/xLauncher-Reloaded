@@ -21,7 +21,7 @@ public class xServerConnect {
 
     public static void loadServers() {
         connectServers.clear();
-        Collections.addAll(connectServers, xSettings.connectServers);
+        Collections.addAll(connectServers, xSettings.SERVER_CONNECTS);
     }
 
     public static xServerConnect[] getConnectServers() {

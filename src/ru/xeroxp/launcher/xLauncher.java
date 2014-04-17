@@ -6,7 +6,6 @@ import ru.xeroxp.launcher.config.xSettingsOfTheme;
 import ru.xeroxp.launcher.gui.elements.xServer;
 import ru.xeroxp.launcher.gui.xSelectTheme;
 import ru.xeroxp.launcher.gui.xTheme;
-import ru.xeroxp.launcher.utils.xUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -29,25 +28,20 @@ public class xLauncher extends JFrame {
     private Point initialClick;
     private String login;
     private String session;
-    private boolean sound = true;
 
     public xLauncher() {
         launcher = this;
-        setMinimumSize(new Dimension(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]));
-        setSize(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]);
+        setMinimumSize(new Dimension(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]));
+        setSize(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]);
         setUndecorated(true);
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setTitle(xSettings.launcherName + " v" + xMain.getVersion());
+        setTitle(xSettings.LAUNCHER_NAME + " v" + xMain.getVersion());
 
         xTheme theme = new xTheme();
         this.theme = theme;
         getContentPane().add(theme);
-
-        if (xUtils.getPlatform().ordinal() == 0) {
-            this.sound = false;
-        }
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -58,6 +52,7 @@ public class xLauncher extends JFrame {
                 }
             }
         });
+
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -73,7 +68,7 @@ public class xLauncher extends JFrame {
             }
         });
         try {
-            setIconImage(ImageIO.read(xLauncher.class.getResource("/images/" + xSettingsOfTheme.Favicon)));
+            setIconImage(ImageIO.read(xLauncher.class.getResource("/images/" + xSettingsOfTheme.FAVICON)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -131,10 +126,6 @@ public class xLauncher extends JFrame {
         }
     }
 
-    public boolean getSound() {
-        return this.sound;
-    }
-
     public class xOnlineThread implements Runnable {
         private final xSelectTheme theme;
         private boolean run = true;
@@ -147,7 +138,7 @@ public class xLauncher extends JFrame {
         public void run() {
             while (this.run) {
                 try {
-                    URL e = new URL(xSettings.monitorLink);
+                    URL e = new URL(xSettings.MONITOR_LINK);
                     URLConnection getVer = e.openConnection();
                     BufferedReader in = new BufferedReader(new InputStreamReader(getVer.getInputStream()));
                     String onlineLine = in.readLine();
@@ -174,12 +165,12 @@ public class xLauncher extends JFrame {
             this.setSize(860, 520);
             this.setLocationRelativeTo(null);
             this.setMinimumSize(new Dimension(860, 520));
-            this.setTitle(xSettings.gameName);
+            this.setTitle(xSettings.GAME_NAME);
             this.setBackground(Color.WHITE);
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             try {
-                this.setIconImage(ImageIO.read(ru.xeroxp.launcher.xLauncher.class.getResource("/images/" + xSettingsOfTheme.Favicon)));
+                this.setIconImage(ImageIO.read(ru.xeroxp.launcher.xLauncher.class.getResource("/images/" + xSettingsOfTheme.FAVICON)));
             } catch (IOException var8) {
                 var8.printStackTrace();
             }
@@ -203,17 +194,17 @@ public class xLauncher extends JFrame {
             this.setSize(860, 520);
             this.setLocationRelativeTo(null);
             this.setMinimumSize(new Dimension(860, 520));
-            this.setTitle(xSettings.gameName);
+            this.setTitle(xSettings.GAME_NAME);
             this.setBackground(Color.WHITE);
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             try {
-                this.setIconImage(ImageIO.read(ru.xeroxp.launcher.xLauncher.class.getResource("/images/" + xSettingsOfTheme.Favicon)));
+                this.setIconImage(ImageIO.read(ru.xeroxp.launcher.xLauncher.class.getResource("/images/" + xSettingsOfTheme.FAVICON)));
             } catch (IOException var3) {
                 var3.printStackTrace();
             }
 
-            oldVer = isOld(xSettings.offlineClient[2]);
+            oldVer = isOld(xSettings.OFFLINE_CLIENT[2]);
             xMain.cm.start();
 
             if (oldVer) {
@@ -233,4 +224,4 @@ public class xLauncher extends JFrame {
             return ((versionNum.length() == 3) && (Integer.parseInt(versionNum) >= 160)) || ((versionNum.length() == 2) && (Integer.parseInt(versionNum) >= 16));
         }
     }
-    }
+}

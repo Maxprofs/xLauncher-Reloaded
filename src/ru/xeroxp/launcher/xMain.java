@@ -17,7 +17,7 @@ import java.util.List;
 
 public class xMain {
 
-    private static String version = xSettings.launcherVersion;
+    private static String version = xSettings.LAUNCHER_VERSION;
     public static boolean error = false;
     public static Thread cm;
 
@@ -99,7 +99,7 @@ public class xMain {
                             }
                         }
 
-                        Thread.sleep(xSettings.checkTime);
+                        Thread.sleep(xSettings.CHECK_TIME);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
@@ -109,7 +109,7 @@ public class xMain {
         cm = new Thread(new Runnable() {
             public void run() {
                 try {
-                    ServerSocket srv = new ServerSocket(xSettings.localPort);
+                    ServerSocket srv = new ServerSocket(xSettings.LOCAL_PORT);
                     srv.setSoTimeout(0);
                     Socket client = srv.accept();
                     InputStream sin = client.getInputStream();

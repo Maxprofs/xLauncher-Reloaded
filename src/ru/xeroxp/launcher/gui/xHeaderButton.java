@@ -30,7 +30,7 @@ public class xHeaderButton {
 
     public static void loadButtons() {
         buttons.clear();
-        Collections.addAll(buttons, xSettingsOfTheme.HeaderButtons);
+        Collections.addAll(buttons, xSettingsOfTheme.HEADER_BUTTONS);
     }
 
     public static xHeaderButton[] getButtons() {

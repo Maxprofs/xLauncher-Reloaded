@@ -77,7 +77,7 @@ public class xServer {
 
     public static void loadServers() {
         servers.clear();
-        Collections.addAll(servers, xSettingsOfTheme.Servers);
+        Collections.addAll(servers, xSettingsOfTheme.SERVERS);
     }
 
     public static xServer getServer(int id) {

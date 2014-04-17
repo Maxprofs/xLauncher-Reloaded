@@ -12,7 +12,6 @@ import ru.xeroxp.launcher.xLauncher;
 import ru.xeroxp.launcher.xMain;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -33,7 +32,7 @@ import static ru.xeroxp.launcher.utils.xUtils.getDirectory;
 @SuppressWarnings("SameParameterValue")
 public class xTheme extends JPanel {
     public static boolean gameOffline = false;
-    public final JButton[] buttons = new JButton[xSettingsOfTheme.Buttons.length];
+    public final JButton[] buttons = new JButton[xSettingsOfTheme.BUTTONS.length];
     private final JPasswordField passwordBar = new JPasswordField();
     private final JTextField loginBar = new JTextField();
     private final JTextField xSliderValue = new JTextField();
@@ -89,24 +88,23 @@ public class xTheme extends JPanel {
     private boolean remember = false;
     private String savedPassword = null;
     private boolean lockAuth = false;
-    private Clip clip = null;
     private Font arial = null;
     private Font arial2 = null;
 
     public xTheme() {
         setLayout(null);
-        setMinimumSize(new Dimension(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]));
-        setSize(xSettingsOfTheme.LauncherSize[0], xSettingsOfTheme.LauncherSize[1]);
+        setMinimumSize(new Dimension(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]));
+        setSize(xSettingsOfTheme.LAUNCHER_SIZE[0], xSettingsOfTheme.LAUNCHER_SIZE[1]);
         setBackground(new Color(0, 0, 0, 0));
         setBorder(null);
         setOpaque(false);
 
-        InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.FontFile1);
+        InputStream is = xTheme.class.getResourceAsStream("/font/" + xSettingsOfTheme.MAIN_FONT_FILE);
 
         try {
             this.arial = Font.createFont(0, is);
-            this.arial = this.arial.deriveFont(0, xSettingsOfTheme.MainFonts[0]);
-            this.arial2 = this.arial.deriveFont(Font.PLAIN, xSettingsOfTheme.MainFonts[1]);
+            this.arial = this.arial.deriveFont(0, xSettingsOfTheme.FONTS_SIZE[0]);
+            this.arial2 = this.arial.deriveFont(Font.PLAIN, xSettingsOfTheme.FONTS_SIZE[1]);
         } catch (FontFormatException e2) {
             xDebug.errorMessage("Failed load font: " + e2.getMessage());
         } catch (IOException e2) {
@@ -114,36 +112,22 @@ public class xTheme extends JPanel {
         }
 
         try {
-            this.background = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.MainPanelBackgroundImage));
-            this.logo = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.Logo));
+            this.background = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.MAIN_PANEL_BACKGROUND_IMAGE));
+            this.logo = ImageIO.read(xTheme.class.getResource("/images/" + xSettingsOfTheme.LOGO));
         } catch (IOException e) {
             xDebug.errorMessage("Failed load Theme images: " + e.getMessage());
         }
 
-        if (xLauncher.getLauncher().getSound()) {
-            try {
-                AudioInputStream audioIn = AudioSystem.getAudioInputStream(xTheme.class.getResource("/sound/" + xSettingsOfTheme.ClickButtonSound));
-                this.clip = AudioSystem.getClip();
-                this.clip.open(audioIn);
-            } catch (UnsupportedAudioFileException e2) {
-                xDebug.errorMessage("Unsupported Audio Format: " + e2.getMessage());
-            } catch (IOException e2) {
-                xDebug.errorMessage("Failed load sound: " + e2.getMessage());
-            } catch (LineUnavailableException e) {
-                xDebug.errorMessage("Failed load clip: " + e.getMessage());
-            }
-        }
-
-        JLabel header = new JLabel(xSettings.launcherName + " v" + xMain.getVersion());
-        header.setForeground(xSettingsOfTheme.HeaderColor);
-        header.setBounds(xSettingsOfTheme.HeaderBounds[0], xSettingsOfTheme.HeaderBounds[1], xSettingsOfTheme.HeaderBounds[2], xSettingsOfTheme.HeaderBounds[3]);
+        JLabel header = new JLabel(xSettings.LAUNCHER_NAME + " v" + xMain.getVersion());
+        header.setForeground(xSettingsOfTheme.HEADER_COLOR);
+        header.setBounds(xSettingsOfTheme.HEADER_BOUNDS[0], xSettingsOfTheme.HEADER_BOUNDS[1], xSettingsOfTheme.HEADER_BOUNDS[2], xSettingsOfTheme.HEADER_BOUNDS[3]);
         header.setFont(this.arial);
 
-        this.percent.setBounds(xSettingsOfTheme.PercentLabelBounds[0], xSettingsOfTheme.PercentLabelBounds[1], xSettingsOfTheme.PercentLabelBounds[2], xSettingsOfTheme.PercentLabelBounds[3]);
-        this.percent.setForeground(xSettingsOfTheme.PercentLabelColor);
+        this.percent.setBounds(xSettingsOfTheme.PERCENT_LABEL_BOUNDS[0], xSettingsOfTheme.PERCENT_LABEL_BOUNDS[1], xSettingsOfTheme.PERCENT_LABEL_BOUNDS[2], xSettingsOfTheme.PERCENT_LABEL_BOUNDS[3]);
+        this.percent.setForeground(xSettingsOfTheme.PERCENT_LABEL_COLOR);
 
-        this.error.setBounds(xSettingsOfTheme.ErrorLabelBounds[0], xSettingsOfTheme.ErrorLabelBounds[1], xSettingsOfTheme.ErrorLabelBounds[2], xSettingsOfTheme.ErrorLabelBounds[3]);
-        this.error.setForeground(xSettingsOfTheme.ErrorLabelColor);
+        this.error.setBounds(xSettingsOfTheme.ERROR_LABEL_BOUNDS[0], xSettingsOfTheme.ERROR_LABEL_BOUNDS[1], xSettingsOfTheme.ERROR_LABEL_BOUNDS[2], xSettingsOfTheme.ERROR_LABEL_BOUNDS[3]);
+        this.error.setForeground(xSettingsOfTheme.ERROR_LABEL_COLOR);
         this.error.setFont(this.arial2);
         this.error.setHorizontalTextPosition(JLabel.CENTER);
         this.error.setHorizontalAlignment(JLabel.CENTER);
@@ -157,12 +141,12 @@ public class xTheme extends JPanel {
             }
         }
 
-        JLabel mb = new JLabel(xSettingsOfTheme.MemoryLabelText);
+        JLabel mb = new JLabel(xSettingsOfTheme.MEMORY_LABEL_TEXT);
         mb.setOpaque(false);
         mb.setBorder(null);
-        mb.setBounds(xSettingsOfTheme.MemoryLabelBounds[0], xSettingsOfTheme.MemoryLabelBounds[1], xSettingsOfTheme.MemoryLabelBounds[2], xSettingsOfTheme.MemoryLabelBounds[3]);
+        mb.setBounds(xSettingsOfTheme.MEMORY_LABEL_BOUNDS[0], xSettingsOfTheme.MEMORY_LABEL_BOUNDS[1], xSettingsOfTheme.MEMORY_LABEL_BOUNDS[2], xSettingsOfTheme.MEMORY_LABEL_BOUNDS[3]);
         mb.setFont(this.arial);
-        mb.setForeground(xSettingsOfTheme.MemoryLabelColor);
+        mb.setForeground(xSettingsOfTheme.MEMORY_LABEL_COLOR);
 
         add(mb);
         xButton.loadButtons();
@@ -214,10 +198,10 @@ public class xTheme extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         g.drawImage(this.background, 0, 0, this);
-        g.drawImage(this.logo, xSettingsOfTheme.LogoBounds[0], xSettingsOfTheme.LogoBounds[1], this);
-        g.drawImage(this.loginField, xSettingsOfTheme.LoginFieldBounds[0], xSettingsOfTheme.LoginFieldBounds[1], this);
-        g.drawImage(this.passField, xSettingsOfTheme.PasswordFieldBounds[0], xSettingsOfTheme.PasswordFieldBounds[1], this);
-        g.drawImage(this.memoryField, xSettingsOfTheme.MemoryFieldBounds[0], xSettingsOfTheme.MemoryFieldBounds[1], this);
+        g.drawImage(this.logo, xSettingsOfTheme.LOGO_BOUNDS[0], xSettingsOfTheme.LOGO_BOUNDS[1], this);
+        g.drawImage(this.loginField, xSettingsOfTheme.LOGIN_FIELD_BOUNDS[0], xSettingsOfTheme.LOGIN_FIELD_BOUNDS[1], this);
+        g.drawImage(this.passField, xSettingsOfTheme.PASSWORD_FIELD_BOUNDS[0], xSettingsOfTheme.PASSWORD_FIELD_BOUNDS[1], this);
+        g.drawImage(this.memoryField, xSettingsOfTheme.MEMORY_FIELD_BOUNDS[0], xSettingsOfTheme.MEMORY_FIELD_BOUNDS[1], this);
     }
 
     public void updatePercent(int done) {
@@ -253,7 +237,7 @@ public class xTheme extends JPanel {
             new Thread(new Runnable() {
                 public void run() {
                     try {
-                        editorPane.setPage(new URL(xSettings.newsUrl));
+                        editorPane.setPage(new URL(xSettings.NEWS_URL));
                     } catch (Exception e) {
                         e.printStackTrace();
                         editorPane.setText("<html><body><font color=\"#808080\"><br><br><br><br><center>Failed to update news<br></center></font></body></html>");
@@ -270,7 +254,7 @@ public class xTheme extends JPanel {
             JScrollBar s_bar = new JScrollBar();
             JScrollPane sp = this.scrollPane;
             s_bar.setUI(new xScrollBar.MyScrollbarUI());
-            Dimension dim = new Dimension(xSettingsOfTheme.NewsScrollBarSize[0], xSettingsOfTheme.NewsScrollBarSize[1]);
+            Dimension dim = new Dimension(xSettingsOfTheme.NEWS_SCROLL_BAR_SIZE[0], xSettingsOfTheme.NEWS_SCROLL_BAR_SIZE[1]);
             s_bar.setPreferredSize(dim);
             s_bar.setBackground(new Color(0, 0, 0, 0));
             s_bar.setForeground(new Color(0, 0, 0, 0));
@@ -326,10 +310,6 @@ public class xTheme extends JPanel {
     }
 
     void startAuth() {
-        if (this.clip != null) {
-            this.clip.start();
-        }
-
         String login = this.loginBar.getText();
         String password = new String(this.passwordBar.getPassword());
 
@@ -641,36 +621,36 @@ public class xTheme extends JPanel {
         animPanel.setLayout(null);
         animPanel.setOpaque(false);
 
-        if (xSettings.animatedNews) {
+        if (xSettings.ANIMATED_NEWS) {
             bPanel = new JPanel();
             bPanel.setLayout(null);
             bPanel.setBorder(null);
             bPanel.setOpaque(false);
-            bPanel.setBounds(0, 0, xSettingsOfTheme.NewsButtonBounds[2], xSettingsOfTheme.NewsPanelHeight1);
+            bPanel.setBounds(0, 0, xSettingsOfTheme.NEWS_BUTTON_BOUNDS[2], xSettingsOfTheme.NEWS_PANEL_HEIGHT_1);
             newsButton = new JButton();
-            newsButton.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NewsButtonIcons[0])));
-            newsButton.setPressedIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NewsButtonIcons[1])));
-            newsButton.setDisabledIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NewsButtonIcons[2])));
-            newsButton.setSize(new Dimension(xSettingsOfTheme.NewsButtonBounds[2], xSettingsOfTheme.NewsButtonBounds[3]));
+            newsButton.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NEWS_BUTTON_ICONS[0])));
+            newsButton.setPressedIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NEWS_BUTTON_ICONS[1])));
+            newsButton.setDisabledIcon(new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NEWS_BUTTON_ICONS[2])));
+            newsButton.setSize(new Dimension(xSettingsOfTheme.NEWS_BUTTON_BOUNDS[2], xSettingsOfTheme.NEWS_BUTTON_BOUNDS[3]));
             newsButton.setOpaque(false);
             newsButton.setBackground(new Color(0, 0, 0, 0));
             newsButton.setFocusPainted(false);
             newsButton.setBorder(null);
             newsButton.setContentAreaFilled(false);
             newsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            animPanel.setBounds(-1, xSettingsOfTheme.NewsPanelY1, xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight1);
-            animPanel.setSize(xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight1);
+            animPanel.setBounds(-1, xSettingsOfTheme.TOP_SPACE_1, xSettingsOfTheme.LAUNCHER_SIZE[0] + 1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1);
+            animPanel.setSize(xSettingsOfTheme.LAUNCHER_SIZE[0] + 1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1);
         } else {
-            animPanel.setBounds(-1, xSettingsOfTheme.NewsPanelY2, xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight2);
-            animPanel.setSize(xSettingsOfTheme.LauncherSize[0] + 1, xSettingsOfTheme.NewsPanelHeight2);
+            animPanel.setBounds(-1, xSettingsOfTheme.TOP_SPACE_2, xSettingsOfTheme.LAUNCHER_SIZE[0] + 1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2);
+            animPanel.setSize(xSettingsOfTheme.LAUNCHER_SIZE[0] + 1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2);
         }
 
         animPanel.add(getNPane());
 
-        if (xSettings.animatedNews) {
+        if (xSettings.ANIMATED_NEWS) {
             bPanel.add(newsButton);
             animPanel.add(bPanel);
-            newsButton.setBounds(xSettingsOfTheme.NewsButtonBounds[0], xSettingsOfTheme.NewsButtonBounds[1], xSettingsOfTheme.NewsButtonBounds[2], xSettingsOfTheme.NewsButtonBounds[3]);
+            newsButton.setBounds(xSettingsOfTheme.NEWS_BUTTON_BOUNDS[0], xSettingsOfTheme.NEWS_BUTTON_BOUNDS[1], xSettingsOfTheme.NEWS_BUTTON_BOUNDS[2], xSettingsOfTheme.NEWS_BUTTON_BOUNDS[3]);
             newsButton.addActionListener(new ActionListener() {
 
                 @Override
@@ -697,7 +677,7 @@ public class xTheme extends JPanel {
 
                                         Thread.sleep(100);
                                     } else {
-                                        if (nPanel.getX() == -xSettingsOfTheme.NewsPanelWidth1) {
+                                        if (nPanel.getX() == -xSettingsOfTheme.NEWS_PANEL_WIDTH_1) {
                                             break;
                                         }
 
@@ -727,24 +707,24 @@ public class xTheme extends JPanel {
         newsPanel.setOpaque(false);
         JPanel newsBackground;
 
-        if (xSettings.animatedNews) {
-            getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1 - 25));
-            gPanel.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1));
-            gPanel.setBackground(xSettingsOfTheme.NewsPanelBgColor2);
+        if (xSettings.ANIMATED_NEWS) {
+            getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1 - 25));
+            gPanel.setSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1));
+            gPanel.setBackground(xSettingsOfTheme.NEWS_PANEL_BG_COLOR);
             newsBackground = new BgPanel();
-            newsBackground.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1));
-            newsPanel.setBounds(15, 12, xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1 - 15);
-            nPanel.setBounds(-xSettingsOfTheme.NewsPanelWidth1, 0, xSettingsOfTheme.NewsPanelWidth1, xSettingsOfTheme.NewsPanelHeight1);
+            newsBackground.setSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1));
+            newsPanel.setBounds(15, 12, xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1 - 15);
+            nPanel.setBounds(-xSettingsOfTheme.NEWS_PANEL_WIDTH_1, 0, xSettingsOfTheme.NEWS_PANEL_WIDTH_1, xSettingsOfTheme.NEWS_PANEL_HEIGHT_1);
         } else {
-            getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2 - 25, xSettingsOfTheme.NewsPanelHeight2 - 25));
-            gPanel.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2));
-            gPanel.setBackground(xSettingsOfTheme.NewsPanelBgColor2);
+            getUpdateNews().setPreferredSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_2 - 25, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2 - 25));
+            gPanel.setSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_2, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2));
+            gPanel.setBackground(xSettingsOfTheme.NEWS_PANEL_BG_COLOR);
             newsBackground = new JPanel();
             newsBackground.setOpaque(false);
             newsBackground.setBackground(new Color(0, 0, 0, 0));
-            newsBackground.setSize(new Dimension(xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2));
-            newsPanel.setBounds(5, 12, xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2 - 15);
-            nPanel.setBounds(xSettingsOfTheme.NewsPanelX2, 0, xSettingsOfTheme.NewsPanelWidth2, xSettingsOfTheme.NewsPanelHeight2);
+            newsBackground.setSize(new Dimension(xSettingsOfTheme.NEWS_PANEL_WIDTH_2, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2));
+            newsPanel.setBounds(5, 12, xSettingsOfTheme.NEWS_PANEL_WIDTH_2, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2 - 15);
+            nPanel.setBounds(xSettingsOfTheme.LEFT_SPACE, 0, xSettingsOfTheme.NEWS_PANEL_WIDTH_2, xSettingsOfTheme.NEWS_PANEL_HEIGHT_2);
         }
 
         newsPanel.add(getUpdateNews());
@@ -781,7 +761,7 @@ public class xTheme extends JPanel {
     }
 
     class BgPanel extends JPanel {
-        final Image bg = new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NewsBgImage)).getImage();
+        final Image bg = new ImageIcon(xTheme.class.getResource("/images/" + xSettingsOfTheme.NEWS_BG_IMAGE)).getImage();
 
         @Override
         public void paintComponent(Graphics g) {

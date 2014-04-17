@@ -31,7 +31,7 @@ public class xLabel {
 
     public static void loadLabels() {
         labels.clear();
-        Collections.addAll(labels, xSettingsOfTheme.Labels);
+        Collections.addAll(labels, xSettingsOfTheme.LABELS);
     }
 
     public static xLabel[] getLabels() {
