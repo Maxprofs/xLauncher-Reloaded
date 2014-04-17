@@ -122,7 +122,7 @@ public class xUtils {
 
                 inputStream.close();
                 outputStream.close();
-            } else if (buildDirectory(file)) {
+            } else if (!buildDirectory(file)) {
                 throw new IOException("Could not create directory: " + file.getAbsolutePath());
             }
         }
