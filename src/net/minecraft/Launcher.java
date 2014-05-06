@@ -1,13 +1,12 @@
 package net.minecraft;
 
 import ru.xeroxp.launcher.config.xSettings;
-import ru.xeroxp.launcher.utils.xUtils;
+import ru.xeroxp.launcher.misc.xDebug;
+import ru.xeroxp.launcher.utils.xFileUtils;
 
 import java.applet.Applet;
 import java.applet.AppletStub;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
@@ -16,15 +15,15 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Launcher extends Applet implements AppletStub, MouseListener {
+public class Launcher extends Applet implements AppletStub {
+    private static String folder;
+    private static String version;
     private final Map<String, String> customParameters = new HashMap<String, String>();
     private Applet applet;
     private xMinecraft minecraft;
     private boolean minecraftStarted = false;
     private int context = 0;
     private boolean active = false;
-    private static String folder;
-    private static String version;
 
     @Override
     public boolean isActive() {
@@ -35,8 +34,8 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
                 if (this.getAppletContext() != null) {
                     this.context = 1;
                 }
-            } catch (Exception var2) {
-                var2.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -76,18 +75,13 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
                     try {
                         Launcher.this.minecraft.patchDir();
                         Launcher.this.replace(Launcher.this.minecraft.loadApplet());
-                    } catch (ClassNotFoundException var2) {
-                        var2.printStackTrace();
-                    } catch (InstantiationException var3) {
-                        var3.printStackTrace();
-                    } catch (IllegalAccessException var4) {
-                        var4.printStackTrace();
-                    } catch (Exception var5) {
-                        var5.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                 }
             };
+
             t.setDaemon(true);
             t.start();
             t = new Thread() {
@@ -98,8 +92,8 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
 
                         try {
                             Thread.sleep(10L);
-                        } catch (InterruptedException var2) {
-                            var2.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -146,7 +140,7 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
         } else {
             try {
                 return super.getParameter(name);
-            } catch (Exception var4) {
+            } catch (Exception e) {
                 this.customParameters.put(name, null);
                 return null;
             }
@@ -157,30 +151,10 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
     public URL getDocumentBase() {
         try {
             return new URL(xSettings.SITE_LINK);
-        } catch (MalformedURLException var2) {
-            var2.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
             return null;
         }
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
     }
 
     @Override
@@ -188,8 +162,8 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
     }
 
     public class xMinecraft implements Runnable {
-        private ClassLoader classLoader;
         private final String jar;
+        private ClassLoader classLoader;
 
         public xMinecraft(String jar) {
             this.jar = jar;
@@ -198,13 +172,15 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
         @Override
         public void run() {
             File dir;
+
             if (folder.isEmpty()) {
-                dir = new File(xUtils.getDirectory() + File.separator + "bin" + File.separator);
+                dir = new File(xFileUtils.getRootDirectory() + File.separator + "bin" + File.separator);
             } else {
-                dir = new File(xUtils.getDirectory() + File.separator + folder + File.separator + "bin" + File.separator);
+                dir = new File(xFileUtils.getRootDirectory() + File.separator + folder + File.separator + "bin" + File.separator);
             }
+
             String[] jars = new String[4];
-            if (xUtils.getPlatform().ordinal() != 2 && xUtils.getPlatform().ordinal() != 3) {
+            if (xFileUtils.getPlatform().ordinal() != 2 && xFileUtils.getPlatform().ordinal() != 3) {
                 jars[0] = "lwjgl2.jar";
             } else {
                 jars[0] = "lwjgl.jar";
@@ -219,19 +195,19 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
             for (int i = 0; i < 4; ++i) {
                 try {
                     urls[i] = (new File(dir, jars[i])).toURI().toURL();
-                } catch (MalformedURLException var7) {
+                } catch (MalformedURLException e) {
                     System.out.println("Failed load libs");
-                    System.out.println(var7.getMessage());
+                    System.out.println(e.getMessage());
                 }
             }
 
             classLoader = new URLClassLoader(urls);
             if (folder.isEmpty()) {
-                System.setProperty("org.lwjgl.librarypath", xUtils.getDirectory() + File.separator + "bin" + File.separator + "natives");
-                System.setProperty("net.java.games.input.librarypath", xUtils.getDirectory() + File.separator + "bin" + File.separator + "natives");
+                System.setProperty("org.lwjgl.librarypath", xFileUtils.getRootDirectory() + File.separator + "bin" + File.separator + "natives");
+                System.setProperty("net.java.games.input.librarypath", xFileUtils.getRootDirectory() + File.separator + "bin" + File.separator + "natives");
             } else {
-                System.setProperty("org.lwjgl.librarypath", xUtils.getDirectory() + File.separator + folder + File.separator + "bin" + File.separator + "natives");
-                System.setProperty("net.java.games.input.librarypath", xUtils.getDirectory() + File.separator + folder + File.separator + "bin" + File.separator + "natives");
+                System.setProperty("org.lwjgl.librarypath", xFileUtils.getRootDirectory() + File.separator + folder + File.separator + "bin" + File.separator + "natives");
+                System.setProperty("net.java.games.input.librarypath", xFileUtils.getRootDirectory() + File.separator + folder + File.separator + "bin" + File.separator + "natives");
             }
         }
 
@@ -244,26 +220,29 @@ public class Launcher extends Applet implements AppletStub, MouseListener {
             //noinspection ConstantConditions,PointlessBooleanExpression
             if (!xSettings.PATCH_DIR) return;
             try {
-                String mcver = version;
+                String mcVer = version;
+
                 for (int j = 0; j < xSettings.MC_VERSIONS.length; j++) {
                     String mcVerFromSettings = xSettings.MC_VERSIONS[j].split("::")[0];
-                    if ((!mcVerFromSettings.contains("x") && mcver.equals(mcVerFromSettings)) || (mcver.substring(0, 3).equals(mcVerFromSettings.substring(0, 3)))) {
+
+                    if ((!mcVerFromSettings.contains("x") && mcVer.equals(mcVerFromSettings)) || (mcVer.substring(0, 3).equals(mcVerFromSettings.substring(0, 3)))) {
                         Field f = classLoader.loadClass(xSettings.MC_CLASS).getDeclaredField(xSettings.MC_VERSIONS[j].split("::")[1]);
                         Field.setAccessible(new Field[]{f}, true);
 
                         if (folder.isEmpty()) {
-                            f.set(null, xUtils.getDirectory());
+                            f.set(null, xFileUtils.getRootDirectory());
                         } else {
-                            f.set(null, new File(xUtils.getDirectory() + File.separator + folder));
+                            f.set(null, new File(xFileUtils.getRootDirectory() + File.separator + folder));
                         }
 
-                        System.out.println("File patched: " + xSettings.MC_CLASS + "::" + xSettings.MC_VERSIONS[j].split("::")[1]);
+                        xDebug.infoMessage("File patched: " + xSettings.MC_CLASS + "::" + xSettings.MC_VERSIONS[j].split("::")[1]);
                         return;
                     }
                 }
-                System.out.println("Error: Client version not correct.");
+
+                xDebug.errorMessage("Client version not correct.");
             } catch (Exception e) {
-                System.out.println("Error: Client field not correct.");
+                xDebug.errorMessage("Client field not correct.");
             }
         }
     }

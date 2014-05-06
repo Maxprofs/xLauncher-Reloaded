@@ -3,7 +3,9 @@ package ru.xeroxp.launcher;
 import ru.xeroxp.launcher.config.xSettings;
 import ru.xeroxp.launcher.gui.xErrorPanel;
 import ru.xeroxp.launcher.gui.xTheme;
-import ru.xeroxp.launcher.utils.xDebug;
+import ru.xeroxp.launcher.misc.xDebug;
+import ru.xeroxp.launcher.utils.xFileUtils;
+import ru.xeroxp.launcher.utils.xTextureUtils;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -17,22 +19,23 @@ import java.util.List;
 
 public class xMain {
 
-    private static String version = xSettings.LAUNCHER_VERSION;
     public static boolean error = false;
-    public static Thread cm;
+    public static Thread clientChecker;
+    private static String version = xSettings.LAUNCHER_VERSION;
 
     public static void main(String[] args) {
         float heapSizeMegs = (float) (Runtime.getRuntime().maxMemory() / 1024L / 1024L);
+
         if (heapSizeMegs >= 120.0F) {
             start();
         } else {
             try {
-                String e = xMain.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+                String classPath = xMain.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
                 List<String> params = new ArrayList<String>();
                 params.add("javaw");
                 params.add("-Xmx512m");
                 params.add("-classpath");
-                params.add(e);
+                params.add(classPath);
                 params.add("ru.xeroxp.launcher.xMain");
                 ProcessBuilder pb = new ProcessBuilder(params);
                 Process process = pb.start();
@@ -41,13 +44,14 @@ public class xMain {
                 }
 
                 System.exit(0);
-            } catch (Exception var6) {
-                xDebug.errorMessage(var6.getMessage());
+            } catch (Exception e) {
+                xDebug.errorMessage(e.getMessage());
                 start();
             }
         }
+
         new Thread(new Runnable() {
-            public boolean texture = false;
+            public boolean texture = true;
             public boolean client = true;
             boolean check = true;
 
@@ -55,39 +59,26 @@ public class xMain {
             public void run() {
                 while (check) {
                     try {
-                        if (!xLauncher.getLauncher().isVisible()) {
-                            if (!xTheme.gameOffline) {
+                        if (!xLauncher.getIntsanse().isVisible()) {
+                            if (!xTheme.offlineMode) {
 
                                 new Thread(new Runnable() {
+                                    @Override
                                     public void run() {
-                                        texture = xAuth.checkTextures();
-                                        client = xAuth.mClientCheck();
+                                        texture = xTextureUtils.check();
+                                        client = xAuth.mCheckClient();
                                     }
                                 }).start();
 
                                 Thread.sleep(50000);
 
-                                if (texture) {
-                                    error = true;
-                                    if (xLoader.process != null) xLoader.process.stop();
-
-                                    new Thread(new Runnable() {
-                                        public void run() {
-                                            new xErrorPanel(xLauncher.getLauncher(), "Папка текстур не прошла проверку").setVisible(true);
-                                            System.exit(1);
-                                        }
-                                    }).start();
-
-                                    Thread.sleep(10000);
-                                    System.exit(1);
-                                }
-
-                                if (!client) {
+                                if (!texture || !client) {
                                     error = true;
                                     if (xLoader.process != null) xLoader.process.stop();
                                     new Thread(new Runnable() {
+                                        @Override
                                         public void run() {
-                                            new xErrorPanel(xLauncher.getLauncher(), "Клиент не прошел проверку").setVisible(true);
+                                            new xErrorPanel(xLauncher.getIntsanse(), texture ? "Клиент не прошел проверку" : "Папка текстур не прошла проверку").setVisible(true);
                                             System.exit(1);
                                         }
                                     }).start();
@@ -106,22 +97,34 @@ public class xMain {
                 }
             }
         }).start();
-        cm = new Thread(new Runnable() {
+
+        clientChecker = new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     ServerSocket srv = new ServerSocket(xSettings.LOCAL_PORT);
                     srv.setSoTimeout(0);
+                    xDebug.infoMessage("Wait client connection...");
                     Socket client = srv.accept();
-                    InputStream sin = client.getInputStream();
-                    DataInputStream in = new DataInputStream(sin);
+                    xDebug.infoMessage("Client connected.");
+                    InputStream inputStream = client.getInputStream();
+                    DataInputStream dataInputStream = new DataInputStream(inputStream);
 
-                    in.close();
-                    sin.close();
+                    while (client.isConnected() && !client.isClosed()) {
+                        if (!dataInputStream.readUTF().equals("I'm alive")) {
+                            break;
+                        }
+
+                        Thread.sleep(10000);
+                    }
+
+                    dataInputStream.close();
+                    inputStream.close();
                     client.close();
                     srv.close();
                     xDebug.errorMessage("Launcher process closed");
-                } catch (Exception ex) {
-                    xDebug.errorMessage(ex.getMessage());
+                } catch (Exception e) {
+                    xDebug.errorMessage(e.getMessage());
                 }
             }
         });
@@ -137,13 +140,13 @@ public class xMain {
     }
 
     public static void restart() {
-        String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+        String javaBin = xFileUtils.getJavaPath("bin" + File.separator + "java");
         File currentJar = null;
 
         try {
             currentJar = new File(xMain.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        } catch (URISyntaxException var6) {
-            var6.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
 
         assert currentJar != null;
@@ -157,11 +160,10 @@ public class xMain {
             try {
                 builder.start();
                 System.exit(0);
-            } catch (IOException var5) {
-                xDebug.errorMessage("Failed to restart launcher: " + var5.getMessage());
+            } catch (IOException e) {
+                xDebug.errorMessage("Failed to restart launcher: " + e.getMessage());
             }
         }
-
     }
 
     public static String getVersion() {

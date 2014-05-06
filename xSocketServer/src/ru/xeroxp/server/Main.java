@@ -3,13 +3,15 @@ package ru.xeroxp.server;
 import ru.xeroxp.server.config.Settings;
 import ru.xeroxp.server.utils.Debug;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.File;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Main {
-    public static String[] files = {};
+class Main {
+    public static final List<String> files = new ArrayList<String>();
     public static String hash = "";
     public static String formats = "";
     public static String launcherSizeJar = "";
@@ -33,21 +35,19 @@ public class Main {
     private static void start() {
         MultiThreadedServer server = new MultiThreadedServer();
         new Thread(server).start();
-        new Thread(new Runnable() {
+        /*new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(Settings.MONITOR_TIME_UPDATE);
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
+                while (true) try {
+                    Thread.sleep(Settings.MONITOR_TIME_UPDATE);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-        }).start();
+        }).start();*/
 
         for (int i = 0; i < Settings.CHECK_FORMATS.length; i++) {
-            formats = ((i == 0) ? formats + ";" : "") + Settings.CHECK_FORMATS[i];
+            formats = ((i == 0) ? "" : formats + ";") + Settings.CHECK_FORMATS[i];
         }
 
         File dir = new File(new File("").getAbsolutePath() + "/check");
@@ -59,8 +59,6 @@ public class Main {
             monitor.start();
             monitor.join();
             Debug.infoMessage("Right after join...");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,20 +69,14 @@ public class Main {
 
     private static void stop() {
         try {
-            InetAddress e = InetAddress.getByName(Settings.STOP_IP);
-            Socket socket = new Socket(e, Settings.PORT_STOP);
+            Socket socket = new Socket(InetAddress.getByName(Settings.STOP_IP), Settings.PORT_STOP);
             socket.setSoTimeout(3000);
-            InputStream sin = socket.getInputStream();
-            OutputStream sout = socket.getOutputStream();
-            DataInputStream in = new DataInputStream(sin);
-            DataOutputStream out = new DataOutputStream(sout);
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             out.writeUTF("stop");
             out.flush();
             socket.close();
             Debug.infoMessage("Server Stopped");
-        } catch (SocketTimeoutException e) {
-            Debug.errorMessage("Не удалось подключиться к серверу: " + e.getMessage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Debug.errorMessage("Не удалось подключиться к серверу: " + e.getMessage());
         }
     }

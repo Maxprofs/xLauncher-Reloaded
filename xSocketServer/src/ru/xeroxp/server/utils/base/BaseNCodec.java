@@ -21,59 +21,18 @@ import java.util.Arrays;
 
 public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
 
-    static class Context {
-
-        int ibitWorkArea;
-
-        long lbitWorkArea;
-
-        byte[] buffer;
-
-        int pos;
-
-        int readPos;
-
-        boolean eof;
-
-        int currentLinePos;
-
-        int modulus;
-
-        Context() {
-        }
-
-        @SuppressWarnings("boxing") // OK to ignore boxing here
-        @Override
-        public String toString() {
-            return String.format("%s[buffer=%s, currentLinePos=%s, eof=%s, ibitWorkArea=%s, lbitWorkArea=%s, " +
-                            "modulus=%s, pos=%s, readPos=%s]", this.getClass().getSimpleName(), Arrays.toString(buffer),
-                    currentLinePos, eof, ibitWorkArea, lbitWorkArea, modulus, pos, readPos
-            );
-        }
-    }
-
-    private static final int EOF = -1;
-
-    static final int MIME_CHUNK_SIZE = 76;
-
     public static final int PEM_CHUNK_SIZE = 64;
-
-    private static final int DEFAULT_BUFFER_RESIZE_FACTOR = 2;
-
-    private static final int DEFAULT_BUFFER_SIZE = 8192;
-
+    static final int MIME_CHUNK_SIZE = 76;
     static final int MASK_8BITS = 0xff;
-
     static final byte PAD_DEFAULT = '=';
-
     final byte PAD = PAD_DEFAULT;
-
+    private static final int EOF = -1;
+    private static final int DEFAULT_BUFFER_RESIZE_FACTOR = 2;
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
+    final int lineLength;
     private final int unencodedBlockSize;
 
     private final int encodedBlockSize;
-
-    final int lineLength;
-
     private final int chunkSeparatorLength;
 
     BaseNCodec(final int unencodedBlockSize, final int encodedBlockSize,
@@ -83,6 +42,19 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
         final boolean useChunking = lineLength > 0 && chunkSeparatorLength > 0;
         this.lineLength = useChunking ? (lineLength / encodedBlockSize) * encodedBlockSize : 0;
         this.chunkSeparatorLength = chunkSeparatorLength;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    static boolean isWhiteSpace(final byte byteToCheck) {
+        switch (byteToCheck) {
+            case ' ':
+            case '\n':
+            case '\r':
+            case '\t':
+                return true;
+            default:
+                return false;
+        }
     }
 
     boolean hasData(final Context context) {
@@ -128,19 +100,6 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
             //return len;
         }
         //return context.eof ? EOF : 0;
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    static boolean isWhiteSpace(final byte byteToCheck) {
-        switch (byteToCheck) {
-            case ' ':
-            case '\n':
-            case '\r':
-            case '\t':
-                return true;
-            default:
-                return false;
-        }
     }
 
     @Override
@@ -241,6 +200,37 @@ public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
             len += ((len + lineLength - 1) / lineLength) * chunkSeparatorLength;
         }
         return len;
+    }
+
+    static class Context {
+
+        int ibitWorkArea;
+
+        long lbitWorkArea;
+
+        byte[] buffer;
+
+        int pos;
+
+        int readPos;
+
+        boolean eof;
+
+        int currentLinePos;
+
+        int modulus;
+
+        Context() {
+        }
+
+        @SuppressWarnings("boxing") // OK to ignore boxing here
+        @Override
+        public String toString() {
+            return String.format("%s[buffer=%s, currentLinePos=%s, eof=%s, ibitWorkArea=%s, lbitWorkArea=%s, " +
+                            "modulus=%s, pos=%s, readPos=%s]", this.getClass().getSimpleName(), Arrays.toString(buffer),
+                    currentLinePos, eof, ibitWorkArea, lbitWorkArea, modulus, pos, readPos
+            );
+        }
     }
 
 }

@@ -1,10 +1,9 @@
-package ru.xeroxp.launcher.gui;
+package ru.xeroxp.launcher.gui.elements;
 
 import ru.xeroxp.launcher.config.xThemeSettings;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
@@ -36,11 +35,11 @@ public class xHeaderButton {
     public static xHeaderButton[] getButtons() {
         int size = buttons.size();
         xHeaderButton[] buttonsList = new xHeaderButton[size];
-        int i = 0;
 
-        for (Iterator var4 = buttons.iterator(); var4.hasNext(); ++i) {
-            xHeaderButton button = (xHeaderButton) var4.next();
+        int i = 0;
+        for (xHeaderButton button : buttons) {
             buttonsList[i] = button;
+            ++i;
         }
 
         return buttonsList;

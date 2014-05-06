@@ -1,6 +1,6 @@
 package ru.xeroxp.launcher.process;
 
-import ru.xeroxp.launcher.utils.xUtils;
+import ru.xeroxp.launcher.utils.xFileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class JavaProcessLauncher {
 
     public JavaProcessLauncher(String jvmPath, String[] commands) {
         if (jvmPath == null) {
-            jvmPath = xUtils.getJavaExecutable();
+            jvmPath = xFileUtils.getJavaExecutable();
         }
 
         this.jvmPath = jvmPath;

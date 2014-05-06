@@ -27,7 +27,7 @@ public class JavaProcess {
         try {
             this.process.exitValue();
             return false;
-        } catch (IllegalThreadStateException var2) {
+        } catch (IllegalThreadStateException e) {
             return true;
         }
     }
@@ -51,9 +51,9 @@ public class JavaProcess {
     public int getExitCode() {
         try {
             return this.process.exitValue();
-        } catch (IllegalThreadStateException var2) {
-            var2.fillInStackTrace();
-            throw var2;
+        } catch (IllegalThreadStateException e) {
+            e.fillInStackTrace();
+            throw e;
         }
     }
 

@@ -1,7 +1,9 @@
 package ru.xeroxp.launcher.utils;
 
 import ru.xeroxp.launcher.config.xSettings;
+import ru.xeroxp.launcher.misc.xDebug;
 import ru.xeroxp.launcher.utils.base.Base64;
+import ru.xeroxp.launcher.xAuth;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -10,8 +12,22 @@ import java.util.Random;
 public class xCipherUtils {
     private static final byte[] key = xSettings.KEY;
 
+    public static String xorEncode(String text) {
+        String res = "";
+        int j = 0;
+
+        for (int i = 0; i < text.length(); i++) {
+            res += (char) (text.charAt(i) ^ xSettings.PASS_ID_KEY.charAt(j));
+            j++;
+            if (j == xSettings.PASS_ID_KEY.length()) j = 0;
+        }
+
+        return res;
+    }
+
     public static String encrypt(String strToEncrypt) {
         try {
+            strToEncrypt = xCipherUtils.genSalt() + strToEncrypt;
             Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
             final SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -35,10 +51,10 @@ public class xCipherUtils {
         return null;
     }
 
-    public static String genSalt(int symbolsCount) {
+    private static String genSalt() {
         Random rnd = new Random();
-        char[] text = new char[symbolsCount];
-        for (int i = 0; i < symbolsCount; i++) {
+        char[] text = new char[xAuth.symbolsCount];
+        for (int i = 0; i < xAuth.symbolsCount; i++) {
             String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
             text[i] = characters.charAt(rnd.nextInt(characters.length()));
         }

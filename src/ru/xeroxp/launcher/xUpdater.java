@@ -1,296 +1,236 @@
 package ru.xeroxp.launcher;
 
 import ru.xeroxp.launcher.config.xSettings;
-import ru.xeroxp.launcher.config.xThemeSettings;
 import ru.xeroxp.launcher.gui.elements.xButton;
+import ru.xeroxp.launcher.gui.elements.xServer;
 import ru.xeroxp.launcher.gui.xTheme;
-import ru.xeroxp.launcher.utils.xDebug;
-import ru.xeroxp.launcher.utils.xUtils;
+import ru.xeroxp.launcher.misc.xConfig;
+import ru.xeroxp.launcher.misc.xDebug;
+import ru.xeroxp.launcher.utils.xFileUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class xUpdater {
-    private BufferedImage update;
-    private BufferedImage bg;
-    private BufferedImage image;
-    private final BufferedImage background;
     private final xTheme theme;
-    private int totalDownload;
-    private double onePercent;
-    private boolean firstBg = true;
 
     public xUpdater(xTheme theme) {
-        try {
-            this.update = ImageIO.read(xUpdater.class.getResource("/images/updatebar_ok.png"));
-            this.image = ImageIO.read(xUpdater.class.getResource("/images/updatebar.png"));
-            this.bg = ImageIO.read(xUpdater.class.getResource("/images/updatebar_bg.png"));
-        } catch (IOException var3) {
-            xDebug.errorMessage("Failed load updater images: " + var3.getMessage());
-        }
-
         this.theme = theme;
-        this.theme.setOpaque(true);
-        this.theme.setBackground(new Color(0, 0, 0, 0));
-        this.background = theme.background;
-        this.theme.revalidate();
-        this.theme.repaint();
+        this.theme.progressBar.init();
         this.checkLauncherUpdate();
-        this.checkClientUpdate(false);
+        this.checkClientsUpdate(false);
+    }
+
+    private static void deleteTempFiles() throws IOException {
+        File[] files = xFileUtils.getRootDirectory().listFiles();
+
+        assert files != null;
+        for (File file : files) {
+            if (file.isFile() && file.getName().endsWith(".tmp") && !file.delete()) {
+                throw new IOException("Failed to delete file: " + file.getAbsolutePath());
+            }
+        }
+    }
+
+    private static void deleteClientFiles() throws IOException {
+        boolean one = false;
+
+        deleteTempFiles();
+        xServer.loadServers();
+
+        for (xServer server : xServer.getServers()) {
+            String path = null;
+            if (!server.getFolder().isEmpty()) {
+                path = xFileUtils.getRootDirectory().getPath() + File.separator + server.getFolder();
+            } else if (!one) {
+                one = true;
+                path = xFileUtils.getRootDirectory().getPath();
+            }
+
+            if (path != null) {
+                File rootDir = new File(path);
+
+                String[] fileList = rootDir.list(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File mdf, String name) {
+                        return name.contains("mods") || name.contains("bin") || name.contains("lib") || name.contains("assets");
+                    }
+                });
+
+                for (String file : fileList) {
+                    xFileUtils.delete(new File(path + File.separator + file));
+                }
+            }
+        }
     }
 
     private void checkLauncherUpdate() {
         try {
-            String e = this.checkVersion(UpdateType.launcher);
+            String latestVersion = this.getLatestVersions(UpdateType.launcher);
 
-            if (e != null) {
+            if (latestVersion != null) {
                 String getVersion = xMain.getVersion();
 
-                if (!e.equals(getVersion)) {
-                    this.theme.lockAuth(true);
-                    this.updateLauncher(e);
+                if (!latestVersion.equals(getVersion)) {
+                    this.theme.setLockAuth(true);
+                    this.updateLauncher(latestVersion);
                 }
 
-                this.updateDownload();
-                this.theme.lockAuth(false);
+                this.theme.progressBar.update();
+                this.theme.setLockAuth(false);
             }
-        } catch (Exception var3) {
-            xDebug.errorMessage("Failed check launcher update: " + var3.getMessage());
+        } catch (Exception e) {
+            xDebug.errorMessage("Failed check launcher update: " + e.getMessage());
         }
     }
 
-    private void updateLauncher(String checkVersion) {
+    private void updateLauncher(String version) {
         disableButtons();
-        File runningLauncher = null;
 
         try {
-            runningLauncher = new File(xUpdater.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        } catch (URISyntaxException var5) {
-            xDebug.errorMessage("Failed to find launcher path: " + var5.getMessage());
-        }
+            File runningLauncher = new File(xUpdater.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
-        try {
-            if (runningLauncher != null) {
-                if (runningLauncher.getPath().endsWith(".jar")) {
-                    this.unpackLauncher(new URL(xSettings.DOWN_LAUNCHER_LINK + xSettings.LAUNCHER_FILE_NAME + ".jar"), runningLauncher);
-                } else if (runningLauncher.getPath().endsWith(".exe")) {
-                    this.unpackLauncher(new URL(xSettings.DOWN_LAUNCHER_LINK + xSettings.LAUNCHER_FILE_NAME + ".exe"), runningLauncher);
-                }
+            if (runningLauncher.getPath().endsWith(".jar")) {
+                xFileUtils.downloadFile(new URL(xSettings.DOWN_LAUNCHER_LINK + xSettings.LAUNCHER_FILE_NAME + ".jar"), runningLauncher);
+            } else if (runningLauncher.getPath().endsWith(".exe")) {
+                xFileUtils.downloadFile(new URL(xSettings.DOWN_LAUNCHER_LINK + xSettings.LAUNCHER_FILE_NAME + ".exe"), runningLauncher);
             }
-            xMain.setVersion(checkVersion);
+
+            xMain.setVersion(version);
             xMain.restart();
-        } catch (IOException var4) {
-            xDebug.errorMessage("Failed update launcher:" + var4.getMessage());
-        }
-    }
-
-    void updateDownload() {
-        this.theme.setOpaque(true);
-        this.theme.setBackground(new Color(0, 0, 0, 0));
-        Graphics g2 = this.background.getGraphics();
-        g2.setColor(new Color(0, 0, 0, 0));
-        g2.drawImage(this.update, 42, 536, null);
-        g2.fillRect(42, 536, this.bg.getWidth(), this.bg.getHeight());
-        g2.dispose();
-        this.theme.revalidate();
-        this.theme.repaint();
-    }
-
-    void checkUpdateBar(int size) {
-        double percent = (double) size / this.onePercent;
-
-        if (percent < 1.0D) {
-            percent = 1.0D;
-        }
-
-        if (percent > 100.0D) {
-            percent = 100.0D;
-        }
-
-        this.updateDownload(percent);
-    }
-
-    void updateDownload(double done) {
-        this.theme.setOpaque(true);
-        this.theme.setBackground(new Color(0, 0, 0, 0));
-        Graphics g2 = this.background.getGraphics();
-        g2.setColor(new Color(0, 0, 0, 0));
-
-        if (this.firstBg) {
-            g2.drawImage(this.bg, 42, 536, null);
-            this.firstBg = false;
-        }
-
-        if (done == 100.0D) {
-            g2.drawImage(this.update, 42, 536, null);
-        } else {
-            g2.drawImage(this.image.getSubimage(0, 0, (int) (6.62D * done), 29), 42, 536, null);
-            this.theme.updatePercent((int) done);
-        }
-
-        g2.fillRect(42, 536, this.bg.getWidth(), this.bg.getHeight());
-        g2.dispose();
-        this.theme.revalidate();
-        this.theme.repaint();
-    }
-
-    void updateClient(String version) {
-        disableButtons();
-
-        try {
-            xUtils.deleteClientFiles();
+        } catch (URISyntaxException e) {
+            xDebug.errorMessage("Failed to find launcher path: " + e.getMessage());
         } catch (IOException e) {
-            xDebug.errorMessage(e.getMessage());
+            xDebug.errorMessage("Failed update launcher:" + e.getMessage());
         }
+    }
+
+    private void updateClient(String client, String version, boolean updateConfigs) {
+        this.disableButtons();
 
         try {
-            this.unpackClient(new URL(xSettings.DOWN_CLIENT_LINK + "client.zip"), xUtils.getDirectory());
-        } catch (IOException var4) {
-            xDebug.errorMessage(var4.getMessage());
+            this.downloadClient(client);
+
+            if (updateConfigs) {
+                this.downloadConfig(client);
+            }
+
+            this.updateVersion(client, version);
+        } catch (IOException e) {
+            xDebug.errorMessage("Client update failed: " + e.getMessage());
         }
 
-        try {
-            this.updateVersion(version);
-        } catch (Exception var3) {
-            xDebug.errorMessage("Failed update client version: " + var3.getMessage());
-        }
-
-        for (int i = 0; i < xThemeSettings.BUTTONS.length; ++i) {
-            xButton button = xButton.getButtons()[i];
-
-            if (button.getId() == xButton.RAM_ID) {
+        for (xButton button : xButton.getButtons()) {
+            if (button.getId() == xButton.RAM_ID || button.getId() == xButton.AUTH_ID) {
                 this.theme.buttons[button.getId()].setEnabled(true);
                 break;
             }
         }
     }
 
-    String checkVersion(UpdateType type) {
+    private String getLatestVersions(UpdateType type) {
         try {
-            URL e = new URL(xSettings.MAIN_INFO_FILE + "?action=" + type.getParameter());
-            URLConnection getVer = e.openConnection();
+            URLConnection getVer = new URL(xSettings.MAIN_INFO_FILE + "?action=" + type.getParameter()).openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(getVer.getInputStream()));
             String inputLine = in.readLine();
             in.close();
 
             return inputLine;
-        } catch (Exception var5) {
-            xDebug.errorMessage("Failed check " + type.name() + " version: " + var5.getMessage());
+        } catch (Exception e) {
+            xDebug.errorMessage("Failed check " + type.name() + " version: " + e.getMessage());
         }
 
         return null;
     }
 
-    public void checkClientUpdate(boolean n) {
+    private Map<String, String> parseVersions(String inputVersions) {
+        if (inputVersions == null) {
+            throw new IllegalArgumentException("Versions is null!");
+        }
+
+        String[] versions = inputVersions.split(", ");
+        Map<String, String> result = new HashMap<String, String>();
+
+        for (String version : versions) {
+            String[] client = version.split(":");
+            result.put(client[0], client[1]);
+        }
+
+        return result;
+    }
+
+    public void checkClientsUpdate(boolean forceUpdate) {
         try {
-            String e = this.checkVersion(UpdateType.client);
+            Map<String, String> latestVersions = this.parseVersions(this.getLatestVersions(UpdateType.client));
 
-            if (e != null) {
-                String getVersion;
-                getVersion = n ? "0" : this.getVersion();
+            for (Map.Entry<String, String> version : latestVersions.entrySet()) {
+                String client = version.getKey();
+                String latestVersion = version.getValue();
+                String currentVersion = this.getVersion(client);
 
-                if (getVersion == null) {
-                    this.theme.lockAuth(true);
-                    this.updateClient(e);
-                    this.theme.lockAuth(false);
+                if (currentVersion == null) {
+                    this.theme.setLockAuth(true);
+                    this.updateClient(client, latestVersion, true);
+                    this.theme.setLockAuth(false);
                     return;
                 }
 
-                if (!e.equals(getVersion)) {
-                    this.theme.lockAuth(true);
-                    this.updateClient(e);
+                if (!latestVersion.equals(currentVersion) || forceUpdate) {
+                    this.theme.setLockAuth(true);
+                    this.updateClient(client, latestVersion, forceUpdate);
                 }
 
-                this.updateDownload();
-                this.theme.lockAuth(false);
+                this.theme.progressBar.update();
+                this.theme.setLockAuth(false);
             }
-        } catch (Exception var3) {
-            xDebug.errorMessage("Failed check client update: " + var3.getMessage());
+        } catch (Exception e) {
+            xDebug.errorMessage("Failed check client update:\n" + e.toString());
+            e.printStackTrace();
         }
     }
 
-    String getVersion() throws Exception {
-        File dir = xUtils.getDirectory();
-
-        if (!xUtils.buildDirectory(dir)) {
-            throw new IOException("Could not create directory: " + dir);
-        }
-
-        File versionFile = new File(dir, "version");
-        if (!versionFile.exists()) {
-            return null;
-        } else {
-            DataInputStream dis = new DataInputStream(new FileInputStream(versionFile));
-            String version = dis.readUTF();
-            dis.close();
-            return version;
-        }
+    private String getVersion(String client) throws IOException {
+        xConfig config = new xConfig(xConfig.VERSIONS);
+        return config.get("version." + client);
     }
 
-    void updateVersion(String version) throws Exception {
-        File dir = xUtils.getDirectory();
-        File versionFile = new File(dir, "version");
-        DataOutputStream dos = new DataOutputStream(new FileOutputStream(versionFile));
-        dos.writeUTF(version);
-        dos.close();
+    private void updateVersion(String client, String version) throws IOException {
+        xConfig config = new xConfig(xConfig.VERSIONS);
+        config.set("version." + client, version);
     }
 
-    void unpackClient(URL url, File targetDir) throws IOException {
-        if (!xUtils.buildDirectory(targetDir)) {
-            throw new IOException("Could not create directory: " + targetDir);
-        }
+    private void downloadClient(String client) throws IOException {
+        File targetDir = new File(xFileUtils.getRootDirectory().getPath() + File.separator + client);
+        xFileUtils.buildDirectory(targetDir);
 
-        URLConnection urlconnection = url.openConnection();
-        this.totalDownload = urlconnection.getContentLength() / 1024;
-        this.onePercent = (double) (this.totalDownload / 100);
-        BufferedInputStream in = new BufferedInputStream(url.openStream(), 1024);
-        File zip = File.createTempFile("client", ".zip", targetDir);
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(zip));
-        this.copyInputStream(in, out, false);
-        out.close();
-        xUtils.unpackArchive(zip, targetDir);
+        File clientZip = File.createTempFile("client", ".tmp", targetDir);
+        URL url = new URL(xSettings.DOWN_CLIENT_LINK + client + "/client.zip");
+        xFileUtils.downloadFile(url, clientZip);
+        deleteClientFiles();
+        xFileUtils.unZip(clientZip, targetDir);
     }
 
-    void unpackLauncher(URL url, File target) throws IOException {
-        URLConnection urlconnection = url.openConnection();
-        this.totalDownload = urlconnection.getContentLength() / 1024;
-        this.onePercent = (double) (this.totalDownload / 100);
-        BufferedInputStream in = new BufferedInputStream(url.openStream(), 1024);
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(target));
-        this.copyInputStream(in, out, false);
-        out.close();
-    }
+    private void downloadConfig(String client) throws IOException {
+        File targetDir = new File(xFileUtils.getRootDirectory().getPath() + File.separator + client);
+        xFileUtils.buildDirectory(targetDir);
 
-    void copyInputStream(InputStream in, OutputStream out, boolean zip) throws IOException {
-        byte[] buffer = new byte[1024];
-        int len = in.read(buffer);
-
-        for (int size = 0; len >= 0; len = in.read(buffer)) {
-            if (!zip) {
-                size += len;
-                this.checkUpdateBar(size / 1024);
-            }
-            out.write(buffer, 0, len);
-        }
-
-        in.close();
-        out.close();
+        File configZip = File.createTempFile("config", ".tmp", targetDir);
+        URL url = new URL(xSettings.DOWN_CLIENT_LINK + client + "/config.zip");
+        xFileUtils.downloadFile(url, configZip);
+        xFileUtils.unZip(configZip, targetDir);
     }
 
     private void disableButtons() {
         xButton.loadButtons();
 
-        for (int i = 0; i < xThemeSettings.BUTTONS.length; ++i) {
+        for (int i = 0; i < xButton.getButtons().length; ++i) {
             xButton button = xButton.getButtons()[i];
 
-            if (button.getId() == xButton.UPDATE_ID || button.getId() == xButton.RAM_ID) {
-                this.theme.buttons[button.getId()].setEnabled(false);
-            }
+            this.theme.buttons[button.getId()].setEnabled(false);
         }
     }
 

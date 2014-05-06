@@ -3,10 +3,10 @@ package ru.xeroxp.launcher.config;
 import ru.xeroxp.launcher.xServerConnect;
 
 public final class xSettings {
-    public static final String SITE_LINK = "http://magicwars.high-sky.ru/"; // Ссылка на главную страницу сайта
+    public static final String SITE_LINK = "http://mw.endlessworlds.ru/"; // Ссылка на главную страницу сайта
     public static final String MINE_FOLDER = "magicwars"; // Папка в которой находится майнкрафт (.minecraft) без точки
     public static final String DOWN_LAUNCHER_LINK = "http://localhost/launcher/"; // Путь до папки, в которой лежит лаунчер
-    public static final String LAUNCHER_FILE_NAME = "xLauncher"; // Названия файла лаунчера (.jar и .exe)
+    public static final String LAUNCHER_FILE_NAME = "MagicWars"; // Названия файла лаунчера (.jar и .exe)
     public static final String DOWN_CLIENT_LINK = "http://localhost/client/"; // Путь до папки, в которой хранится client.zip (в нем хранятся все файлы клиентов)
     public static final String MAIN_INFO_FILE = "http://localhost/maininfo.php"; // Путь до файла информации
     public static final String LAUNCHER_NAME = "MagicWars Launcher"; // Название лаунчера
@@ -23,10 +23,10 @@ public final class xSettings {
     }; // Ключ обмена информацией между лаунчером и сокет-сервером (в сокет-сервере должен быть такой же)
     public static final boolean ANIMATED_NEWS = false; // Переключение вида новостей
     public static final xServerConnect[] SERVER_CONNECTS = {
-            new xServerConnect("192.168.10.3", 4444)
-    }; // id, ip адрес и port сокет-серверов
-    public static final boolean PATCH_DIR = true; //Использовать автоматическую замену директории игры
-    public static final String MC_CLASS = "net.minecraft.client.Minecraft";
+            new xServerConnect("127.0.0.1", 4444)
+    }; // ip адрес и port сокет-сервера
+    public static final boolean PATCH_DIR = true; // Использовать автоматическую замену директории игры
+    public static final String MC_CLASS = "net.minecraft.client.main.Main";
     public static final String[] MC_VERSIONS = {
             "1.2.5::aj", "1.3.x::am", "1.4.x::an", "1.5.x::an", "1.6.x::an"
     }; // Версии и классы для автозамены дирректории игры

@@ -5,7 +5,6 @@ import ru.xeroxp.launcher.config.xThemeSettings;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
@@ -97,11 +96,11 @@ public class xServer {
     public static xServer[] getServers() {
         int size = servers.size();
         xServer[] serverList = new xServer[size];
-        int i = 0;
 
-        for (Iterator var4 = servers.iterator(); var4.hasNext(); ++i) {
-            xServer server = (xServer) var4.next();
+        int i = 0;
+        for (xServer server : servers) {
             serverList[i] = server;
+            ++i;
         }
 
         return serverList;

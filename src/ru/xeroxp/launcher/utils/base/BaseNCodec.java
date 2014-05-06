@@ -22,8 +22,8 @@ import java.util.Arrays;
 @SuppressWarnings("SameParameterValue")
 public abstract class BaseNCodec implements BinaryEncoder, BinaryDecoder {
 
-    static final int MIME_CHUNK_SIZE = 76;
     public static final int PEM_CHUNK_SIZE = 64;
+    static final int MIME_CHUNK_SIZE = 76;
     static final int MASK_8BITS = 0xff;
     static final byte PAD_DEFAULT = '=';
     final byte PAD = PAD_DEFAULT;

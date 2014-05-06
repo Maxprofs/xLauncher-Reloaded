@@ -1,26 +1,26 @@
 package ru.xeroxp.launcher;
 
 import ru.xeroxp.launcher.config.xSettings;
-import ru.xeroxp.launcher.gui.xTheme;
+import ru.xeroxp.launcher.misc.xConfig;
+import ru.xeroxp.launcher.misc.xDebug;
 import ru.xeroxp.launcher.process.JavaProcess;
 import ru.xeroxp.launcher.process.JavaProcessLauncher;
 import ru.xeroxp.launcher.process.JavaProcessRunnable;
-import ru.xeroxp.launcher.utils.xDebug;
-import ru.xeroxp.launcher.utils.xUtils;
+import ru.xeroxp.launcher.utils.xFileUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 public class xLoader implements JavaProcessRunnable {
     public static JavaProcess process;
-    private final Object lock = new Object();
-    private boolean isWorking = false;
     private final String userName;
-    private String sessionId = "0";
     private final String jarFile;
-    private String server = "0";
-    private String port = "25565";
     private final String folder;
     private final String version;
+    private boolean isWorking = false;
+    private String sessionId = "0";
+    private String server = "0";
+    private String port = "25565";
 
     public xLoader(String userName, String sessionId, String server, String port, String folder, String jar, String version) {
         this.userName = userName;
@@ -30,7 +30,7 @@ public class xLoader implements JavaProcessRunnable {
         this.jarFile = jar;
         this.folder = folder;
         this.version = version;
-        playGame();
+        this.playGame();
     }
 
     public xLoader(String userName) {
@@ -38,7 +38,18 @@ public class xLoader implements JavaProcessRunnable {
         this.jarFile = xSettings.OFFLINE_CLIENT[1];
         this.folder = xSettings.OFFLINE_CLIENT[0];
         this.version = xSettings.OFFLINE_CLIENT[2];
-        playGame();
+        this.playGame();
+    }
+
+    public static String getMemory() {
+        try {
+            xConfig config = new xConfig(xConfig.LAUNCHER);
+            return config.get("memory");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private static String getLibraries(File path) {
@@ -64,25 +75,23 @@ public class xLoader implements JavaProcessRunnable {
         this.isWorking = working;
     }
 
-    void playGame() {
-        synchronized (this.lock) {
-            if (this.isWorking) {
-                return;
-            }
-            setWorking(true);
-            launchGame();
+    private synchronized void playGame() {
+        if (this.isWorking) {
+            return;
         }
+
+        this.setWorking(true);
+        this.launchGame();
     }
 
-    void launchGame() {
+    private void launchGame() {
         try {
-            String memory = xTheme.readMemory();
+            String memory = getMemory();
 
             if (memory == null || memory.isEmpty()) {
                 memory = Integer.toString(512);
             }
 
-            String separator = System.getProperty("file.separator");
             File nativesPath;
             File libraryPath;
             File workDir;
@@ -90,28 +99,27 @@ public class xLoader implements JavaProcessRunnable {
             File jarPath;
 
             if (this.folder.isEmpty()) {
-                nativesPath = new File(xUtils.getDirectory(), "bin" + separator + "natives");
-                libraryPath = new File(xUtils.getDirectory(), "libraries");
-                workDir = xUtils.getDirectory();
-                jarPath = new File(xUtils.getDirectory(), "bin" + separator + this.jarFile);
-                assetsDir = new File(xUtils.getDirectory(), "assets");
+                nativesPath = new File(xFileUtils.getRootDirectory(), "bin" + File.separator + "natives");
+                libraryPath = new File(xFileUtils.getRootDirectory(), "libraries");
+                workDir = xFileUtils.getRootDirectory();
+                jarPath = new File(xFileUtils.getRootDirectory(), "bin" + File.separator + this.jarFile);
+                assetsDir = new File(xFileUtils.getRootDirectory(), "assets");
             } else {
-                nativesPath = new File(xUtils.getDirectory(), this.folder + separator + "bin" + separator + "natives");
-                libraryPath = new File(xUtils.getDirectory(), this.folder + separator + "libraries");
-                workDir = new File(xUtils.getDirectory(), this.folder);
-                jarPath = new File(xUtils.getDirectory(), this.folder + separator + "bin" + separator + this.jarFile);
-                assetsDir = new File(xUtils.getDirectory(), this.folder + separator + "assets");
+                nativesPath = new File(xFileUtils.getRootDirectory(), this.folder + File.separator + "bin" + File.separator + "natives");
+                libraryPath = new File(xFileUtils.getRootDirectory(), this.folder + File.separator + "libraries");
+                workDir = new File(xFileUtils.getRootDirectory(), this.folder);
+                jarPath = new File(xFileUtils.getRootDirectory(), this.folder + File.separator + "bin" + File.separator + this.jarFile);
+                assetsDir = new File(xFileUtils.getRootDirectory(), this.folder + File.separator + "assets");
             }
 
             String libraries = getLibraries(libraryPath);
-
             if (!libraries.isEmpty()) {
-                libraries = libraries + ";" + jarPath.getAbsolutePath();
+                libraries += ";" + jarPath.getAbsolutePath();
             } else {
                 libraries = jarPath.getAbsolutePath();
             }
 
-            JavaProcessLauncher processLauncher = new JavaProcessLauncher(xUtils.getJavaExecutable(), new String[0]);
+            JavaProcessLauncher processLauncher = new JavaProcessLauncher(xFileUtils.getJavaExecutable(), new String[0]);
 
             if (jarFile.toLowerCase().contains("forge")) {
                 processLauncher.addCommands("-Dfml.ignoreInvalidMinecraftCertificates=true");
@@ -121,7 +129,7 @@ public class xLoader implements JavaProcessRunnable {
             processLauncher.addCommands("-Xmx" + memory + "M");
             File assetsDirectory = assetsDir;
 
-            if (xUtils.getPlatform().toString().equals("macos")) {
+            if (xFileUtils.getPlatform().toString().equals("macos")) {
                 processLauncher.addCommands("-Xdock:icon=" + new File(assetsDirectory, "icons/minecraft.icns").getAbsolutePath());
                 processLauncher.addCommands("-Xdock:name=" + xSettings.GAME_NAME);
             }
@@ -153,7 +161,7 @@ public class xLoader implements JavaProcessRunnable {
             process.safeSetExitRunnable(this);
         } catch (Exception e) {
             e.printStackTrace();
-            setWorking(false);
+            this.setWorking(false);
         }
     }
 
@@ -162,7 +170,7 @@ public class xLoader implements JavaProcessRunnable {
         int exitCode = process.getExitCode();
 
         if (exitCode == 0) {
-            xDebug.errorMessage("Game ended with no troubles detected (exit code " + exitCode + ")");
+            xDebug.infoMessage("Game ended with no troubles detected (exit code " + exitCode + ")");
         } else {
             xDebug.errorMessage("Game ended with bad state (exit code " + exitCode + ")");
 
@@ -184,11 +192,11 @@ public class xLoader implements JavaProcessRunnable {
                 xDebug.errorMessage(errorText);
             }
 
-            setWorking(false);
+            this.setWorking(false);
         }
+
         if (!xMain.error) {
             System.exit(1);
         }
     }
-
 }

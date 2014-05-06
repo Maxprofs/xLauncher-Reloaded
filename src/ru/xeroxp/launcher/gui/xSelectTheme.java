@@ -2,8 +2,10 @@ package ru.xeroxp.launcher.gui;
 
 import ru.xeroxp.launcher.config.xSettings;
 import ru.xeroxp.launcher.config.xThemeSettings;
+import ru.xeroxp.launcher.gui.elements.xHeaderButton;
+import ru.xeroxp.launcher.gui.elements.xScrollBar;
 import ru.xeroxp.launcher.gui.elements.xServer;
-import ru.xeroxp.launcher.utils.xDebug;
+import ru.xeroxp.launcher.misc.xDebug;
 import ru.xeroxp.launcher.xLauncher;
 import ru.xeroxp.launcher.xMain;
 
@@ -18,15 +20,14 @@ import java.io.InputStream;
 
 public class xSelectTheme extends JPanel {
     private final JLabel[] serverOnline = new JLabel[xServer.getSize()];
-    private BufferedImage background;
-    private BufferedImage onlineBar;
-    private BufferedImage onlineBarBg;
-    private BufferedImage offlineBar;
     private final BufferedImage image = new BufferedImage(xThemeSettings.SERVERS_IN_SCROLL_PANEL_SIZE[0], xThemeSettings.SERVERS_IN_SCROLL_PANEL_SIZE[1], BufferedImage.TYPE_INT_ARGB);
     private final JScrollPane scrollPane;
     private final JPanel serverPanel = new JPanel();
     private final JPanel serversBackground = new BgPanel();
-
+    private BufferedImage background;
+    private BufferedImage onlineBar;
+    private BufferedImage onlineBarBg;
+    private BufferedImage offlineBar;
     private boolean sendReady = false;
     private Font serverFont = null;
     private Font serverFont2 = null;
@@ -68,10 +69,8 @@ public class xSelectTheme extends JPanel {
             this.serverFont = Font.createFont(0, is2);
             this.serverFont = this.serverFont.deriveFont(Font.BOLD, xThemeSettings.SERVER_FONTS_SIZE[1]);
             this.serverFont2 = this.serverFont.deriveFont(Font.BOLD, xThemeSettings.SERVER_FONTS_SIZE[2]);
-        } catch (FontFormatException e2) {
-            xDebug.errorMessage("Failed load font: " + e2.getMessage());
-        } catch (IOException e2) {
-            xDebug.errorMessage("Failed load font: " + e2.getMessage());
+        } catch (Exception e) {
+            xDebug.errorMessage("Failed load font: " + e.getMessage());
         }
 
         try {
@@ -146,7 +145,7 @@ public class xSelectTheme extends JPanel {
                     if (headerButton.getButtonName().equals("exit")) {
                         System.exit(0);
                     } else if (headerButton.getButtonName().equals("minimize")) {
-                        xLauncher.getLauncher().iconified();
+                        xLauncher.getIntsanse().iconified();
                     }
                 }
 
@@ -160,6 +159,8 @@ public class xSelectTheme extends JPanel {
                     headerButtons.setIcon(new ImageIcon(xTheme.class.getResource("/images/" + headerButton.getImage())));
                 }
             });
+
+            add(headerButtons);
         }
     }
 
@@ -167,7 +168,7 @@ public class xSelectTheme extends JPanel {
         for (final xServer server : xServer.getServers()) {
             final JLabel serverIcon = new JLabel();
             serverIcon.setBounds(server.getIconX(), server.getIconY(), server.getIconSizeX(), server.getIconSizeY());
-            serverIcon.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/" + server.getName().toLowerCase() + ".png")));
+            serverIcon.setIcon(new ImageIcon(xSelectTheme.class.getResource("/images/icons/" + server.getName().toLowerCase() + ".png")));
             serverIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
             final JLabel serverImage = new JLabel();
@@ -179,7 +180,7 @@ public class xSelectTheme extends JPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (!xSelectTheme.this.sendReady) {
-                        xLauncher.getLauncher().drawMinecraft(server.getIp(), server.getPort(), server.getFolder(), server.getJar(), server.getVersion());
+                        xLauncher.getIntsanse().drawMinecraft(server.getIp(), server.getPort(), server.getFolder(), server.getJar(), server.getVersion());
                         xSelectTheme.this.sendReady = true;
                     }
                 }
@@ -199,7 +200,7 @@ public class xSelectTheme extends JPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (!xSelectTheme.this.sendReady) {
-                        xLauncher.getLauncher().drawMinecraft(server.getIp(), server.getPort(), server.getFolder(), server.getJar(), server.getVersion());
+                        xLauncher.getIntsanse().drawMinecraft(server.getIp(), server.getPort(), server.getFolder(), server.getJar(), server.getVersion());
                         xSelectTheme.this.sendReady = true;
                     }
                 }

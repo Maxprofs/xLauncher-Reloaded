@@ -17,7 +17,7 @@
 
 package ru.xeroxp.server.utils.base;
 
-public class EncoderException extends Exception {
+class EncoderException extends Exception {
 
     private static final long serialVersionUID = 1L;
 

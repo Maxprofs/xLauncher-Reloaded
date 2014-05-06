@@ -4,7 +4,6 @@ import ru.xeroxp.launcher.config.xThemeSettings;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
@@ -44,9 +43,9 @@ public class xButton {
         xButton[] buttonsList = new xButton[size];
         int i = 0;
 
-        for (Iterator var4 = buttons.iterator(); var4.hasNext(); ++i) {
-            xButton button = (xButton) var4.next();
+        for (xButton button : buttons) {
             buttonsList[i] = button;
+            ++i;
         }
 
         return buttonsList;

@@ -1,6 +1,6 @@
 package ru.xeroxp.launcher.process;
 
-import ru.xeroxp.launcher.utils.xDebug;
+import ru.xeroxp.launcher.misc.xDebug;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,11 +12,11 @@ class ProcessMonitorThread extends Thread {
 
     private final JavaProcess process;
 
-
     public ProcessMonitorThread(JavaProcess process) {
         this.process = process;
     }
 
+    @Override
     public void run() {
         InputStreamReader reader = new InputStreamReader(this.process.getRawProcess().getInputStream());
         BufferedReader buf = new BufferedReader(reader);
@@ -28,15 +28,14 @@ class ProcessMonitorThread extends Thread {
                     xDebug.infoMessage("Client> " + line);
                     this.process.getSysOutLines().add(line);
                 }
-            } catch (IOException var13) {
-                Logger.getLogger(ProcessMonitorThread.class.getName()).log(Level.SEVERE, null, var13);
+            } catch (IOException e) {
+                Logger.getLogger(ProcessMonitorThread.class.getName()).log(Level.SEVERE, null, e);
             } finally {
                 try {
                     buf.close();
-                } catch (IOException var12) {
-                    Logger.getLogger(ProcessMonitorThread.class.getName()).log(Level.SEVERE, null, var12);
+                } catch (IOException e) {
+                    Logger.getLogger(ProcessMonitorThread.class.getName()).log(Level.SEVERE, null, e);
                 }
-
             }
         }
 
@@ -44,6 +43,5 @@ class ProcessMonitorThread extends Thread {
         if (onExit != null) {
             onExit.onJavaProcessEnded(this.process);
         }
-
     }
 }

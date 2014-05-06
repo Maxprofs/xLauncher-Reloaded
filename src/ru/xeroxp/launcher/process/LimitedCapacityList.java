@@ -28,10 +28,9 @@ public class LimitedCapacityList {
         }
 
         this.locks.writeLock().unlock();
-        //return value;
     }
 
-    int getMaxSize() {
+    private int getMaxSize() {
         this.locks.readLock().lock();
         int result = this.items.length;
         this.locks.readLock().unlock();

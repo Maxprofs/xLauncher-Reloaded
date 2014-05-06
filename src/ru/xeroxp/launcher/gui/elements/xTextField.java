@@ -5,7 +5,6 @@ import ru.xeroxp.launcher.config.xThemeSettings;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
@@ -45,11 +44,11 @@ public class xTextField {
     public static xTextField[] getFields() {
         int size = fields.size();
         xTextField[] fieldList = new xTextField[size];
-        int i = 0;
 
-        for (Iterator var4 = fields.iterator(); var4.hasNext(); ++i) {
-            xTextField field = (xTextField) var4.next();
+        int i = 0;
+        for (xTextField field : fields) {
             fieldList[i] = field;
+            ++i;
         }
 
         return fieldList;

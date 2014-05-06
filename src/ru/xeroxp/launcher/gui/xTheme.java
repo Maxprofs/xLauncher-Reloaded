@@ -2,13 +2,12 @@ package ru.xeroxp.launcher.gui;
 
 import ru.xeroxp.launcher.config.xSettings;
 import ru.xeroxp.launcher.config.xThemeSettings;
-import ru.xeroxp.launcher.gui.elements.xButton;
-import ru.xeroxp.launcher.gui.elements.xCheckbox;
-import ru.xeroxp.launcher.gui.elements.xLabel;
-import ru.xeroxp.launcher.gui.elements.xTextField;
-import ru.xeroxp.launcher.utils.xDebug;
+import ru.xeroxp.launcher.gui.elements.*;
+import ru.xeroxp.launcher.misc.xConfig;
+import ru.xeroxp.launcher.misc.xDebug;
 import ru.xeroxp.launcher.xAuth;
 import ru.xeroxp.launcher.xLauncher;
+import ru.xeroxp.launcher.xLoader;
 import ru.xeroxp.launcher.xMain;
 
 import javax.imageio.ImageIO;
@@ -21,50 +20,49 @@ import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.regex.Pattern;
 
-import static ru.xeroxp.launcher.utils.xUtils.getDirectory;
-
 @SuppressWarnings("SameParameterValue")
 public class xTheme extends JPanel {
-    public static boolean gameOffline = false;
+    public static boolean offlineMode = false;
     public final JButton[] buttons = new JButton[xThemeSettings.BUTTONS.length];
+    public final xProgressBar progressBar = new xProgressBar(this);
     private final JPasswordField passwordBar = new JPasswordField();
     private final JTextField loginBar = new JTextField();
     private final JTextField xSliderValue = new JTextField();
-    public BufferedImage background;
-    private final ActionListener JoinListener = new ActionListener() {
+
+    private final ActionListener joinListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             xTheme.this.startAuth();
         }
     };
-    private final ActionListener RememberMemListener = new ActionListener() {
+
+    private final ActionListener rememberMemListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     String mem = xSliderValue.getText();
-                    xAuth.rememberMemory((Integer.parseInt(mem) < 128) ? "128" : mem);
+
+                    try {
+                        xConfig config = new xConfig(xConfig.LAUNCHER);
+                        config.set("memory", (Integer.parseInt(mem) < 128) ? "128" : mem);
+                        xMain.restart();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }).start();
         }
     };
 
-    private final KeyListener JoinKListener = new KeyListener() {
-        @Override
-        public void keyTyped(KeyEvent e) {
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-        }
-
+    private final KeyListener joinKeyListener = new KeyAdapter() {
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == 10) {
@@ -73,18 +71,18 @@ public class xTheme extends JPanel {
         }
     };
 
+    private final JLabel error = new JLabel();
+    private final Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]*$");
+    public BufferedImage background;
     private BufferedImage logo;
     private BufferedImage loginField;
     private BufferedImage passField;
     private BufferedImage memoryField;
-    private final JLabel percent = new JLabel();
     private JPanel nPanel;
     private JPanel bPanel;
     private JScrollPane scrollPane;
     private JButton newsButton;
     private boolean newsOpened = false;
-    private final JLabel error = new JLabel();
-    private final Pattern pattern = Pattern.compile("^[A-Za-z0-9_-]*$");
     private boolean remember = false;
     private String savedPassword = null;
     private boolean lockAuth = false;
@@ -92,12 +90,12 @@ public class xTheme extends JPanel {
     private Font arial2 = null;
 
     public xTheme() {
-        setLayout(null);
-        setMinimumSize(new Dimension(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]));
-        setSize(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]);
-        setBackground(new Color(0, 0, 0, 0));
-        setBorder(null);
-        setOpaque(false);
+        this.setLayout(null);
+        this.setMinimumSize(new Dimension(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]));
+        this.setSize(xThemeSettings.LAUNCHER_SIZE[0], xThemeSettings.LAUNCHER_SIZE[1]);
+        this.setBackground(new Color(0, 0, 0, 0));
+        this.setBorder(null);
+        this.setOpaque(false);
 
         InputStream is = xTheme.class.getResourceAsStream("/font/" + xThemeSettings.MAIN_FONT_FILE);
 
@@ -105,10 +103,8 @@ public class xTheme extends JPanel {
             this.arial = Font.createFont(0, is);
             this.arial = this.arial.deriveFont(0, xThemeSettings.FONTS_SIZE[0]);
             this.arial2 = this.arial.deriveFont(Font.PLAIN, xThemeSettings.FONTS_SIZE[1]);
-        } catch (FontFormatException e2) {
-            xDebug.errorMessage("Failed load font: " + e2.getMessage());
-        } catch (IOException e2) {
-            xDebug.errorMessage("Failed load font: " + e2.getMessage());
+        } catch (Exception e) {
+            xDebug.errorMessage("Failed load font: " + e.getMessage());
         }
 
         try {
@@ -123,19 +119,16 @@ public class xTheme extends JPanel {
         header.setBounds(xThemeSettings.HEADER_BOUNDS[0], xThemeSettings.HEADER_BOUNDS[1], xThemeSettings.HEADER_BOUNDS[2], xThemeSettings.HEADER_BOUNDS[3]);
         header.setFont(this.arial);
 
-        this.percent.setBounds(xThemeSettings.PERCENT_LABEL_BOUNDS[0], xThemeSettings.PERCENT_LABEL_BOUNDS[1], xThemeSettings.PERCENT_LABEL_BOUNDS[2], xThemeSettings.PERCENT_LABEL_BOUNDS[3]);
-        this.percent.setForeground(xThemeSettings.PERCENT_LABEL_COLOR);
-
         this.error.setBounds(xThemeSettings.ERROR_LABEL_BOUNDS[0], xThemeSettings.ERROR_LABEL_BOUNDS[1], xThemeSettings.ERROR_LABEL_BOUNDS[2], xThemeSettings.ERROR_LABEL_BOUNDS[3]);
         this.error.setForeground(xThemeSettings.ERROR_LABEL_COLOR);
         this.error.setFont(this.arial2);
         this.error.setHorizontalTextPosition(JLabel.CENTER);
         this.error.setHorizontalAlignment(JLabel.CENTER);
 
-        String readFile = readLogin();
+        String authData = readLogin();
+        if (authData != null) {
+            String[] args = authData.split(":");
 
-        if (readFile != null) {
-            String[] args = readFile.split(":");
             if (args.length != 1) {
                 this.savedPassword = args[1];
             }
@@ -148,48 +141,40 @@ public class xTheme extends JPanel {
         mb.setFont(this.arial);
         mb.setForeground(xThemeSettings.MEMORY_LABEL_COLOR);
 
-        add(mb);
+        this.add(mb);
         xButton.loadButtons();
-        addButtons();
+        this.addButtons();
         xCheckbox.loadCheckboxes();
-        addCheckboxes();
+        this.addCheckboxes();
         xTextField.loadFields();
-        addFields();
-        add(header);
+        this.addFields();
+        this.add(header);
         xLabel.loadLabels();
-        addLabels();
-        getUpdateNews();
-        animationPanels();
+        this.addLabels();
+        this.getUpdateNews();
+        this.animationPanels();
         xHeaderButton.loadButtons();
-        addHeaderButtons();
-        add(this.percent);
-        add(this.error);
+        this.addHeaderButtons();
+        this.add(this.error);
     }
 
     private static void openLink(URI uri) {
         try {
-            Object o = Class.forName("java.awt.Desktop").getMethod("getDesktop", new Class[0]).invoke(null);
-            o.getClass().getMethod("browse", new Class[]{URI.class}).invoke(o, uri);
-        } catch (Throwable e) {
+            /** Что это такое вообще? */
+//            Object o = Class.forName("java.awt.Desktop").getMethod("getDesktop", new Class[0]).invoke(null);
+//            o.getClass().getMethod("browse", new Class[]{URI.class}).invoke(o, uri);
+            Desktop.getDesktop().browse(uri);
+        } catch (Exception e) {
             xDebug.errorMessage("Failed to open link " + uri.toString());
         }
     }
 
-    public static String readMemory() {
-        File dir = getDirectory();
-        File versionFile = new File(dir, "memory");
-
-        if (versionFile.exists()) {
-            DataInputStream dis;
-            try {
-                dis = new DataInputStream(new FileInputStream(versionFile));
-                String readMemory = dis.readUTF();
-                dis.close();
-
-                return readMemory;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    private static String readLogin() {
+        try {
+            xConfig config = new xConfig(xConfig.LAUNCHER);
+            return config.get("auth");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return null;
@@ -204,15 +189,6 @@ public class xTheme extends JPanel {
         g.drawImage(this.memoryField, xThemeSettings.MEMORY_FIELD_BOUNDS[0], xThemeSettings.MEMORY_FIELD_BOUNDS[1], this);
     }
 
-    public void updatePercent(int done) {
-        if (done < 99) {
-            this.percent.setText("Обновление " + done + "%");
-            this.percent.setVisible(true);
-        } else {
-            this.percent.setVisible(false);
-        }
-    }
-
     public JScrollPane getUpdateNews() {
         if (scrollPane != null) {
             return scrollPane;
@@ -222,8 +198,9 @@ public class xTheme extends JPanel {
             final JTextPane editorPane = new JTextPane();
 
             editorPane.setContentType("text/html");
-            editorPane.setText("<html><body><font color=\"#808080\"><br><br><br><br><center>Loading update news..</center></font></body></html>");
+            editorPane.setText("<html><body><font color=\"#808080\"><br><br><br><br><center>Загрузка новостей...</center></font></body></html>");
             editorPane.addHyperlinkListener(new HyperlinkListener() {
+                @Override
                 public void hyperlinkUpdate(HyperlinkEvent he) {
                     if (he.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
                         try {
@@ -235,34 +212,34 @@ public class xTheme extends JPanel {
             });
 
             new Thread(new Runnable() {
+                @Override
                 public void run() {
                     try {
                         editorPane.setPage(new URL(xSettings.NEWS_URL));
                     } catch (Exception e) {
                         e.printStackTrace();
-                        editorPane.setText("<html><body><font color=\"#808080\"><br><br><br><br><center>Failed to update news<br></center></font></body></html>");
+                        editorPane.setText("<html><body><font color=\"#808080\"><br><br><br><br><center>Новости не доступны<br></center></font></body></html>");
                     }
                 }
             }).start();
 
             editorPane.setOpaque(false);
             editorPane.setEditable(false);
-            scrollPane = new JScrollPane(editorPane);
-            scrollPane.setBorder(null);
-            scrollPane.setOpaque(false);
-            scrollPane.getViewport().setOpaque(false);
-            JScrollBar s_bar = new JScrollBar();
-            JScrollPane sp = this.scrollPane;
-            s_bar.setUI(new xScrollBar.MyScrollbarUI());
-            Dimension dim = new Dimension(xThemeSettings.NEWS_SCROLL_BAR_SIZE[0], xThemeSettings.NEWS_SCROLL_BAR_SIZE[1]);
-            s_bar.setPreferredSize(dim);
-            s_bar.setBackground(new Color(0, 0, 0, 0));
-            s_bar.setForeground(new Color(0, 0, 0, 0));
-            s_bar.setOpaque(false);
-            sp.setVerticalScrollBar(s_bar);
+            this.scrollPane = new JScrollPane(editorPane);
+            this.scrollPane.setBorder(null);
+            this.scrollPane.setOpaque(false);
+            this.scrollPane.getViewport().setOpaque(false);
+            JScrollBar scrollBar = new JScrollBar();
+            JScrollPane scrollPane = this.scrollPane;
+            scrollBar.setUI(new xScrollBar.MyScrollbarUI());
+            scrollBar.setPreferredSize(new Dimension(xThemeSettings.NEWS_SCROLL_BAR_SIZE[0], xThemeSettings.NEWS_SCROLL_BAR_SIZE[1]));
+            scrollBar.setBackground(new Color(0, 0, 0, 0));
+            scrollBar.setForeground(new Color(0, 0, 0, 0));
+            scrollBar.setOpaque(false);
+            scrollPane.setVerticalScrollBar(scrollBar);
             editorPane.setMargin(null);
-        } catch (Exception e2) {
-            e2.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return scrollPane;
@@ -276,40 +253,18 @@ public class xTheme extends JPanel {
     public void setError(String text) {
         this.error.setText(text);
         xDebug.errorMessage(text);
-        lockAuth(false);
+        setLockAuth(false);
     }
 
     public boolean getRemember() {
         return this.remember;
     }
 
-    String readLogin() {
-        File dir = getDirectory();
-        File versionFile = new File(dir, "login");
-
-        if (versionFile.exists()) {
-            DataInputStream dis;
-            try {
-                dis = new DataInputStream(new FileInputStream(versionFile));
-                String readLogin = dis.readUTF();
-                dis.close();
-
-                return readLogin;
-            } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
-    }
-
-    public void lockAuth(boolean status) {
+    public void setLockAuth(boolean status) {
         this.lockAuth = status;
     }
 
-    void startAuth() {
+    private void startAuth() {
         String login = this.loginBar.getText();
         String password = new String(this.passwordBar.getPassword());
 
@@ -318,8 +273,8 @@ public class xTheme extends JPanel {
             return;
         }
 
-        if (gameOffline) {
-            xLauncher.getLauncher().drawMinecraft(login);
+        if (offlineMode) {
+            xLauncher.getIntsanse().drawMinecraft(login);
         } else if (!this.lockAuth) {
             if (password.isEmpty()) {
                 setError("Вы не указали пароль");
@@ -336,7 +291,7 @@ public class xTheme extends JPanel {
                 return;
             }
 
-            lockAuth(true);
+            setLockAuth(true);
 
             if ((this.savedPassword != null) && (password.equals("password"))) {
                 Thread authThread = new Thread(new xAuth(login, this, this.savedPassword));
@@ -348,7 +303,7 @@ public class xTheme extends JPanel {
         }
     }
 
-    void addHeaderButtons() {
+    private void addHeaderButtons() {
         for (final xHeaderButton headerButton : xHeaderButton.getButtons()) {
             final JLabel headerButtons = new JLabel();
             headerButtons.setBounds(headerButton.getImageX(), headerButton.getImageY(), headerButton.getImageSizeX(), headerButton.getImageSizeY());
@@ -359,7 +314,7 @@ public class xTheme extends JPanel {
                     if (headerButton.getButtonName().equals("exit")) {
                         System.exit(0);
                     } else if (headerButton.getButtonName().equals("minimize")) {
-                        xLauncher.getLauncher().iconified();
+                        xLauncher.getIntsanse().iconified();
                     }
                 }
 
@@ -378,7 +333,7 @@ public class xTheme extends JPanel {
         }
     }
 
-    void addButtons() {
+    private void addButtons() {
         for (final xButton button : xButton.getButtons()) {
 
             buttons[button.getId()] = new JButton();
@@ -394,10 +349,12 @@ public class xTheme extends JPanel {
             switch (button.getId()) {
                 case xButton.UPDATE_ID:
                     buttons[button.getId()].addActionListener(new ActionListener() {
+                        @Override
                         public void actionPerformed(ActionEvent e) {
                             new Thread(new Runnable() {
+                                @Override
                                 public void run() {
-                                    xMain.xWebThread.updater.checkClientUpdate(true);
+                                    xMain.xWebThread.updater.checkClientsUpdate(true);
                                     revalidate();
                                     repaint();
                                 }
@@ -406,11 +363,11 @@ public class xTheme extends JPanel {
                     });
                     break;
                 case xButton.AUTH_ID:
-                    buttons[button.getId()].addKeyListener(JoinKListener);
-                    buttons[button.getId()].addActionListener(JoinListener);
+                    buttons[button.getId()].addKeyListener(joinKeyListener);
+                    buttons[button.getId()].addActionListener(joinListener);
                     break;
                 case xButton.RAM_ID:
-                    buttons[button.getId()].addActionListener(RememberMemListener);
+                    buttons[button.getId()].addActionListener(rememberMemListener);
                     break;
             }
 
@@ -418,7 +375,7 @@ public class xTheme extends JPanel {
         }
     }
 
-    void addCheckboxes() {
+    private void addCheckboxes() {
         for (final xCheckbox checkbox : xCheckbox.getCheckboxes()) {
             final JLabel labels = new JLabel(checkbox.getCheckboxLabel());
             labels.setBounds(checkbox.getLabelX(), checkbox.getLabelY(), checkbox.getLabelSizeX(), checkbox.getLabelSizeY());
@@ -436,6 +393,7 @@ public class xTheme extends JPanel {
 
             if (checkbox.getId() == xCheckbox.REMEMBER_PASS_ID) {
                 checkboxes.addItemListener(new ItemListener() {
+                    @Override
                     public void itemStateChanged(ItemEvent e) {
                         xTheme.this.remember = checkboxes.isSelected();
                     }
@@ -451,8 +409,9 @@ public class xTheme extends JPanel {
                     }
                 }
             } else if (checkbox.getId() == xCheckbox.OFFLINE_MODE_ID) checkboxes.addItemListener(new ItemListener() {
+                @Override
                 public void itemStateChanged(ItemEvent e) {
-                    gameOffline = checkboxes.isSelected();
+                    offlineMode = checkboxes.isSelected();
                 }
             });
 
@@ -461,7 +420,7 @@ public class xTheme extends JPanel {
         }
     }
 
-    void addLabels() {
+    private void addLabels() {
         for (final xLabel label : xLabel.getLabels()) {
             final JLabel labels = new JLabel(label.getName().toUpperCase());
             labels.setForeground(label.getColor());
@@ -469,14 +428,11 @@ public class xTheme extends JPanel {
             labels.setCursor(new Cursor(Cursor.HAND_CURSOR));
             labels.setFont(this.arial2);
             labels.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     try {
-                        try {
-                            Desktop.getDesktop().browse(new URI(label.getLabelLink()));
-                        } catch (URISyntaxException e1) {
-                            e1.printStackTrace();
-                        }
-                    } catch (IOException ex) {
+                        Desktop.getDesktop().browse(new URI(label.getLabelLink()));
+                    } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -486,7 +442,7 @@ public class xTheme extends JPanel {
         }
     }
 
-    void addFields() {
+    private void addFields() {
         String readFile = readLogin();
         for (final xTextField field : xTextField.getFields()) {
             if (field.getId() == xTextField.PASS_ID) {
@@ -501,6 +457,7 @@ public class xTheme extends JPanel {
                     @Override
                     public void focusGained(FocusEvent e) {
                         String passToString = new String(passwordBar.getPassword());
+
                         if (passToString.equals(field.getFieldName())) {
                             passwordBar.setEchoChar('\u25CF');
                             passwordBar.setText("");
@@ -516,7 +473,7 @@ public class xTheme extends JPanel {
                     }
                 });
 
-                passwordBar.addKeyListener(JoinKListener);
+                passwordBar.addKeyListener(joinKeyListener);
                 if (readFile != null) {
                     String[] args = readFile.split(":");
                     if (args.length != 1) {
@@ -555,7 +512,7 @@ public class xTheme extends JPanel {
                     }
                 });
 
-                loginBar.addKeyListener(JoinKListener);
+                loginBar.addKeyListener(joinKeyListener);
                 if (readFile != null) {
                     String[] args = readFile.split(":");
 
@@ -584,21 +541,17 @@ public class xTheme extends JPanel {
                 xSliderValue.setBorder(null);
                 xSliderValue.setFont(this.arial);
                 xSliderValue.setForeground(field.getFieldColor());
-                String memory = xTheme.readMemory();
+                String memory = xLoader.getMemory();
 
                 if (memory != null) {
                     xSliderValue.setText(memory);
                 }
 
-                if (xSliderValue.getText().length() == 0) {
+                if (xSliderValue.getText().isEmpty()) {
                     xSliderValue.setText("512");
                 }
 
-                xSliderValue.addFocusListener(new FocusListener() {
-                    @Override
-                    public void focusGained(FocusEvent e) {
-                    }
-
+                xSliderValue.addFocusListener(new FocusAdapter() {
                     @Override
                     public void focusLost(FocusEvent e) {
                         if (xSliderValue.getText().length() == 0) xSliderValue.setText("512");
@@ -616,7 +569,7 @@ public class xTheme extends JPanel {
         }
     }
 
-    void animationPanels() {
+    private void animationPanels() {
         JPanel animPanel = new JPanel();
         animPanel.setLayout(null);
         animPanel.setOpaque(false);
@@ -645,7 +598,7 @@ public class xTheme extends JPanel {
             animPanel.setSize(xThemeSettings.LAUNCHER_SIZE[0] + 1, xThemeSettings.NEWS_PANEL_HEIGHT_2);
         }
 
-        animPanel.add(getNPane());
+        animPanel.add(getNPanel());
 
         if (xSettings.ANIMATED_NEWS) {
             bPanel.add(newsButton);
@@ -656,11 +609,11 @@ public class xTheme extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!newsOpened) {
-                        xAnimation anim = new xAnimation(bPanel, getNPane(), 0, xAnimation.AnimationType.LEFT_TO_RIGHT_SLIDE);
+                        xAnimation anim = new xAnimation(bPanel, getNPanel(), 0, xAnimation.AnimationType.LEFT_TO_RIGHT_SLIDE);
                         anim.start();
                         newsOpened = true;
                     } else {
-                        xAnimation anim2 = new xAnimation(getNPane(), bPanel, -1, xAnimation.AnimationType.RIGHT_TO_LEFT_SLIDE);
+                        xAnimation anim2 = new xAnimation(getNPanel(), bPanel, -1, xAnimation.AnimationType.RIGHT_TO_LEFT_SLIDE);
                         anim2.start();
                         newsOpened = false;
                     }
@@ -698,7 +651,7 @@ public class xTheme extends JPanel {
         add(animPanel);
     }
 
-    void buildNPane() {
+    private void buildNPane() {
         nPanel = new JPanel();
         nPanel.setLayout(null);
         nPanel.setOpaque(false);
@@ -733,7 +686,7 @@ public class xTheme extends JPanel {
         nPanel.add(gPanel);
     }
 
-    JPanel getNPane() {
+    private JPanel getNPanel() {
         if (nPanel == null) {
             buildNPane();
         }

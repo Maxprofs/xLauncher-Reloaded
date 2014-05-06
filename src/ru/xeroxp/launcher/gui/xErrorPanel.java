@@ -1,7 +1,7 @@
 package ru.xeroxp.launcher.gui;
 
 import ru.xeroxp.launcher.config.xThemeSettings;
-import ru.xeroxp.launcher.utils.xDebug;
+import ru.xeroxp.launcher.misc.xDebug;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,16 +12,16 @@ import java.io.InputStream;
 public class xErrorPanel extends JDialog {
     public xErrorPanel(Frame parent, String error) {
         super(parent);
-        setTitle("Ошибка");
-        setSize(xThemeSettings.ERROR_PANEL_SIZE[0], xThemeSettings.ERROR_PANEL_SIZE[1] + 20);
-        setResizable(false);
-        setModal(true);
-        setLocationRelativeTo(parent);
+        this.setTitle("Ошибка");
+        this.setSize(xThemeSettings.ERROR_PANEL_SIZE[0], xThemeSettings.ERROR_PANEL_SIZE[1] + 20);
+        this.setResizable(false);
+        this.setModal(true);
+        this.setLocationRelativeTo(parent);
         JPanel backgroundBg = new BackgroundRegisterPanel();
         backgroundBg.setLayout(null);
         backgroundBg.setBorder(null);
         backgroundBg.setOpaque(false);
-        add(backgroundBg);
+        this.add(backgroundBg);
         InputStream is = xTheme.class.getResourceAsStream("/font/" + xThemeSettings.MAIN_FONT_FILE);
         Font arial = null;
 
@@ -57,23 +57,23 @@ public class xErrorPanel extends JDialog {
         }
 
         @Override
-        public void paintComponent(Graphics g2) {
-            int w = getWidth();
-            int h = getHeight();
+        public void paintComponent(Graphics g) {
+            int w = this.getWidth();
+            int h = this.getHeight();
 
             if ((img == null) || (img.getWidth(null) != w) || (img.getHeight(null) != h)) {
-                img = createImage(w, h);
+                img = this.createImage(w, h);
 
-                Graphics g = img.getGraphics();
+                Graphics g2 = img.getGraphics();
                 for (int x = 0; x <= w / xThemeSettings.ERROR_PANEL_SIZE[0]; x++) {
                     for (int y = 0; y <= h / xThemeSettings.ERROR_PANEL_SIZE[1]; y++)
-                        g.drawImage(bgImage, x * xThemeSettings.ERROR_PANEL_SIZE[0], y * xThemeSettings.ERROR_PANEL_SIZE[1], null);
+                        g2.drawImage(bgImage, x * xThemeSettings.ERROR_PANEL_SIZE[0], y * xThemeSettings.ERROR_PANEL_SIZE[1], null);
                 }
 
-                g.dispose();
+                g2.dispose();
             }
 
-            g2.drawImage(img, 0, 0, w, h, null);
+            g.drawImage(img, 0, 0, w, h, null);
         }
     }
 }

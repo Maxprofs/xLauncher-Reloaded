@@ -82,13 +82,9 @@ public class Base64 extends BaseNCodec {
             24, 25, -1, -1, -1, -1, 63, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34,
             35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
     };
-
-    private static final int MASK_6BITS = 0x3f;
-
-    private final byte[] encodeTable;
-
     private final byte[] decodeTable = DECODE_TABLE;
-
+    private static final int MASK_6BITS = 0x3f;
+    private final byte[] encodeTable;
     private final byte[] lineSeparator;
 
     private final int decodeSize;
@@ -134,6 +130,133 @@ public class Base64 extends BaseNCodec {
         }
         this.decodeSize = this.encodeSize - 1;
         this.encodeTable = urlSafe ? URL_SAFE_ENCODE_TABLE : STANDARD_ENCODE_TABLE;
+    }
+
+    @Deprecated
+    public static boolean isArrayByteBase64(final byte[] arrayOctet) {
+        return isBase64(arrayOctet);
+    }
+
+    private static boolean isBase64(final byte octet) {
+        return octet == PAD_DEFAULT || (octet >= 0 && octet < DECODE_TABLE.length && DECODE_TABLE[octet] != -1);
+    }
+
+    public static boolean isBase64(final String base64) {
+        return isBase64(getBytesUtf8(base64));
+    }
+
+    private static boolean isBase64(final byte[] arrayOctet) {
+        for (byte anArrayOctet : arrayOctet) {
+            if (!isBase64(anArrayOctet) && !isWhiteSpace(anArrayOctet)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static byte[] encodeBase64(final byte[] binaryData) {
+        return encodeBase64(binaryData, false);
+    }
+
+    public static String encodeBase64String(final byte[] binaryData) {
+        return newStringUtf8(encodeBase64(binaryData, false));
+    }
+
+    public static byte[] encodeBase64URLSafe(final byte[] binaryData) {
+        return encodeBase64(binaryData, false, true);
+    }
+
+    public static String encodeBase64URLSafeString(final byte[] binaryData) {
+        return newStringUtf8(encodeBase64(binaryData, false, true));
+    }
+
+    public static byte[] encodeBase64Chunked(final byte[] binaryData) {
+        return encodeBase64(binaryData, true);
+    }
+
+    private static byte[] encodeBase64(final byte[] binaryData, final boolean isChunked) {
+        return encodeBase64(binaryData, isChunked, false);
+    }
+
+    private static byte[] encodeBase64(final byte[] binaryData, final boolean isChunked, final boolean urlSafe) {
+        return encodeBase64(binaryData, isChunked, urlSafe, Integer.MAX_VALUE);
+    }
+
+    private static byte[] encodeBase64(final byte[] binaryData, final boolean isChunked,
+                                       final boolean urlSafe, final int maxResultSize) {
+        if (binaryData == null || binaryData.length == 0) {
+            return binaryData;
+        }
+
+        final Base64 b64 = isChunked ? new Base64(urlSafe) : new Base64(0, CHUNK_SEPARATOR, urlSafe);
+        final long len = b64.getEncodedLength(binaryData);
+        if (len > maxResultSize) {
+            throw new IllegalArgumentException("Input array too big, the output array would be bigger (" +
+                    len +
+                    ") than the specified maximum size of " +
+                    maxResultSize);
+        }
+
+        return b64.encode(binaryData);
+    }
+
+    public static byte[] decodeBase64(final String base64String) {
+        return new Base64().decode(base64String);
+    }
+
+    private static byte[] decodeBase64(final byte[] base64Data) {
+        return new Base64().decode(base64Data);
+    }
+
+    public static BigInteger decodeInteger(final byte[] pArray) {
+        return new BigInteger(1, decodeBase64(pArray));
+    }
+
+    public static byte[] encodeInteger(final BigInteger bigInt) {
+        if (bigInt == null) {
+            throw new NullPointerException("encodeInteger called with null parameter");
+        }
+        return encodeBase64(toIntegerBytes(bigInt), false);
+    }
+
+    private static byte[] toIntegerBytes(final BigInteger bigInt) {
+        int bitLen = bigInt.bitLength();
+        bitLen = ((bitLen + 7) >> 3) << 3;
+        final byte[] bigBytes = bigInt.toByteArray();
+
+        if (((bigInt.bitLength() % 8) != 0) && (((bigInt.bitLength() / 8) + 1) == (bitLen / 8))) {
+            return bigBytes;
+        }
+        int startSrc = 0;
+        int len = bigBytes.length;
+
+        if ((bigInt.bitLength() % 8) == 0) {
+            startSrc = 1;
+            len--;
+        }
+        final int startDst = bitLen / 8 - len; // to pad w/ nulls as per spec
+        final byte[] resizedBytes = new byte[bitLen / 8];
+        System.arraycopy(bigBytes, startSrc, resizedBytes, startDst, len);
+        return resizedBytes;
+    }
+
+    private static String newString(final byte[] bytes, final Charset charset) {
+        return bytes == null ? null : new String(bytes, charset);
+    }
+
+    public static String newStringUtf8(final byte[] bytes) {
+        return newString(bytes, Charsets.UTF_8);
+    }
+
+    private static byte[] getBytes(final String string, final Charset charset) {
+        if (string == null) {
+            return null;
+        }
+        return string.getBytes(charset);
+    }
+
+    public static byte[] getBytesUtf8(final String string) {
+        return getBytes(string, Charsets.UTF_8);
     }
 
     public boolean isUrlSafe() {
@@ -256,136 +379,9 @@ public class Base64 extends BaseNCodec {
         }
     }
 
-    @Deprecated
-    public static boolean isArrayByteBase64(final byte[] arrayOctet) {
-        return isBase64(arrayOctet);
-    }
-
-    private static boolean isBase64(final byte octet) {
-        return octet == PAD_DEFAULT || (octet >= 0 && octet < DECODE_TABLE.length && DECODE_TABLE[octet] != -1);
-    }
-
-    public static boolean isBase64(final String base64) {
-        return isBase64(getBytesUtf8(base64));
-    }
-
-    private static boolean isBase64(final byte[] arrayOctet) {
-        for (byte anArrayOctet : arrayOctet) {
-            if (!isBase64(anArrayOctet) && !isWhiteSpace(anArrayOctet)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static byte[] encodeBase64(final byte[] binaryData) {
-        return encodeBase64(binaryData, false);
-    }
-
-    public static String encodeBase64String(final byte[] binaryData) {
-        return newStringUtf8(encodeBase64(binaryData, false));
-    }
-
-    public static byte[] encodeBase64URLSafe(final byte[] binaryData) {
-        return encodeBase64(binaryData, false, true);
-    }
-
-    public static String encodeBase64URLSafeString(final byte[] binaryData) {
-        return newStringUtf8(encodeBase64(binaryData, false, true));
-    }
-
-    public static byte[] encodeBase64Chunked(final byte[] binaryData) {
-        return encodeBase64(binaryData, true);
-    }
-
-    private static byte[] encodeBase64(final byte[] binaryData, final boolean isChunked) {
-        return encodeBase64(binaryData, isChunked, false);
-    }
-
-    private static byte[] encodeBase64(final byte[] binaryData, final boolean isChunked, final boolean urlSafe) {
-        return encodeBase64(binaryData, isChunked, urlSafe, Integer.MAX_VALUE);
-    }
-
-    private static byte[] encodeBase64(final byte[] binaryData, final boolean isChunked,
-                                       final boolean urlSafe, final int maxResultSize) {
-        if (binaryData == null || binaryData.length == 0) {
-            return binaryData;
-        }
-
-        final Base64 b64 = isChunked ? new Base64(urlSafe) : new Base64(0, CHUNK_SEPARATOR, urlSafe);
-        final long len = b64.getEncodedLength(binaryData);
-        if (len > maxResultSize) {
-            throw new IllegalArgumentException("Input array too big, the output array would be bigger (" +
-                    len +
-                    ") than the specified maximum size of " +
-                    maxResultSize);
-        }
-
-        return b64.encode(binaryData);
-    }
-
-    public static byte[] decodeBase64(final String base64String) {
-        return new Base64().decode(base64String);
-    }
-
-    private static byte[] decodeBase64(final byte[] base64Data) {
-        return new Base64().decode(base64Data);
-    }
-
-    public static BigInteger decodeInteger(final byte[] pArray) {
-        return new BigInteger(1, decodeBase64(pArray));
-    }
-
-    public static byte[] encodeInteger(final BigInteger bigInt) {
-        if (bigInt == null) {
-            throw new NullPointerException("encodeInteger called with null parameter");
-        }
-        return encodeBase64(toIntegerBytes(bigInt), false);
-    }
-
-    private static byte[] toIntegerBytes(final BigInteger bigInt) {
-        int bitLen = bigInt.bitLength();
-        bitLen = ((bitLen + 7) >> 3) << 3;
-        final byte[] bigBytes = bigInt.toByteArray();
-
-        if (((bigInt.bitLength() % 8) != 0) && (((bigInt.bitLength() / 8) + 1) == (bitLen / 8))) {
-            return bigBytes;
-        }
-        int startSrc = 0;
-        int len = bigBytes.length;
-
-        if ((bigInt.bitLength() % 8) == 0) {
-            startSrc = 1;
-            len--;
-        }
-        final int startDst = bitLen / 8 - len; // to pad w/ nulls as per spec
-        final byte[] resizedBytes = new byte[bitLen / 8];
-        System.arraycopy(bigBytes, startSrc, resizedBytes, startDst, len);
-        return resizedBytes;
-    }
-
     @Override
     protected boolean isInAlphabet(final byte octet) {
         return octet >= 0 && octet < decodeTable.length && decodeTable[octet] != -1;
-    }
-
-    private static String newString(final byte[] bytes, final Charset charset) {
-        return bytes == null ? null : new String(bytes, charset);
-    }
-
-    public static String newStringUtf8(final byte[] bytes) {
-        return newString(bytes, Charsets.UTF_8);
-    }
-
-    private static byte[] getBytes(final String string, final Charset charset) {
-        if (string == null) {
-            return null;
-        }
-        return string.getBytes(charset);
-    }
-
-    public static byte[] getBytesUtf8(final String string) {
-        return getBytes(string, Charsets.UTF_8);
     }
 
 }

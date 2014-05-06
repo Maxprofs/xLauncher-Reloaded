@@ -4,7 +4,6 @@ import ru.xeroxp.launcher.config.xSettings;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
@@ -27,11 +26,11 @@ public class xServerConnect {
     public static xServerConnect[] getConnectServers() {
         int size = connectServers.size();
         xServerConnect[] serverList = new xServerConnect[size];
-        int i = 0;
 
-        for (Iterator var4 = connectServers.iterator(); var4.hasNext(); ++i) {
-            xServerConnect server = (xServerConnect) var4.next();
+        int i = 0;
+        for (xServerConnect server : connectServers) {
             serverList[i] = server;
+            ++i;
         }
 
         return serverList;

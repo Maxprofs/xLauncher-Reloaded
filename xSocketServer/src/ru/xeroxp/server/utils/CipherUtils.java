@@ -8,11 +8,11 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Random;
 
 public class CipherUtils {
-    private static byte[] key;
-    private static final byte[] key1 = Settings.KEY_1;
-    private static final byte[] key2 = Settings.KEY_2;
-    private static final byte[] key3 = Settings.KEY_3;
+    private static final byte[] key1 = Settings.SERVER_KEY;
+    private static final byte[] key2 = Settings.CLIENT_KEY;
+    private static final byte[] key3 = Settings.LAUNCHER_KEY;
     private static final int symbolsCount = Settings.SYMBOLS_COUNT;
+    private static byte[] key;
 
     public static String encrypt(String strToEncrypt, String num) {
         if (num.equals("2")) {
@@ -61,5 +61,16 @@ public class CipherUtils {
             text[i] = characters.charAt(rnd.nextInt(characters.length()));
         }
         return new String(text);
+    }
+
+    public static String xorEncode(String text, String key) {
+        String res = "";
+        int j = 0;
+        for (int i = 0; i < text.length(); i++) {
+            res += (char) (text.charAt(i) ^ key.charAt(j));
+            j++;
+            if (j == key.length()) j = 0;
+        }
+        return res;
     }
 }

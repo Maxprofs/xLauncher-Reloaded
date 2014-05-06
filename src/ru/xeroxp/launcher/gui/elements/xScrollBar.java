@@ -1,6 +1,7 @@
-package ru.xeroxp.launcher.gui;
+package ru.xeroxp.launcher.gui.elements;
 
 import ru.xeroxp.launcher.config.xThemeSettings;
+import ru.xeroxp.launcher.gui.xTheme;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,13 +12,13 @@ import java.io.IOException;
 
 public class xScrollBar {
     public static class MyScrollbarUI extends MetalScrollBarUI {
-        private Image imageThumb, imageTrack;
         private final JButton b = new JButton() {
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(0, 0);
             }
         };
+        private Image imageThumb, imageTrack;
 
         public MyScrollbarUI() {
             try {

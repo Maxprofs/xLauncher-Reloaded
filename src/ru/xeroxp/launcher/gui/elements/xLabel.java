@@ -5,7 +5,6 @@ import ru.xeroxp.launcher.config.xThemeSettings;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
@@ -37,11 +36,11 @@ public class xLabel {
     public static xLabel[] getLabels() {
         int size = labels.size();
         xLabel[] labelList = new xLabel[size];
-        int i = 0;
 
-        for (Iterator var4 = labels.iterator(); var4.hasNext(); ++i) {
-            xLabel label = (xLabel) var4.next();
+        int i = 0;
+        for (xLabel label : labels) {
             labelList[i] = label;
+            ++i;
         }
 
         return labelList;

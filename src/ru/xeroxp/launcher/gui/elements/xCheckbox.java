@@ -5,7 +5,6 @@ import ru.xeroxp.launcher.config.xThemeSettings;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("SameParameterValue")
@@ -52,11 +51,11 @@ public class xCheckbox {
     public static xCheckbox[] getCheckboxes() {
         int size = checkboxes.size();
         xCheckbox[] checkboxesList = new xCheckbox[size];
-        int i = 0;
 
-        for (Iterator var4 = checkboxes.iterator(); var4.hasNext(); ++i) {
-            xCheckbox checkbox = (xCheckbox) var4.next();
+        int i = 0;
+        for (xCheckbox checkbox : checkboxes) {
             checkboxesList[i] = checkbox;
+            ++i;
         }
 
         return checkboxesList;

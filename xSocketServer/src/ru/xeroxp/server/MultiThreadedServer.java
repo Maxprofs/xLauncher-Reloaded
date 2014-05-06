@@ -20,7 +20,7 @@ class MultiThreadedServer implements Runnable {
 
     @Override
     public void run() {
-        openServerSocket();
+        this.openServerSocket();
         while (!isStopped()) {
             SSLSocket clientSocket;
             try {

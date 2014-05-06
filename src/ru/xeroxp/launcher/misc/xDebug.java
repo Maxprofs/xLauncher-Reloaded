@@ -1,4 +1,4 @@
-package ru.xeroxp.launcher.utils;
+package ru.xeroxp.launcher.misc;
 
 import ru.xeroxp.launcher.config.xSettings;
 

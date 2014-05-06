@@ -17,10 +17,7 @@
 
 package ru.xeroxp.server.utils.base;
 
-public class DecoderException extends Exception {
-
-    private static final long serialVersionUID = 1L;
-
+class DecoderException extends Exception {
     public DecoderException() {
         super();
     }

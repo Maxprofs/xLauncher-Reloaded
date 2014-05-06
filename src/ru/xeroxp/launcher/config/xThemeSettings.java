@@ -1,7 +1,6 @@
 package ru.xeroxp.launcher.config;
 
 import ru.xeroxp.launcher.gui.elements.*;
-import ru.xeroxp.launcher.gui.xHeaderButton;
 
 import java.awt.*;
 
@@ -19,10 +18,10 @@ public final class xThemeSettings {
     }; // id, название(текст и названия картинки), ip, port, подпапка, клиент, версия, максимальное количество слотов сервера, координаты и размеры, цвета текстов
 
     public static final xLabel[] LABELS = {
-            new xLabel("База знаний", new Color(63, 63, 63), 593, 65, 100, 14, "http://magicwars.high-sky.ru/"),
-            new xLabel("Личный кабинет", new Color(63, 63, 63), 593, 98, 150, 14, "http://magicwars.high-sky.ru/cabinet/"),
-            new xLabel("Еще ссылка", new Color(63, 63, 63), 593, 131, 150, 14, "http://magicwars.high-sky.ru/"),
-            new xLabel("И еще", new Color(63, 63, 63), 593, 164, 100, 14, "http://magicwars.high-sky.ru/")
+            new xLabel("База знаний", new Color(63, 63, 63), 593, 65, 100, 14, "http://mw.endlessworlds.ru/"),
+            new xLabel("Личный кабинет", new Color(63, 63, 63), 593, 98, 150, 14, "http://mw.endlessworlds.ru/cabinet/"),
+            new xLabel("Новости", new Color(63, 63, 63), 593, 131, 150, 14, "http://vk.com/m_w_minecraft"),
+            new xLabel("Правила", new Color(63, 63, 63), 593, 164, 100, 14, "http://mw.endlessworlds.ru/doku.php/правила")
     }; // Название, цвет, координаты и размеры ссылки, сама ссылка
 
     public static final xButton[] BUTTONS = {
@@ -65,20 +64,24 @@ public final class xThemeSettings {
     public static final Color HEADER_COLOR = new Color(114, 114, 114); // Цвет текста на рамке (сверху)
 
     /**
-     * Labels
+     * ProgressBar
      */
-    public static final int[] ERROR_LABEL_BOUNDS = {485, 513, 300, 14}; // Координаты панели информации о входе (там, где надпись "Авторизация...")
-    public static final Color ERROR_LABEL_COLOR = new Color(63, 63, 63); // Цвет текта панели информации о входе
-
+    public static final String[] PROGRESSBAR_IMAGES = {"updatebar_ok.png", "updatebar.png", "updatebar_bg.png"};
     public static final int[] PERCENT_LABEL_BOUNDS = {360, 542, 200, 15}; // Координаты панели с процентами (на полосе загрузки)
     public static final Color PERCENT_LABEL_COLOR = new Color(114, 114, 114); // Цвет текста панели с процентами
+
+    /**
+     * Labels
+     */
+    public static final int[] ERROR_LABEL_BOUNDS = {485, 505, 300, 15}; // Координаты панели информации о входе (там, где надпись "Авторизация...")
+    public static final Color ERROR_LABEL_COLOR = new Color(63, 63, 63); // Цвет текта панели информации о входе
 
     public static final String MEMORY_LABEL_TEXT = "mb"; // Надпись в панели выбора памяти
     public static final int[] MEMORY_LABEL_BOUNDS = {690, 410, 20, 20}; // Координаты надписи в панели выбора памяти
     public static final Color MEMORY_LABEL_COLOR = new Color(114, 114, 114); // Цвет текста надписи в панели выбора памяти
 
     /**
-     * Scrollbar
+     * ScrollBar
      */
     public static final String[] SCROLLBAR_IMAGES = {"scrollbar.png", "scrollbar_bg.png"}; // Картинки полосы прокрутки
     public static final int[] NEWS_SCROLL_BAR_SIZE = {12, 30}; // Размеры полосы прокрутки новостей
