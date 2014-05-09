@@ -119,7 +119,7 @@ public class xFileUtils {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static void buildDirectory(File file) throws IOException {
-        if (file.exists() || file.mkdirs()) {
+        if (!file.exists() && !file.mkdirs()) {
             throw new IOException("Could not create directory: " + file);
         }
     }

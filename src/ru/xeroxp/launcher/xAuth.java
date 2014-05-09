@@ -42,14 +42,14 @@ public class xAuth implements Runnable {
 
     private static void calcLauncherHash() {
         try {
-            File runningLauncher = new File(xUpdater.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-
-            launcherFormat = runningLauncher.getPath().endsWith(".exe") ? "exe" : "jar";
-            launcherHash = xMD5Utils.hash(runningLauncher);
+//            File runningLauncher = new File(xUpdater.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+//
+//            launcherFormat = runningLauncher.getPath().endsWith(".exe") ? "exe" : "jar";
+//            launcherHash = xMD5Utils.hash(runningLauncher);
 
             /** Отладка **/
-//            launcherFormat = "jar";
-//            launcherHash = xMD5Utils.hash(new File("E:/Osip/Developing/xLauncher/launcher/MagicWars.jar"));
+            launcherFormat = "jar";
+            launcherHash = xMD5Utils.hash(new File("E:/Osip/Developing/xLauncher/launcher/MagicWars.jar"));
         } catch (Exception e) {
             xDebug.errorMessage(e.getMessage());
         }
@@ -286,23 +286,32 @@ public class xAuth implements Runnable {
                     outputStream.flush();
                 } else if (response.equals("abuse")) {
                     this.theme.setError("Ошибка авторизаци");
+                    break;
                 } else if (response.equals("fail")) {
                     this.theme.setError("Неправильный логин или пароль");
+                    break;
                 } else if (response.equals("abanned")) {
                     this.theme.setError("Ваш аккаунт заблокирован");
+                    break;
                 } else if (response.equals("banned")) {
                     this.theme.setError("Вы заблокированы");
+                    break;
                 } else if (response.equals("abuseSize")) {
                     this.theme.setError("Нельзя модифицировать клиент");
+                    break;
                 } else if (response.equals("abuseLauncher")) {
                     this.theme.setError("Лаунчер не прошел проверку");
+                    break;
                 } else if (response.equals("abuseTexture")) {
                     this.theme.setError("У вас обнаружен X-Ray");
+                    break;
                 } else if (response.equals("abuseMod")) {
                     this.theme.setError("Нельзя добавлять моды в клиент");
+                    break;
                 } else if (response.equals("oldLauncher")) {
                     this.theme.setError("Лаунчер устарел");
                     new xUpdater(this.theme);
+                    break;
                 } else if (!response.equals("2")) {
                     try {
                         xConfig config = new xConfig(xConfig.LAUNCHER);
@@ -313,8 +322,6 @@ public class xAuth implements Runnable {
 
                     xLauncher.getIntsanse().drawServerSelect(this.login, response.split(":")[1]);
                     break;
-                } else {
-                    break;
                 }
             }
 
@@ -323,7 +330,6 @@ public class xAuth implements Runnable {
             this.theme.setError("Время подключения истекло");
         } catch (IOException e) {
             this.theme.setError("Сервер авторизации недоступен");
-            e.printStackTrace();
         }
     }
 
