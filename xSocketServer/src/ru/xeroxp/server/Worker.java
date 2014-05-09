@@ -28,6 +28,7 @@ class Worker implements Runnable {
         try {
             Main.launcherSizeJar = MD5Utils.fileHash(path + File.separator + "launcher" + File.separator + Settings.LAUNCHER_FILE_NAME + ".jar");
             Main.launcherSizeExe = MD5Utils.fileHash(path + File.separator + "launcher" + File.separator + Settings.LAUNCHER_FILE_NAME + ".exe");
+            Debug.infoMessage(Main.launcherSizeJar + " : " + Main.launcherSizeExe);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -112,7 +113,7 @@ class Worker implements Runnable {
                 BufferedReader localBufferedReader;
                 String result;
 
-                if (inputArgs[4].equals("jar") && inputArgs[5].equals(Main.launcherSizeJar) || inputArgs[5].equals(Main.launcherSizeJar)) {
+                if (inputArgs[4].equals("jar") && inputArgs[5].equals(Main.launcherSizeJar) || inputArgs[5].equals(Main.launcherSizeExe)) {
                     localURL = new URL(Settings.MAIN_FILE + "?action=auth&user=" + URLEncoder.encode(userN, "UTF-8") + "&password=" + URLEncoder.encode(CipherUtils.xorEncode(intToStr(inputArgs[2]), Settings.PASS_ID_KEY), "UTF-8") + "&version=" + URLEncoder.encode(inputArgs[3], "UTF-8"));
                     localBufferedReader = new BufferedReader(new InputStreamReader(localURL.openStream()));
                     result = localBufferedReader.readLine();
